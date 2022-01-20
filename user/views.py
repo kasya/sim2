@@ -11,7 +11,7 @@ class Login(TemplateView):
   """Login methods."""
 
   form_class = LoginForm
-  template_name = "login.html"
+  template_name = 'login.html'
 
   def get(self, request):
     """Render login page."""
@@ -31,6 +31,7 @@ class Login(TemplateView):
 
 
 class Logout(TemplateView):
+  """Logout methods."""
 
   def get(self, request):
     logout(request)
@@ -38,7 +39,9 @@ class Logout(TemplateView):
 
 
 class Profile(TemplateView):
-  template_name = "profile.html"
+  """Profile methods."""
+
+  template_name = 'profile.html'
 
   def get(self, request):
     """Render profile page."""
@@ -50,7 +53,7 @@ class Signup(TemplateView):
   """Signup methods."""
 
   form_class = SignupForm
-  template_name = "signup.html"
+  template_name = 'signup.html'
 
   def get(self, request):
     """Render signup page."""
@@ -59,8 +62,7 @@ class Signup(TemplateView):
     return render(request, self.template_name, {'form': form})
 
   def post(self, request):
-    """Get the data from Signup form and add it to database.
-    If user already exists send him back to login page."""
+    """Get the data from Signup form and add it to database."""
 
     form = self.form_class(request.POST)
 

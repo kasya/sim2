@@ -8,8 +8,9 @@ from user.models import User
 
 
 class LoginForm(ModelForm):
+  """User login form."""
 
-  remember = forms.BooleanField(label="Remember me", required=False)
+  remember = forms.BooleanField(label='Remember me', required=False)
 
   def clean(self):
     cleaned_data = super().clean()
@@ -38,6 +39,7 @@ class LoginForm(ModelForm):
 
 
 class SignupForm(ModelForm):
+  """User signup form."""
 
   def save(self, commit=True):
     user = super().save(commit=False)
