@@ -31,7 +31,7 @@
 		rel="stylesheet"
 	/>
 	<!-- Nucleo Icons -->
-	<link href="{% static %}" rel="stylesheet" />
+	<link href="{% static 'assets/css/nucleo-icons.css' %}" rel="stylesheet" />
 	<!-- Font Awesome Icons -->
 	<script
 		src="https://kit.fontawesome.com/42d5adcbca.js"
@@ -123,7 +123,7 @@
 							Logout
 						</a>
 					</li>
-					{% endif %} {% else user.is_authenticated %}
+					{% else %}
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a
 							class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
