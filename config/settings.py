@@ -48,6 +48,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.ScryptPasswordHasher',
+]
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -100,7 +108,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# https://docs.djangoproject.com/en/4.0/ref/settings/#session-cookie-age
+
 AUTH_USER_MODEL = 'user.User'
+
+# https://docs.djangoproject.com/en/4.0/ref/settings/#session-cookie-age
+
+SESSION_COOKIE_AGE = 86400
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
