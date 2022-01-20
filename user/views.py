@@ -1,10 +1,10 @@
 """User views methods."""
 
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 
-from .forms import LoginForm
+from user.forms import LoginForm
 
 
 class Login(TemplateView):
@@ -26,6 +26,6 @@ class Login(TemplateView):
 
     form = self.form_class(request.POST)
     if form.is_valid():
-      return HttpResponseRedirect('/profile')
+      return redirect('profile')
 
     return render(request, self.template_name, {'form': form})

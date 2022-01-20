@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import User
+from user.models import User
 
 
 class LoginForm(ModelForm):
@@ -12,6 +12,3 @@ class LoginForm(ModelForm):
     widgets = {
         'password': forms.PasswordInput(),
     }
-
-
-form = LoginForm()

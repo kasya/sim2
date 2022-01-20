@@ -31,7 +31,7 @@
 		rel="stylesheet"
 	/>
 	<!-- Nucleo Icons -->
-	<link href="/static/assets/css/nucleo-icons.css" rel="stylesheet" />
+	<link href="{% static %}" rel="stylesheet" />
 	<!-- Font Awesome Icons -->
 	<script
 		src="https://kit.fontawesome.com/42d5adcbca.js"
@@ -112,7 +112,18 @@
 							Profile
 						</a>
 					</li>
-					{% endif %} {% if not user.is_authenticated %}
+					<li class="nav-item dropdown dropdown-hover mx-2">
+						<a
+							class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
+							id="dropdownMenuPages"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
+							href="#"
+						>
+							Logout
+						</a>
+					</li>
+					{% endif %} {% else user.is_authenticated %}
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a
 							class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
@@ -135,19 +146,6 @@
 							Signup
 						</a>
 					</li>
-					{% endif %} {% if user.is_authenticated %}
-					<li class="nav-item dropdown dropdown-hover mx-2">
-						<a
-							class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-							id="dropdownMenuPages"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							href="#"
-						>
-							Logout
-						</a>
-					</li>
-					{% endif %}
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a
 							class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center link-border"
@@ -159,6 +157,7 @@
 							Start Exam
 						</a>
 					</li>
+					{% endif %}
 				</ul>
 			</div>
 		</div>
