@@ -27,9 +27,9 @@
 	<link href="{% static 'assets/css/nucleo-icons.css' %}" rel="stylesheet" />
 	<!-- Font Awesome Icons -->
 	<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-	<link href="/static/assets/css/nucleo-svg.css" rel="stylesheet" />
+	<link href="{% static 'assets/css/nucleo-svg.css'%}" rel="stylesheet" />
 	<!-- CSS Files -->
-	<link id="pagestyle" href="/static/assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
+	<link id="pagestyle" href="{% static 'assets/css/soft-ui-dashboard.css'%}?v=1.0.3" rel="stylesheet" />
 	<link href="{% static 'style.css' %}" rel="stylesheet" />
 
 	<script src="https://unpkg.com/vue@3.2.23/dist/vue.global.js"></script>
@@ -44,8 +44,7 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-gradient-dark z-index-3 py-3">
 		<div class="container">
-			<a class="navbar-brand text-white" href="/" rel="tooltip" title="Designed and Coded by Creative Tim"
-				data-placement="bottom" target="_blank">
+			<a class="navbar-brand text-white" href="/" rel="tooltip" data-placement="bottom" target="_blank">
 				Sim2
 			</a>
 			<button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
@@ -60,7 +59,7 @@
 				<ul class="navbar-nav navbar-nav-hover mx-right">
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="#">
+							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="/">
 							Home
 						</a>
 					</li>
@@ -77,10 +76,16 @@
 							Logout
 						</a>
 					</li>
+					<li class="nav-item dropdown dropdown-hover mx-2">
+						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center link-border"
+							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="#">
+							Start Exam
+						</a>
+					</li>
 					{% else %}
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="#">
+							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="{% url login %}">
 							Login
 						</a>
 					</li>
@@ -88,12 +93,6 @@
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
 							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="#">
 							Signup
-						</a>
-					</li>
-					<li class="nav-item dropdown dropdown-hover mx-2">
-						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center link-border"
-							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="/start">
-							Start Exam
 						</a>
 					</li>
 					{% endif %}
