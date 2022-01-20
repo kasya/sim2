@@ -69,20 +69,19 @@
 					</li>
 					{% if user.is_authenticated %}
 					<li class="nav-item dropdown dropdown-hover mx-2">
-
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="#">
+							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="{% url 'profile' %}">
 							Profile
 						</a>
 					</li>
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
-							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="#">
+							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="{% url 'logout' %}">
 							Logout
 						</a>
 					</li>
 					<li class="nav-item dropdown dropdown-hover mx-2">
-						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center link-border"
+						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
 							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="#">
 							Start Exam
 						</a>
