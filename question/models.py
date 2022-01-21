@@ -16,15 +16,15 @@ class Question(models.Model):
   MULTIPLE_CHOICE_TYPE = 'multiple_choice'
   MULTIPLE_SELECT_TYPE = 'multiple_select'
 
-  QUESTION_TYPE = [
-      (MULTIPLE_CHOICE_TYPE, 'multiple_choice'),
-      (MULTIPLE_SELECT_TYPE, 'multiple_select'),
+  QUESTION_TYPES = [
+      (MULTIPLE_CHOICE_TYPE, 'Multiple choice'),
+      (MULTIPLE_SELECT_TYPE, 'Multiple select'),
   ]
 
   text = models.CharField(max_length=1000)
   type = models.CharField(max_length=30,
                           default=MULTIPLE_CHOICE_TYPE,
-                          choices=QUESTION_TYPE)
+                          choices=QUESTION_TYPES)
   weight = models.IntegerField(default=1)
   correct_answers = models.ManyToManyField(Answer,
                                            related_name='correct_answers')
