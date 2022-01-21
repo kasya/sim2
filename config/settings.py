@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user.apps.UserConfig',
     'question.apps.QuestionConfig',
+    'exam.apps.ExamConfig',
 ]
 
 MIDDLEWARE = [

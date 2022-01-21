@@ -1,4 +1,5 @@
 from django.db import models
+from exam.models import Exam
 
 
 class Answer(models.Model):
@@ -23,6 +24,7 @@ class Question(models.Model):
   type = models.CharField(max_length=30, default=MULTIPLE_CHOICE_TYPE)
 
   category = models.ForeignKey('QuestionCategory', on_delete=models.CASCADE)
+  exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
 
   def __repr__(self):
     return f'Question #{self.id}: {self.text}'
@@ -35,3 +37,7 @@ class QuestionCategory(models.Model):
 
   def __repr__(self):
     return f'<Category>: {self.name}'
+
+  class Meta:
+    verbose_name = 'Question category'
+    verbose_name_plural = 'Question categories'
