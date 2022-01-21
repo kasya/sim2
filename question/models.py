@@ -4,8 +4,6 @@ from django.db import models
 class Answer(models.Model):
   """Answer model."""
 
-  is_correct = models.BooleanField(default=False)
-  question = models.ForeignKey('Question', on_delete=models.CASCADE)
   text = models.CharField(max_length=1000)
 
   def __repr__(self):
@@ -18,9 +16,19 @@ class Question(models.Model):
   MULTIPLE_CHOICE_TYPE = 'multiple_choice'
   MULTIPLE_SELECT_TYPE = 'multiple_select'
 
+  QUESTION_TYPE = [
+      (MULTIPLE_CHOICE_TYPE, 'multiple_choice'),
+      (MULTIPLE_SELECT_TYPE, 'multiple_select'),
+  ]
+
   text = models.CharField(max_length=1000)
+  type = models.CharField(max_length=30,
+                          default=MULTIPLE_CHOICE_TYPE,
+                          choices=QUESTION_TYPE)
   weight = models.IntegerField(default=1)
-  type = models.CharField(max_length=30, default=MULTIPLE_CHOICE_TYPE)
+  correct_answers = models.ManyToManyField(Answer,
+                                           related_name='correct_answers')
+  wrong_answers = models.ManyToManyField(Answer, related_name='wrong_answers')
 
   category = models.ForeignKey('QuestionCategory', on_delete=models.CASCADE)
 
