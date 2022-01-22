@@ -43,7 +43,3 @@ class QuestionCategory(models.Model):
 
   def __repr__(self):
     return f'<Category>: {self.name}'
-
-  class Meta:
-    verbose_name = 'Question category'
-    verbose_name_plural = 'Question categories'
