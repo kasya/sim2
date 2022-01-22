@@ -31,7 +31,7 @@ class ExamAttempt(models.Model):
   IN_PROGRESS = 'in_progress'
   FINISHED = 'finished'
 
-  EXAM_ATTEMPT_STATUSES = [(IN_PROGRESS, 'In progress'), (FINISHED, 'Finished')]
+  STATUSES = ((IN_PROGRESS, 'In progress'), (FINISHED, 'Finished'))
 
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
   exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
@@ -39,7 +39,7 @@ class ExamAttempt(models.Model):
   grade = models.IntegerField(default=0)
   status = models.CharField(max_length=25,
                             default=IN_PROGRESS,
-                            choices=EXAM_ATTEMPT_STATUSES)
+                            choices=STATUSES)
   duration_minutes = models.IntegerField(default=0)
 
   questions = models.ManyToManyField('question.Question')
