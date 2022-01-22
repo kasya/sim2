@@ -8,6 +8,8 @@ class UserModelTestCase(TestCase):
   """Test cases for user models."""
 
   def test_user_model(self):
+    """Unit test for User model."""
+
     username = 'john@test.com'
     password = 'smith'
     firstname = 'john'

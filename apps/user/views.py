@@ -1,12 +1,10 @@
 """User views methods."""
-from django.contrib import messages
+
 from django.contrib.auth import login, logout
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import TemplateView
 
 from apps.user.forms import LoginForm, SignupForm
-from apps.user.models import User
 
 
 class Login(TemplateView):

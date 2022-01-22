@@ -24,7 +24,7 @@ class UserViewTestCase(TestCase):
     username = 'john@test.com'
     password = 'smith'
 
-    user = User.objects.create_user(username=username, password=password)
+    User.objects.create_user(username=username, password=password)
     response = self.client.post(reverse('login'), {
         'email': username,
         'password': password,
@@ -38,7 +38,7 @@ class UserViewTestCase(TestCase):
     username = 'john@test.com'
     password = 'smith'
 
-    user = User.objects.create_user(username=username, password=password)
+    User.objects.create_user(username=username, password=password)
     self.client.login(email=username, password=password)
 
     response = self.client.get(reverse('logout'))

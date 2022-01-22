@@ -1,5 +1,7 @@
+"""Forms for user app."""
+
 from django import forms
-from django.contrib.auth import authenticate, hashers
+from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
 from django.urls import reverse
@@ -21,6 +23,8 @@ class LoginForm(ModelForm):
     return cleaned_data
 
   def login(self, request):
+    """User login method."""
+
     user = authenticate(username=self.cleaned_data['email'],
                         password=self.cleaned_data['password'])
     auth_login(request, user)
@@ -31,6 +35,8 @@ class LoginForm(ModelForm):
     return reverse('profile')
 
   class Meta:
+    """Meta class for Login form."""
+
     model = User
     fields = ['email', 'password']
     widgets = {
@@ -60,6 +66,8 @@ class SignupForm(ModelForm):
     return user
 
   class Meta:
+    """Meta class for Signup form."""
+
     model = User
     fields = ('email', 'first_name', 'last_name', 'password')
     widgets = {
