@@ -1,4 +1,4 @@
-from django.apps import apps
+"""Exam models."""
 from django.conf import settings
 from django.db import models
 from django.utils.timezone import now
@@ -31,11 +31,15 @@ class ExamAttempt(models.Model):
   IN_PROGRESS = 'in_progress'
   FINISHED = 'finished'
 
+  EXAM_ATTEMPT_STATUSES = [(IN_PROGRESS, 'In progress'), (FINISHED, 'Finished')]
+
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
   exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
   created = models.DateTimeField(default=now, editable=False)
   grade = models.IntegerField(default=0)
-  status = models.CharField(max_length=25, default=IN_PROGRESS)
+  status = models.CharField(max_length=25,
+                            default=IN_PROGRESS,
+                            choices=EXAM_ATTEMPT_STATUSES)
   duration_minutes = models.IntegerField(default=0)
 
   questions = models.ManyToManyField('question.Question')

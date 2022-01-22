@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 
+# pylint: disable=wildcard-import
 from config.secrets import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
