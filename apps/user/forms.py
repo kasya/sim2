@@ -4,7 +4,7 @@ from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
 from django.urls import reverse
 
-from user.models import User
+from apps.user.models import User
 
 
 class LoginForm(ModelForm):

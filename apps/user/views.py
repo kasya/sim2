@@ -1,17 +1,18 @@
 """User views methods."""
+
 from django.contrib.auth import login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, TemplateView
 
-from user.forms import LoginForm, SignupForm
+from apps.user.forms import LoginForm, SignupForm
 
 
 class Login(TemplateView):
   """Login methods."""
 
   form_class = LoginForm
-  template_name = 'login.html'
+  template_name = 'user/login.html'
 
   def get(self, request):
     """Render login page."""
@@ -41,7 +42,7 @@ class Logout(TemplateView):
 class Profile(TemplateView):
   """Profile methods."""
 
-  template_name = 'profile.html'
+  template_name = 'user/profile.html'
 
   def get(self, request):
     """Render profile page."""
@@ -53,7 +54,7 @@ class Signup(TemplateView):
   """Signup methods."""
 
   form_class = SignupForm
-  template_name = 'signup.html'
+  template_name = 'user/signup.html'
 
   def get(self, request):
     """Render signup page."""

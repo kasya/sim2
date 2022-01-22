@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from exam.models import AnswerAttempt, Exam, ExamAttempt, Subject
+from apps.exam.models import AnswerAttempt, Exam, ExamAttempt, Subject
 
 admin.site.register(AnswerAttempt)
 admin.site.register(Exam)

@@ -1,7 +1,8 @@
 """User app URL configuration."""
+
 from django.urls import path
 
-from . import views
+from apps.user import views
 
 urlpatterns = [
     path('login', views.Login.as_view(), name='login'),
