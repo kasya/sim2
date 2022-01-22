@@ -41,6 +41,13 @@ class LoginForm(ModelForm):
 class SignupForm(ModelForm):
   """User signup form."""
 
+  def clean_email(self):
+    email = self.cleaned_data['email']
+    if User.objects.filter(email=email).exists():
+      raise forms.ValidationError('You already have an account with us.')
+
+    return email
+
   def save(self, commit=True):
     user = super().save(commit=False)
 
