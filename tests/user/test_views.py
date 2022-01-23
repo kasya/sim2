@@ -29,8 +29,10 @@ class UserViewTestCase(TestCase):
         'email': email,
         'password': password,
     })
-
     self.assertRedirects(response, reverse('profile'))
+
+    response = self.client.get(reverse('profile'))
+    self.assertInHTML('Logout', response.content.decode('utf-8'))
 
   def test_logout_get(self):
     """Check that user logged out and redirected to login page."""
@@ -48,9 +50,21 @@ class UserViewTestCase(TestCase):
   def test_profile_get(self):
     """Check that profile page renders correctly."""
 
+    # try to access page incognito.
+    response = self.client.get(reverse('profile'))
+    self.assertRedirects(response, '/login?next=/profile')
+
+    # login user and try to access page.
+    email = 'john@test.com'
+    password = 'smith'
+
+    user = User.objects.create_user(username=email, password=password)
+    self.client.login(username=email, password=password)
+
     response = self.client.get(reverse('profile'))
     self.assertEqual(response.status_code, 200)
     self.assertTemplateUsed('user/profile.html')
+    self.assertIn(f'Hello, {email}', response.content.decode('utf-8'))
 
   def test_signup_get(self):
     """Check that signup page renders correctly."""
