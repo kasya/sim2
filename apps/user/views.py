@@ -1,9 +1,8 @@
 """User views methods."""
 
-from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
-from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
 from apps.user.forms import LoginForm, SignupForm
@@ -40,16 +39,10 @@ class Logout(TemplateView):
     return redirect('login')
 
 
-@method_decorator(login_required, name='dispatch')
-class Profile(TemplateView):
+class Profile(LoginRequiredMixin, TemplateView):
   """Profile methods."""
 
   template_name = 'user/profile.html'
-
-  def get(self, request):
-    """Render profile page."""
-
-    return render(request, self.template_name)
 
 
 class Signup(TemplateView):

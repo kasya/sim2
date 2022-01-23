@@ -1,7 +1,6 @@
 """Tests for User app views."""
 
 from apps.user.models import User
-from django.contrib.auth import login
 from django.test import Client, TestCase
 from django.urls import reverse
 
@@ -32,7 +31,7 @@ class UserViewTestCase(TestCase):
     self.assertRedirects(response, reverse('profile'))
 
     response = self.client.get(reverse('profile'))
-    self.assertInHTML('Logout', response.content.decode('utf-8'))
+    self.assertIn('Logout', response.content.decode('utf-8'))
 
   def test_logout_get(self):
     """Check that user logged out and redirected to login page."""
@@ -52,13 +51,14 @@ class UserViewTestCase(TestCase):
 
     # try to access page incognito.
     response = self.client.get(reverse('profile'))
-    self.assertRedirects(response, '/login?next=/profile')
+    self.assertRedirects(response,
+                         f'{reverse("login")}?next={reverse("profile")}')
 
     # login user and try to access page.
     email = 'john@test.com'
     password = 'smith'
 
-    user = User.objects.create_user(username=email, password=password)
+    User.objects.create_user(username=email, password=password)
     self.client.login(username=email, password=password)
 
     response = self.client.get(reverse('profile'))
