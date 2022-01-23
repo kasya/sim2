@@ -117,6 +117,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'user.User'
 
+# https://docs.djangoproject.com/en/4.0/ref/settings/#login-redirect-url
+
+LOGIN_REDIRECT_URL = '/'
+
+# https://docs.djangoproject.com/en/4.0/ref/settings/#login-url
+
+LOGIN_URL = '/login'
+
 # https://docs.djangoproject.com/en/4.0/ref/settings/#session-cookie-age
 
 SESSION_COOKIE_AGE = 86400
