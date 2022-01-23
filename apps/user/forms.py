@@ -69,7 +69,7 @@ class SignupForm(ModelForm):
     """Meta class for Signup form."""
 
     model = User
-    fields = ('email', 'first_name', 'last_name', 'password')
+    fields = ('email', 'password', 'first_name', 'last_name')
     widgets = {
         'password': forms.PasswordInput(),
     }

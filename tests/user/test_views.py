@@ -21,12 +21,12 @@ class UserViewTestCase(TestCase):
   def test_login_post(self):
     """Check that user logged in correctly and redirected to profile page."""
 
-    username = 'john@test.com'
+    email = 'john@test.com'
     password = 'smith'
 
-    User.objects.create_user(username=username, password=password)
+    User.objects.create_user(username=email, password=password)
     response = self.client.post(reverse('login'), {
-        'email': username,
+        'email': email,
         'password': password,
     })
 
@@ -35,11 +35,11 @@ class UserViewTestCase(TestCase):
   def test_logout_get(self):
     """Check that user logged out and redirected to login page."""
 
-    username = 'john@test.com'
+    email = 'john@test.com'
     password = 'smith'
 
-    User.objects.create_user(username=username, password=password)
-    self.client.login(email=username, password=password)
+    User.objects.create_user(username=email, password=password)
+    self.client.login(email=email, password=password)
 
     response = self.client.get(reverse('logout'))
 
@@ -63,17 +63,17 @@ class UserViewTestCase(TestCase):
     """Check that user is signed up and added to database."""
 
     # Signup user.
-    username = 'john@test.com'
+    email = 'john@test.com'
     password = 'smith'
-    firstname = 'john'
-    lastname = 'smith'
+    first_name = 'john'
+    last_name = 'smith'
 
     response = self.client.post(
         reverse('signup'), {
-            'email': username,
+            'email': email,
             'password': password,
-            'first_name': firstname,
-            'last_name': lastname,
+            'first_name': first_name,
+            'last_name': last_name,
         })
     self.assertRedirects(response, reverse('login'))
     self.assertEqual(User.objects.count(), 1)
@@ -81,9 +81,9 @@ class UserViewTestCase(TestCase):
     # try to signup same user again.
     response = self.client.post(
         reverse('signup'), {
-            'email': username,
+            'email': email,
             'password': password,
-            'first_name': firstname,
-            'last_name': lastname,
+            'first_name': first_name,
+            'last_name': last_name,
         })
     self.assertEqual(User.objects.count(), 1)
