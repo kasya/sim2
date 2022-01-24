@@ -26,7 +26,7 @@ class QuestionModelTestCase(TestCase):
 
     answer = Answer.objects.get(text='Answer 1')
 
-    self.assertEqual(str(answer), f'<Answer>: {answer.text}, id#{answer.id}')
+    self.assertEqual(str(answer), f'<Answer>: {answer.text}, id# {answer.id}')
 
   def test_question_model(self):
     """Unit test for question model."""
@@ -34,7 +34,7 @@ class QuestionModelTestCase(TestCase):
     question = Question.objects.get(text="Question 1")
 
     self.assertEqual(str(question),
-                     f'<Question>: {question.text}, id#{question.id}:')
+                     f'<Question>: {question.text}, id# {question.id}:')
     self.assertEqual(Question.objects.count(), 1)
 
   def test_question_category(self):
@@ -43,5 +43,5 @@ class QuestionModelTestCase(TestCase):
     category = QuestionCategory.objects.get(name="Category 1")
 
     self.assertEqual(str(category),
-                     f'<Category>: {category.name}, id#{category.id}')
+                     f'<Category>: {category.name}, id# {category.id}')
     self.assertEqual(QuestionCategory.objects.count(), 1)

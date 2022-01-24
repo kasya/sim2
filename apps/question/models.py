@@ -7,7 +7,7 @@ class Answer(models.Model):
   text = models.CharField(max_length=1000)
 
   def __str__(self):
-    return f'<Answer>: {self.text}, id#{self.id}'
+    return f'<Answer>: {self.text}, id# {self.id}'
 
 
 class Question(models.Model):
@@ -34,7 +34,7 @@ class Question(models.Model):
   exam = models.ForeignKey('exam.Exam', on_delete=models.CASCADE)
 
   def __str__(self):
-    return f'<Question>: {self.text}, id#{self.id}:'
+    return f'<Question>: {self.text}, id# {self.id}:'
 
 
 class QuestionCategory(models.Model):
@@ -43,4 +43,4 @@ class QuestionCategory(models.Model):
   name = models.CharField(max_length=1000)
 
   def __str__(self):
-    return f'<Category>: {self.name}, id#{self.id}'
+    return f'<Category>: {self.name}, id# {self.id}'
