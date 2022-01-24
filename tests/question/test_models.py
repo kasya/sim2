@@ -1,15 +1,15 @@
 """Tests for Question app models."""
 
+from django.test import TestCase
+
 from apps.exam.models import Exam, Subject
 from apps.question.models import Answer, Question, QuestionCategory
-from django.test import TestCase
 
 
 class QuestionModelTestCase(TestCase):
   """Test cases for Question models."""
 
   def setUp(self):
-
     question_category = QuestionCategory.objects.create(name='Category 1')
     subject = Subject.objects.create(name='Subject 1')
     exam = Exam.objects.create(name='Exam 1', subject=subject)
