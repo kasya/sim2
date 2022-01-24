@@ -2,13 +2,14 @@
 
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 
 from apps.user.forms import LoginForm, SignupForm
 
 
-class Login(TemplateView):
+class Login(LoginView):
   """Login methods."""
 
   form_class = LoginForm
