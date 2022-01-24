@@ -31,6 +31,7 @@ class Question(models.Model):
   wrong_answers = models.ManyToManyField(Answer, related_name='wrong_answers')
 
   category = models.ForeignKey('QuestionCategory', on_delete=models.CASCADE)
+  exam = models.ForeignKey('exam.Exam', on_delete=models.CASCADE)
 
   def __repr__(self):
     return f'Question #{self.id}: {self.text}'
