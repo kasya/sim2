@@ -6,8 +6,8 @@ class Answer(models.Model):
 
   text = models.CharField(max_length=1000)
 
-  def __repr__(self):
-    return '"({}) {}".format("C" if self.is_correct else "I", self.text[:100])'
+  def __str__(self):
+    return f'<Answer>: {self.text}, id#{self.id}'
 
 
 class Question(models.Model):
@@ -33,8 +33,8 @@ class Question(models.Model):
   category = models.ForeignKey('QuestionCategory', on_delete=models.CASCADE)
   exam = models.ForeignKey('exam.Exam', on_delete=models.CASCADE)
 
-  def __repr__(self):
-    return f'Question #{self.id}: {self.text}'
+  def __str__(self):
+    return f'<Question>: {self.text}, id#{self.id}:'
 
 
 class QuestionCategory(models.Model):
@@ -42,5 +42,5 @@ class QuestionCategory(models.Model):
 
   name = models.CharField(max_length=1000)
 
-  def __repr__(self):
-    return f'<Category>: {self.name}'
+  def __str__(self):
+    return f'<Category>: {self.name}, id#{self.id}'
