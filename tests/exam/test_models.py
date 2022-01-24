@@ -33,7 +33,8 @@ class ExamModelTestCase(TestCase):
 
     subject = Subject.objects.get(name='Subject 1')
 
-    self.assertEqual(str(subject), f'<Subject>: Subject 1')
+    self.assertEqual(str(subject),
+                     f'<Subject>: {subject.name}, id# {subject.id}')
     self.assertEqual(Subject.objects.count(), 1)
 
   def test_exam(self):
@@ -41,7 +42,7 @@ class ExamModelTestCase(TestCase):
 
     exam = Exam.objects.get(name='Exam 1')
 
-    self.assertEqual(str(exam), f'<Exam>: Exam 1')
+    self.assertEqual(str(exam), f'<Exam>: {exam.name}, id# {exam.id}')
     self.assertEqual(Exam.objects.count(), 1)
 
   def test_exam_attempt(self):
@@ -49,10 +50,7 @@ class ExamModelTestCase(TestCase):
 
     exam_attempt = ExamAttempt.objects.get(exam=1)
 
-    self.assertEqual(
-        str(exam_attempt),
-        f'This exam attempt was created on {exam_attempt.created} by {exam_attempt.user}'
-    )
+    self.assertEqual(str(exam_attempt), f'<ExamAttempt>: id# {exam_attempt.id}')
     self.assertEqual(ExamAttempt.objects.count(), 1)
 
   def test_answer_attempt(self):
@@ -60,8 +58,6 @@ class ExamModelTestCase(TestCase):
 
     answer_attempt = AnswerAttempt.objects.get(id=1)
 
-    self.assertEqual(
-        str(answer_attempt),
-        f'This is an answer attempt #{answer_attempt.id} for an attempt #{answer_attempt.attempt.id}'
-    )
+    self.assertEqual(str(answer_attempt),
+                     f'<AnswerAttempt>: id# {answer_attempt.id}')
     self.assertEqual(AnswerAttempt.objects.count(), 1)

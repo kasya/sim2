@@ -10,7 +10,7 @@ class Subject(models.Model):
   name = models.CharField(max_length=1000)
 
   def __str__(self):
-    return f'<Subject>: {self.name}'
+    return f'<Subject>: {self.name}, id# {self.id}'
 
 
 class Exam(models.Model):
@@ -22,7 +22,7 @@ class Exam(models.Model):
   subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
   def __str__(self):
-    return f'<Exam>: {self.name}'
+    return f'<Exam>: {self.name}, id# {self.id}'
 
 
 class ExamAttempt(models.Model):
@@ -45,7 +45,7 @@ class ExamAttempt(models.Model):
   questions = models.ManyToManyField('question.Question')
 
   def __str__(self):
-    return f'This exam attempt was created on {self.created} by {self.user}'
+    return f'<ExamAttempt>: id# {self.id}'
 
 
 class AnswerAttempt(models.Model):
@@ -57,4 +57,4 @@ class AnswerAttempt(models.Model):
   answers = models.ManyToManyField('question.Answer')
 
   def __str__(self):
-    return f'This is an answer attempt #{self.id} for an attempt #{self.attempt.id}'
+    return f'<AnswerAttempt>: id# {self.id}'
