@@ -48,6 +48,13 @@ class ExamAttempt(models.Model):
   def __str__(self):
     return f'<ExamAttempt>: id# {self.id}'
 
+  @property
+  def no_questions_left(self):
+    """Check if user answered all questions in current exam attempt."""
+
+    return AnswerAttempt.objects.filter(
+        attempt=self.id).count() == self.questions.count()
+
 
 class AnswerAttempt(models.Model):
   """Answer attempt model."""

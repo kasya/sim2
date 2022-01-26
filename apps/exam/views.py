@@ -39,7 +39,7 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     """Render intro page template for chosen exam. """
 
     context = super().get_context_data(**kwargs)
-    context['exam'] = Exam.objects.filter(id=self.kwargs['exam_id'])
+    context['exam'] = Exam.objects.get(id=self.kwargs['exam_id'])
     return context
 
   def post(self, request, exam_id):
