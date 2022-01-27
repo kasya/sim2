@@ -48,7 +48,6 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     Pre-populate attempt_questions table with questions from this exam.
     """
     exam = Exam.objects.get(id=exam_id)
-    exam_questions = exam.question_set.all()
     exam_duration_minutes = exam.duration_minutes
 
     if request.user.requires_extra_time:
@@ -56,7 +55,7 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
 
     current_attempt = ExamAttempt.objects.create(
         user=request.user, exam=exam, duration_minutes=exam_duration_minutes)
-    for question in exam_questions:
+    for question in exam.question_set.all():
       current_attempt.questions.add(question)
 
     return redirect(reverse('exam_page', args=(exam_id, current_attempt.id)))
