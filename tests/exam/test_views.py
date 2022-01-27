@@ -83,7 +83,7 @@ class ExamViewTestCase(TestCase):
     self.assertRedirects(
         response,
         reverse(
-            "exam_page",
+            'exam_page',
             kwargs={
                 'exam_id': exam.id,
                 'attempt_id': ExamAttempt.objects.get(user=user, exam=exam).id

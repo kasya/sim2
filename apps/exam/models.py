@@ -28,11 +28,11 @@ class Exam(models.Model):
 class ExamAttempt(models.Model):
   """Exam attempt model."""
 
-  STATUS_IN_PROGRESS = 'in_progress'
   STATUS_FINISHED = 'finished'
+  STATUS_IN_PROGRESS = 'in_progress'
 
-  STATUSES = ((STATUS_IN_PROGRESS, 'In progress'), (STATUS_FINISHED,
-                                                    'Finished'))
+  STATUSES = ((STATUS_FINISHED, 'Finished'), (STATUS_IN_PROGRESS,
+                                              'In progress'))
 
   created = models.DateTimeField(default=now, editable=False)
   duration_minutes = models.IntegerField(default=0)
@@ -49,7 +49,7 @@ class ExamAttempt(models.Model):
     return f'<ExamAttempt>: id# {self.id}'
 
   @property
-  def no_questions_left(self):
+  def all_questions_answered(self):
     """Check if user answered all questions in current exam attempt."""
 
     return AnswerAttempt.objects.filter(

@@ -48,7 +48,7 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     Pre-populate attempt_questions table with questions from this exam.
     """
     exam = Exam.objects.get(id=exam_id)
-    exam_questions = Question.objects.filter(exam=exam)
+    exam_questions = exam.question_set.all()
     exam_duration_minutes = exam.duration_minutes
 
     if request.user.requires_extra_time:
@@ -62,7 +62,7 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     return redirect(reverse('exam_page', args=(exam_id, current_attempt.id)))
 
 
-class ExamPageView(TemplateView):
+class ExamPageView(TemplateView, LoginRequiredMixin):
 
   template_name = 'exam/exam_attempt.html'
 
@@ -70,8 +70,7 @@ class ExamPageView(TemplateView):
     """Render page with actual questions. """
 
     context = super().get_context_data(**kwargs)
-    exam = Exam.objects.get(id=self.kwargs['exam_id'])
-    context['attempt'] = ExamAttempt.objects.get(exam=exam,
+    context['attempt'] = ExamAttempt.objects.get(exam_id=self.kwargs['exam_id'],
                                                  id=self.kwargs['attempt_id'])
     context['api_url'] = 'http://127.0.0.1:8000/'
 
@@ -93,7 +92,7 @@ class ExamFinishView(TemplateView):
     except ExamAttempt.DoesNotExist:
       raise Http404
 
-    if not current_attempt.no_questions_left:
+    if not current_attempt.all_questions_answered:
       raise Http404
 
     current_attempt.status = ExamAttempt.STATUS_FINISHED

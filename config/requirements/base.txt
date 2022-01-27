@@ -1,3 +1,4 @@
-# https://github.com/adamchainz/django-cors-headers
 
-django-cors-headers
+# https://www.django-rest-framework.org/
+
+django- rest-framework

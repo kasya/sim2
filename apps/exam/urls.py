@@ -9,11 +9,11 @@ from apps.exam.views import (ExamFinishView, ExamIntro, ExamList, ExamPageView,
                              SubjectList)
 
 urlpatterns = [
-    path(
-        'start/',
-        TemplateView.as_view(
-            template_name='exam/subject.html',
-            extra_context={'api_url': 'http://127.0.0.1:8000/'})),
+    path('start/',
+         TemplateView.as_view(
+             template_name='exam/subject.html',
+             extra_context={'api_url': 'http://127.0.0.1:8000/'}),
+         name='start'),
     path('api/subject/', SubjectList.as_view(), name='subject_list'),
     path('api/subject/<subject_id>/exams/',
          ExamList.as_view(),
