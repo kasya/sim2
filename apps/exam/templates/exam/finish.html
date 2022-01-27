@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if error_message %}
+{{ error_message }}
+{% else %}
+<div class="container-fluid">
+	<p>
+		Congratulations! You've finished exam in {{ exam.name }}. Your grade is {{
+		grade }}%.
+	</p>
+	{% if grade < exam.passing_grade %}
+	<div>
+		<p>
+			To pass this exam you need to answer at least {{ exam.passing_grade }}%
+			questions correctly. Would you like to try again?
+		</p>
+	</div>
+	<div>
+		<a href="{% url 'start' %}"><button class="btn bg-gradient-info w-auto me-1 mb-0">
+				Try again
+			</button></a>
+	</div>
+</div>
+
+{% endif %}
+{% endif %}
+{% endblock %}

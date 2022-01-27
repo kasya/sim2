@@ -35,7 +35,10 @@
 
 	<script src="https://unpkg.com/vue@3.2.23/dist/vue.global.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+	<script>
+		axios.defaults.xsrfCookieName = "csrftoken";
+		axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+	</script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
 	</script>
@@ -44,7 +47,6 @@
 </head>
 
 <body>
-
 	<nav class="navbar navbar-expand-lg navbar-dark bg-gradient-dark z-index-3 py-3">
 		<div class="container">
 			<a class="navbar-brand text-white" href="/" rel="tooltip" data-placement="bottom" target="_blank">
@@ -61,7 +63,6 @@
 			<div class="collapse navbar-collapse pt-3 pb-2 py-lg-0" id="navigation">
 				<ul class="navbar-nav navbar-nav-hover mx-right">
 					<li class="nav-item dropdown dropdown-hover mx-2">
-
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
 							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="/">
 							Home
@@ -108,7 +109,6 @@
 	<section class="content">
 		<header>{% block header %} {% endblock %}</header>
 		{% block content %} {% endblock %}
-
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
 			integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">

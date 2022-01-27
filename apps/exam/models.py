@@ -28,16 +28,17 @@ class Exam(models.Model):
 class ExamAttempt(models.Model):
   """Exam attempt model."""
 
-  IN_PROGRESS = 'in_progress'
-  FINISHED = 'finished'
+  STATUS_FINISHED = 'finished'
+  STATUS_IN_PROGRESS = 'in_progress'
 
-  STATUSES = ((IN_PROGRESS, 'In progress'), (FINISHED, 'Finished'))
+  STATUSES = ((STATUS_FINISHED, 'Finished'), (STATUS_IN_PROGRESS,
+                                              'In progress'))
 
   created = models.DateTimeField(default=now, editable=False)
   duration_minutes = models.IntegerField(default=0)
   grade = models.IntegerField(default=0)
   status = models.CharField(max_length=25,
-                            default=IN_PROGRESS,
+                            default=STATUS_IN_PROGRESS,
                             choices=STATUSES)
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
   exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
@@ -46,6 +47,13 @@ class ExamAttempt(models.Model):
 
   def __str__(self):
     return f'<ExamAttempt>: id# {self.id}'
+
+  @property
+  def all_questions_answered(self):
+    """Check if user answered all questions in current exam attempt."""
+
+    return AnswerAttempt.objects.filter(
+        attempt=self.id).count() == self.questions.count()
 
 
 class AnswerAttempt(models.Model):

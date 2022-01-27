@@ -28,18 +28,23 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.user.apps.UserConfig',
-    'apps.question.apps.QuestionConfig',
-    'apps.exam.apps.ExamConfig',
 ]
+
+PROJECT_APPS = [
+    'apps.user.apps.UserConfig', 'apps.question.apps.QuestionConfig',
+    'apps.exam.apps.ExamConfig'
+]
+
+EXTRA_APPS = ['rest_framework']
+
+INSTALLED_APPS = DJANGO_APPS + EXTRA_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,6 +65,11 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.ScryptPasswordHasher',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':
+        ('rest_framework.authentication.SessionAuthentication',),
+}
 
 ROOT_URLCONF = 'config.urls'
 
