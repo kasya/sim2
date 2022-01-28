@@ -5,8 +5,8 @@
 <div class="container-fluid">
 	<p>You chose {{ exam.name }} as your exam.</p>
 	<p>
-		This exam has N questions. The time to finish this exam is limited to N
-		minutes.
+		This exam has {{ exam.question_set.count }} questions. The time to finish
+		this exam is limited to {{ exam.duration_minutes }} minutes.
 	</p>
 	<p>Are you ready?</p>
 	<form method="POST">

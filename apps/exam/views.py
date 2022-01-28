@@ -6,6 +6,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import TemplateView
 
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -18,12 +19,16 @@ from apps.user.models import User
 class SubjectList(APIView):
   """Retrieve a list of all subjects."""
 
+  permission_classes = (IsAuthenticated,)
+
   def get(self, request):
     return Response(SubjectSerializer(Subject.objects.all(), many=True).data)
 
 
 class ExamList(APIView):
   """Retrieve a list of all exams."""
+
+  permission_classes = (IsAuthenticated,)
 
   def get(self, request, subject_id):
     """Pre-populating select menu with possible exams for chosen subject."""
@@ -76,7 +81,7 @@ class ExamPageView(TemplateView, LoginRequiredMixin):
     return context
 
 
-class ExamFinishView(TemplateView):
+class ExamFinishView(TemplateView, LoginRequiredMixin):
 
   template_name = 'exam/finish.html'
 

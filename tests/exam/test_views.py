@@ -41,6 +41,12 @@ class ExamViewTestCase(TestCase):
 
     subject = Subject.objects.get(name=self.subject_name)
     response = self.client.get(reverse('subject_list')).render()
+    # check that authentication works.
+    self.assertEqual(response.status_code, 403)
+    # login user and check again
+    user = User.objects.get(username=self.username)
+    self.client.login(username=user.username, password=self.password)
+    response = self.client.get(reverse('subject_list')).render()
     data = json.loads(response.content)
 
     self.assertEqual(response.status_code, 200)
@@ -50,6 +56,13 @@ class ExamViewTestCase(TestCase):
     """Check that method returns a list of all available exams."""
 
     exam = Exam.objects.get(name=self.exam_name)
+    response = self.client.get(
+        reverse('exam_list', kwargs={'subject_id': exam.subject.id})).render()
+    # check that authentication works.
+    self.assertEqual(response.status_code, 403)
+    # login user and check again
+    user = User.objects.get(username=self.username)
+    self.client.login(username=user.username, password=self.password)
     response = self.client.get(
         reverse('exam_list', kwargs={'subject_id': exam.subject.id})).render()
     data = json.loads(response.content)

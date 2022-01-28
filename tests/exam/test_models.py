@@ -1,9 +1,10 @@
 """Tests for Exam app models."""
 
+from django.test import TestCase
+
 from apps.exam.models import AnswerAttempt, Exam, ExamAttempt, Subject
 from apps.question.models import Answer, Question, QuestionCategory
 from apps.user.models import User
-from django.test import TestCase
 
 
 class ExamModelTestCase(TestCase):
