@@ -45,10 +45,7 @@ class QuestionView(APIView):
     data = request.data
     answer_ids = data.get('answers')
 
-    if not data or not answer_ids:
-      raise Http404
-
-    if not self.attempt.time_left_seconds:
+    if not data or not answer_ids or not self.attempt.time_left_seconds:
       raise Http404
 
     answer_attempts = AnswerAttempt.objects.filter(attempt=self.attempt,
