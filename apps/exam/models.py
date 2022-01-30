@@ -1,6 +1,9 @@
 """Exam models."""
+from datetime import datetime, timedelta
+
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.timezone import now
 
 
@@ -34,8 +37,8 @@ class ExamAttempt(models.Model):
   STATUSES = ((STATUS_FINISHED, 'Finished'), (STATUS_IN_PROGRESS,
                                               'In progress'))
 
-  created = models.DateTimeField(default=now, editable=False)
-  duration_minutes = models.IntegerField(default=0)
+  created = models.DateTimeField(default=timezone.now, editable=False)
+  duration_minutes = models.IntegerField(default=120)
   grade = models.IntegerField(default=0)
   status = models.CharField(max_length=25,
                             default=STATUS_IN_PROGRESS,
@@ -54,6 +57,14 @@ class ExamAttempt(models.Model):
 
     return AnswerAttempt.objects.filter(
         attempt=self.id).count() == self.questions.count()
+
+  @property
+  def time_left_seconds(self):
+    """Calculate how much time left in exam attempt until the end."""
+
+    end_time = self.created + timedelta(minutes=self.duration_minutes)
+    time_left = end_time - timezone.now()
+    return max(int(time_left.total_seconds()), 0)
 
 
 class AnswerAttempt(models.Model):

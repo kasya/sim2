@@ -1,6 +1,7 @@
 """Tests for Question app views."""
 
 import json
+from unittest import mock
 
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -17,6 +18,8 @@ class UserViewTestCase(TestCase):
   client = Client()
   username = 'John'
   password = 'password'
+  extra_user_username = 'Jane'
+  extra_user_password = 'multipass'
   exam_name = 'Exam 1'
   subject_name = 'Subject 1'
 
@@ -34,28 +37,38 @@ class UserViewTestCase(TestCase):
     question.wrong_answers.add(wrong_answers)
     user = User.objects.create_user(username=self.username,
                                     password=self.password)
+    extra_user = User.objects.create_user(username=self.extra_user_username,
+                                          password=self.extra_user_password)
 
   def test_api_get_question(self):
     """Check that method send the correct question to frontend."""
 
     exam = Exam.objects.get(name=self.exam_name)
     user = User.objects.get(username=self.username)
+    extra_user = User.objects.get(username=self.extra_user_username)
     attempt = ExamAttempt.objects.create(user=user, exam=exam)
     question = Question.objects.get(text='Question 1')
     attempt.questions.add(question)
 
     response = self.client.get(
-        reverse('question_api', kwargs={'attempt_id': attempt.id})).render()
-    self.assertEqual(response.status_code, 403)
+        reverse('question_api', kwargs={'attempt_id': attempt.id}))
+    self.assertEqual(response.status_code, 404)
+
+    # try to login different user and access page
+    self.client.login(username=extra_user.username,
+                      password=self.extra_user_password)
+    response = self.client.get(
+        reverse('question_api', kwargs={'attempt_id': attempt.id}))
+    self.assertEqual(response.status_code, 404)
 
     self.client.login(username=user.username, password=self.password)
-    response = self.client.get(
-        reverse('question_api', kwargs={'attempt_id': attempt.id})).render()
-    data = json.loads(response.content)
 
-    self.assertEqual(response.status_code, 200)
-
-    self.assertEqual(json.dumps(QuestionSerializer(question).data), data)
+    with mock.patch('random.shuffle', return_value=lambda x: x):
+      response = self.client.get(
+          reverse('question_api', kwargs={'attempt_id': attempt.id})).render()
+      data = json.loads(response.content)
+      self.assertEqual(response.status_code, 200)
+      self.assertEqual(QuestionSerializer(question).data, data)
 
   def test_api_post_question(self):
     """
