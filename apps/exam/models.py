@@ -6,6 +6,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.timezone import now
 
+from apps.question.models import Question
+
 
 class Subject(models.Model):
   """Subject model."""
@@ -65,6 +67,30 @@ class ExamAttempt(models.Model):
     end_time = self.created + timedelta(minutes=self.duration_minutes)
     time_left = end_time - timezone.now()
     return max(int(time_left.total_seconds()), 0)
+
+  def calculate_grade(self):
+    """Calculate the grade for an attempt."""
+
+    correct_answer_count = 0
+    grade = 0
+    answer_attempts = AnswerAttempt.objects.filter(attempt=self.id)
+    question_ids = [a.question.id for a in answer_attempts]
+
+    if answer_attempts:
+      for question_id in question_ids:
+        answer_attempt = AnswerAttempt.objects.get(question_id=question_id,
+                                                   attempt=self.id)
+        answer_ids = [a.id for a in answer_attempt.answers.all()]
+        if set(answer_ids) == set(
+            Question.objects.get(id=question_id).correct_answer_ids()):
+          correct_answer_count += 1
+
+      grade = round(correct_answer_count / answer_attempts.count() * 100)
+
+    self.grade = grade
+    self.save()
+
+    return grade
 
 
 class AnswerAttempt(models.Model):
