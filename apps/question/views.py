@@ -51,9 +51,10 @@ class QuestionView(APIView):
       answer_attempt = AnswerAttempt.objects.prefetch_related('answers').get(
           attempt=self.attempt, question=data['question_id'])
 
-      if set([a.id for a in answer_attempt.answers.all()]) == set(answer_ids):
+      if set((a.id for a in answer_attempt.answers.all())) == set(answer_ids):
         return Response(status=status.HTTP_200_OK)
 
+      # TODO(kasya): Switch from delete/add to update approach.
       answer_attempt.delete()
     except AnswerAttempt.DoesNotExist:
       pass
