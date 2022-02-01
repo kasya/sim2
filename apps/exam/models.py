@@ -80,8 +80,8 @@ class ExamAttempt(models.Model):
         question_id__in=question_ids,
         attempt=self.id).select_related('question').prefetch_related('answers'):
 
-      answer_ids = [a.id for a in answer_attempt.answers.all()]
-      if set(answer_ids) == set(answer_attempt.question.correct_answer_ids()):
+      if set((a.id for a in answer_attempt.answers.all())) == set(
+          answer_attempt.question.correct_answer_ids()):
         correct_answer_count += 1
 
     grade = round(correct_answer_count / answer_attempts.count() * 100)
