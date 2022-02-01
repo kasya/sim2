@@ -36,6 +36,9 @@ class Question(models.Model):
   def __str__(self):
     return f'<Question>: {self.text}, id# {self.id}:'
 
+  def correct_answer_ids(self):
+    return (answer.id for answer in self.correct_answers.all())
+
 
 class QuestionCategory(models.Model):
   """Question category model."""
