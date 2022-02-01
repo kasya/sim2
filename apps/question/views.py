@@ -47,15 +47,16 @@ class QuestionView(APIView):
 
     if not data or not answer_ids or not self.attempt.time_left_seconds:
       raise Http404
+    try:
+      answer_attempt = AnswerAttempt.objects.prefetch_related('answers').get(
+          attempt=self.attempt, question=data['question_id'])
 
-    answer_attempts = AnswerAttempt.objects.filter(attempt=self.attempt,
-                                                   question=data['question_id'])
+      if set([a.id for a in answer_attempt.answers.all()]) == set(answer_ids):
+        return Response(status=status.HTTP_200_OK)
 
-    if set(answer_attempts) == set(answer_ids):
-      return Response(status=status.HTTP_200_OK)
-
-    for answer in answer_attempts:
-      answer.delete()
+      answer_attempt.delete()
+    except AnswerAttempt.DoesNotExist:
+      pass
 
     aa = AnswerAttempt.objects.create(attempt_id=self.attempt.id,
                                       question_id=data['question_id'])
