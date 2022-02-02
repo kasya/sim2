@@ -1,6 +1,5 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -47,6 +46,8 @@ class QuestionView(APIView):
 
     if not data or not answer_ids or not self.attempt.time_left_seconds:
       raise Http404
+
+    # Try to update an existing answer attempt.
     try:
       answer_attempt = AnswerAttempt.objects.prefetch_related('answers').get(
           attempt=self.attempt, question=data['question_id'])
@@ -54,11 +55,12 @@ class QuestionView(APIView):
       if set((a.id for a in answer_attempt.answers.all())) == set(answer_ids):
         return Response(status=status.HTTP_200_OK)
 
-      # TODO(kasya): Switch from delete/add to update approach.
-      answer_attempt.delete()
+      answer_attempt.answers.set(Answer.objects.filter(id__in=answer_ids))
+      return Response(status=status.HTTP_200_OK)
     except AnswerAttempt.DoesNotExist:
       pass
 
+    # Create a new answer attempt.
     aa = AnswerAttempt.objects.create(attempt_id=self.attempt.id,
                                       question_id=data['question_id'])
     for answer_id in answer_ids:

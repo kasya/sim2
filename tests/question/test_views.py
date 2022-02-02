@@ -35,10 +35,9 @@ class UserViewTestCase(TestCase):
                                        exam=exam)
     question.correct_answers.add(correct_answers)
     question.wrong_answers.add(wrong_answers)
-    user = User.objects.create_user(username=self.username,
-                                    password=self.password)
-    extra_user = User.objects.create_user(username=self.extra_user_username,
-                                          password=self.extra_user_password)
+    User.objects.create_user(username=self.username, password=self.password)
+    User.objects.create_user(username=self.extra_user_username,
+                             password=self.extra_user_password)
 
   def test_api_get_question(self):
     """Check that method send the correct question to frontend."""
@@ -108,7 +107,7 @@ class UserViewTestCase(TestCase):
     self.assertEqual(answer_attempt.answers.first().id, correct_answer.id)
     # Check that answer id in db changes when we change our answers.
 
-    expected_result = [wrong_answer]
+    expected_result = wrong_answer
 
     response = self.client.post(reverse('question_api',
                                         kwargs={'attempt_id': attempt.id}),
@@ -118,4 +117,4 @@ class UserViewTestCase(TestCase):
                                 }).render()
     answer_attempt = AnswerAttempt.objects.get(attempt=attempt.id)
     self.assertIsNotNone(answer_attempt)
-    self.assertEqual(answer_attempt.answers.first().id, wrong_answer.id)
+    self.assertEqual(answer_attempt.answers.first().id, expected_result.id)
