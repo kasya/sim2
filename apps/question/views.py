@@ -56,7 +56,7 @@ class QuestionView(APIView):
         return Response(status=status.HTTP_200_OK)
 
       answer_attempt.answers.set(Answer.objects.filter(id__in=answer_ids))
-      return Response(status=status.HTTP_202_ACCEPTED)
+      return Response(status=status.HTTP_200_OK)
     except AnswerAttempt.DoesNotExist:
       pass
 
