@@ -1,6 +1,5 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -54,8 +53,9 @@ class QuestionView(APIView):
       if set((a.id for a in answer_attempt.answers.all())) == set(answer_ids):
         return Response(status=status.HTTP_200_OK)
 
-      # TODO(kasya): Switch from delete/add to update approach.
-      answer_attempt.delete()
+      answer_attempt.answers.set(Answer.objects.filter(id__in=answer_ids))
+      return Response(status=status.HTTP_202_ACCEPTED)
+
     except AnswerAttempt.DoesNotExist:
       pass
 
