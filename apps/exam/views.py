@@ -2,7 +2,7 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 
@@ -12,8 +12,6 @@ from rest_framework.views import APIView
 
 from apps.exam.models import Exam, ExamAttempt, Subject
 from apps.exam.serializers import ExamSerializer, SubjectSerializer
-from apps.question.models import Question
-from apps.user.models import User
 
 
 class SubjectList(APIView):
@@ -104,6 +102,12 @@ class ExamFinishView(TemplateView, LoginRequiredMixin):
 
     context = super().get_context_data(**kwargs)
     context['exam'] = current_attempt.exam
-    context['grade'] = current_attempt.grade
+    context['grade'] = current_attempt.calculate_grade()
+    if current_attempt.passed:
+      context[
+          'status'] = f'Congratulations! You passed the exam in {current_attempt.exam.name}! Your grade is {current_attempt.grade}%.'
+    else:
+      context[
+          'status'] = f"Sorry, you didn't pass the exam in {current_attempt.exam.name}. Your grade is {current_attempt.grade}%."
 
     return context

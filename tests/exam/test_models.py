@@ -106,3 +106,20 @@ class ExamModelTestCase(TestCase):
     answer_attempt2.answers.add(wrong_answer)
 
     self.assertEqual(exam_attempt.calculate_grade(), 50)
+
+  def test_passed(self):
+    """Check that method correctly checks if exam has been passed."""
+
+    exam = Exam.objects.get(name='Exam 1')
+    exam_attempt = ExamAttempt.objects.get(exam=exam)
+    exam_attempt.grade = 0
+    self.assertEqual(exam_attempt.passed, False)
+
+    exam_attempt.grade = 50
+    self.assertEqual(exam_attempt.passed, False)
+
+    exam_attempt.grade = 75
+    self.assertEqual(exam_attempt.passed, True)
+
+    exam_attempt.grade = 100
+    self.assertEqual(exam_attempt.passed, True)

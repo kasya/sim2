@@ -1,12 +1,9 @@
 """Exam models."""
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.utils.timezone import now
-
-from apps.question.models import Question
 
 
 class Subject(models.Model):
@@ -74,22 +71,29 @@ class ExamAttempt(models.Model):
     correct_answer_count = 0
     grade = 0
     answer_attempts = AnswerAttempt.objects.filter(attempt=self.id)
-    question_ids = [a.question.id for a in answer_attempts]
+    if answer_attempts:
+      question_ids = [a.question.id for a in answer_attempts]
 
-    for answer_attempt in AnswerAttempt.objects.filter(
-        question_id__in=question_ids,
-        attempt=self.id).select_related('question').prefetch_related('answers'):
+      for answer_attempt in AnswerAttempt.objects.filter(
+          question_id__in=question_ids, attempt=self.id).select_related(
+              'question').prefetch_related('answers'):
 
-      if set((a.id for a in answer_attempt.answers.all())) == set(
-          answer_attempt.question.correct_answer_ids()):
-        correct_answer_count += 1
+        if set((a.id for a in answer_attempt.answers.all())) == set(
+            answer_attempt.question.correct_answer_ids()):
+          correct_answer_count += 1
 
-    grade = round(correct_answer_count / answer_attempts.count() * 100)
+      grade = round(correct_answer_count / answer_attempts.count() * 100)
 
-    self.grade = grade
-    self.save()
+      self.grade = grade
+      self.save()
 
     return grade
+
+  @property
+  def passed(self):
+    """Check if user passed exam."""
+
+    return self.grade >= self.exam.passing_grade
 
 
 class AnswerAttempt(models.Model):
