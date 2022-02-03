@@ -105,9 +105,9 @@ class ExamFinishView(TemplateView, LoginRequiredMixin):
     context['grade'] = current_attempt.calculate_grade()
     if current_attempt.passed:
       context[
-          'status'] = f'Congratulations! You passed the exam in {current_attempt.exam.name}! Your grade is {current_attempt.grade}%.'
+          'status'] = f"Congratulations! You've passed the exam in {current_attempt.exam.name}! Your grade is {current_attempt.grade}%."
     else:
       context[
-          'status'] = f"Sorry, you didn't pass the exam in {current_attempt.exam.name}. Your grade is {current_attempt.grade}%."
+          'status'] = f"Sorry, you haven't passed the exam in {current_attempt.exam.name}. Your grade is {current_attempt.grade}%."
 
     return context

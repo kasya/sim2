@@ -1,5 +1,10 @@
-{% extends 'base.html' %} {% block content %} {% if error_message %} {{
-error_message }} {% else %}
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if error_message %}
+{{ error_message }}
+{% else %}
 <div class="container-fluid">
 	<div>
 		<p>{{ status }}</p>
@@ -9,12 +14,11 @@ error_message }} {% else %}
 		</p>
 	</div>
 	<div>
-		<a href="{% url 'start' %}"
-			><button class="btn bg-gradient-info w-auto me-1 mb-0">
+		<a href="{% url 'start' %}"><button class="btn bg-gradient-info w-auto me-1 mb-0">
 				Try again
-			</button></a
-		>
+			</button></a>
 	</div>
 </div>
 
-{% endif %} {% endblock %}
+{% endif %}
+{% endblock %}

@@ -71,21 +71,22 @@ class ExamAttempt(models.Model):
     correct_answer_count = 0
     grade = 0
     answer_attempts = AnswerAttempt.objects.filter(attempt=self.id)
-    if answer_attempts:
-      question_ids = [a.question.id for a in answer_attempts]
+    question_ids = [a.question.id for a in answer_attempts]
 
-      for answer_attempt in AnswerAttempt.objects.filter(
-          question_id__in=question_ids, attempt=self.id).select_related(
-              'question').prefetch_related('answers'):
+    for answer_attempt in AnswerAttempt.objects.filter(
+        question_id__in=question_ids,
+        attempt=self.id).select_related('question').prefetch_related('answers'):
 
-        if set((a.id for a in answer_attempt.answers.all())) == set(
-            answer_attempt.question.correct_answer_ids()):
-          correct_answer_count += 1
+      if set((a.id for a in answer_attempt.answers.all())) == set(
+          answer_attempt.question.correct_answer_ids()):
+        correct_answer_count += 1
 
-      grade = round(correct_answer_count / answer_attempts.count() * 100)
+      answer_attempt_count = answer_attempts.count()
+      if answer_attempt_count:
+        grade = round(correct_answer_count / answer_attempt_count * 100)
 
-      self.grade = grade
-      self.save()
+    self.grade = grade
+    self.save()
 
     return grade
 
