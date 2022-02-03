@@ -1,12 +1,9 @@
 """Exam models."""
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.utils.timezone import now
-
-from apps.question.models import Question
 
 
 class Subject(models.Model):
@@ -84,12 +81,20 @@ class ExamAttempt(models.Model):
           answer_attempt.question.correct_answer_ids()):
         correct_answer_count += 1
 
-    grade = round(correct_answer_count / answer_attempts.count() * 100)
+      answer_attempt_count = answer_attempts.count()
+      if answer_attempt_count:
+        grade = round(correct_answer_count / answer_attempt_count * 100)
 
     self.grade = grade
     self.save()
 
     return grade
+
+  @property
+  def passed(self):
+    """Check if user passed exam."""
+
+    return self.grade >= self.exam.passing_grade
 
 
 class AnswerAttempt(models.Model):
