@@ -11,7 +11,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.exam.models import Exam, ExamAttempt, Subject
-from apps.exam.serializers import ExamSerializer, SubjectSerializer
+from apps.exam.serializers import (ExamAttemptSerializer, ExamSerializer,
+                                   SubjectSerializer)
 
 
 class SubjectList(APIView):
@@ -111,3 +112,18 @@ class ExamFinishView(TemplateView, LoginRequiredMixin):
           'status'] = f"Sorry, you haven't passed the exam in {current_attempt.exam.name}. Your grade is {current_attempt.grade}%."
 
     return context
+
+
+class AttemptView(APIView):
+
+  permission_classes = (IsAuthenticated,)
+
+  def get(self, request, attempt_id):
+    """Returns exam attempt."""
+
+    try:
+      return Response(
+          ExamAttemptSerializer(ExamAttempt.objects.get(id=attempt_id)).data)
+
+    except ExamAttempt.DoesNotExist:
+      raise Http404

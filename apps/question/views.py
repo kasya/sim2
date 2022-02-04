@@ -7,13 +7,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.exam.models import AnswerAttempt, ExamAttempt
-from apps.question.models import Answer
+from apps.question.models import Answer, Question
 from apps.question.serializers import QuestionSerializer
 
 
-class QuestionView(APIView):
-  """Question object view."""
-
+class APIAttemptBase(APIView):
   permission_classes = (IsAuthenticated,)
 
   def dispatch(self, request, *args, **kwargs):
@@ -22,6 +20,10 @@ class QuestionView(APIView):
                                      id=self.kwargs['attempt_id'],
                                      user=request.user.id)
     return super().dispatch(request, *args, **kwargs)
+
+
+class QuestionView(APIAttemptBase):
+  """Question object view."""
 
   def get(self, request, **kwargs):
     """Send a question object to frontend."""
@@ -67,3 +69,24 @@ class QuestionView(APIView):
       aa.answers.add(Answer.objects.get(id=answer_id))
 
     return Response(status=status.HTTP_201_CREATED)
+
+
+class QuestionAnswerView(APIAttemptBase):
+
+  def get(self, request, **kwargs):
+    """Returns answered question and picked answers from AttemptAnswer."""
+
+    attempt = self.attempt
+    question = Question.objects.get(id=self.kwargs['question_id'])
+
+    if question not in attempt.questions.all():
+      raise Http404
+
+    answer_attempt = AnswerAttempt.objects.get(attempt=attempt.id,
+                                               question=question.id)
+
+    answer_ids = [answer.id for answer in answer_attempt.answers.all()]
+    return Response({
+        'answer_ids': answer_ids,
+        'question': QuestionSerializer(question).data
+    })

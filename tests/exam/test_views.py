@@ -7,7 +7,8 @@ from django.urls import reverse
 from rest_framework.response import Response
 
 from apps.exam.models import Exam, ExamAttempt, Subject
-from apps.exam.serializers import ExamSerializer, SubjectSerializer
+from apps.exam.serializers import (ExamAttemptSerializer, ExamSerializer,
+                                   SubjectSerializer)
 from apps.question.models import Answer, Question, QuestionCategory
 from apps.user.models import User
 
@@ -138,3 +139,23 @@ class ExamViewTestCase(TestCase):
     self.assertTemplateUsed('exam/finish.html')
     self.assertEqual(exam, response.context['exam'])
     self.assertEqual(exam_attempt.grade, response.context['grade'])
+
+  def test_get_attempt(self):
+
+    exam = Exam.objects.get(name=self.exam_name)
+    user = User.objects.get(username=self.username)
+
+    # Check case when user is not authorized.
+    response = self.client.get(reverse('get_attempt', kwargs={'attempt_id': 1}))
+    self.assertEqual(response.status_code, 403)
+    # Check case when there's no attempt yet.
+    self.client.login(username=user.username, password=self.password)
+    response = self.client.get(reverse('get_attempt', kwargs={'attempt_id': 1}))
+    self.assertEqual(response.status_code, 404)
+
+    exam_attempt = ExamAttempt.objects.create(exam=exam, user=user)
+    response = self.client.get(
+        reverse('get_attempt', kwargs={'attempt_id': exam_attempt.id}))
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.data, ExamAttemptSerializer(exam_attempt).data)

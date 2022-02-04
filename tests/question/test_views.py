@@ -22,17 +22,23 @@ class UserViewTestCase(TestCase):
   extra_user_password = 'multipass'
   exam_name = 'Exam 1'
   subject_name = 'Subject 1'
+  question_text = 'Question 1'
 
   def setUp(self):
 
     question_category = QuestionCategory.objects.create(name='Category 1')
     subject = Subject.objects.create(name=self.subject_name)
     exam = Exam.objects.create(name=self.exam_name, subject=subject)
+    exam1 = Exam.objects.create(name='Exam 2', subject=subject)
+
     correct_answers = Answer.objects.create(text='Answer 1')
     wrong_answers = Answer.objects.create(text='Answer 2')
-    question = Question.objects.create(text='Question 1',
+    question = Question.objects.create(text=self.question_text,
                                        category=question_category,
                                        exam=exam)
+    self.question2 = Question.objects.create(text='Question 2',
+                                             category=question_category,
+                                             exam=exam1)
     question.correct_answers.add(correct_answers)
     question.wrong_answers.add(wrong_answers)
     User.objects.create_user(username=self.username, password=self.password)
@@ -46,7 +52,7 @@ class UserViewTestCase(TestCase):
     user = User.objects.get(username=self.username)
     extra_user = User.objects.get(username=self.extra_user_username)
     attempt = ExamAttempt.objects.create(user=user, exam=exam)
-    question = Question.objects.get(text='Question 1')
+    question = Question.objects.get(text=self.question_text)
     attempt.questions.add(question)
 
     response = self.client.get(
@@ -78,7 +84,7 @@ class UserViewTestCase(TestCase):
     exam = Exam.objects.get(name=self.exam_name)
     user = User.objects.get(username=self.username)
     attempt = ExamAttempt.objects.create(user=user, exam=exam)
-    question = Question.objects.get(text='Question 1')
+    question = Question.objects.get(text=self.question_text)
     attempt.questions.add(question)
     correct_answer = Answer.objects.get(text='Answer 1')
     wrong_answer = Answer.objects.get(text='Answer 2')
@@ -118,3 +124,52 @@ class UserViewTestCase(TestCase):
     answer_attempt = AnswerAttempt.objects.get(attempt=attempt.id)
     self.assertIsNotNone(answer_attempt)
     self.assertEqual(answer_attempt.answers.first().id, expected_result.id)
+
+  def test_get_attempt_question_answers(self):
+    """Check that method return correct question and answers to it."""
+
+    exam = Exam.objects.get(name=self.exam_name)
+    subject = Subject.objects.get(name=self.subject_name)
+    user = User.objects.get(username=self.username)
+    attempt = ExamAttempt.objects.create(user=user, exam=exam)
+    question = Question.objects.get(text=self.question_text)
+    answer_attempt = AnswerAttempt.objects.create(attempt=attempt,
+                                                  question=question)
+    correct_answer = Answer.objects.get(text='Answer 1')
+
+    # Check for anonymous user.
+    response = self.client.get(
+        reverse('question_answers_api',
+                kwargs={
+                    'attempt_id': attempt.id,
+                    'question_id': question.id
+                }))
+    self.assertEqual(response.status_code, 404)
+
+    # Check for case when question not in this attempt.
+    self.client.login(username=user.username, password=self.password)
+
+    response = self.client.get(
+        reverse('question_answers_api',
+                kwargs={
+                    'attempt_id': attempt.id,
+                    'question_id': self.question2.id
+                }))
+
+    self.assertEqual(response.status_code, 404)
+
+    attempt.questions.add(question)
+    answer_attempt.answers.add(correct_answer)
+    with mock.patch('random.shuffle', return_value=lambda x: x):
+
+      response = self.client.get(
+          reverse('question_answers_api',
+                  kwargs={
+                      'attempt_id': attempt.id,
+                      'question_id': question.id
+                  }))
+
+      self.assertEqual(response.status_code, 200)
+      self.assertEqual(response.data['answer_ids'], [correct_answer.id])
+      self.assertEqual(response.data['question'],
+                       QuestionSerializer(question).data)
