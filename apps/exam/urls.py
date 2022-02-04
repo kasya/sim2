@@ -5,8 +5,8 @@ from django.views.generic import TemplateView
 
 from apps.exam.models import Exam
 from apps.exam.serializers import ExamSerializer
-from apps.exam.views import (ExamFinishView, ExamIntro, ExamList, ExamPageView,
-                             SubjectList)
+from apps.exam.views import (AttemptView, ExamFinishView, ExamIntro, ExamList,
+                             ExamPageView, SubjectList)
 
 urlpatterns = [
     path('start/',
@@ -25,4 +25,6 @@ urlpatterns = [
     path('exam/<attempt_id>/finish',
          ExamFinishView.as_view(),
          name='exam_finish'),
+    path('api/attempt/<attempt_id>/', AttemptView.as_view(),
+         name='get_attempt'),
 ]
