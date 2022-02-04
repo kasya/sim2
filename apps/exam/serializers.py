@@ -19,9 +19,8 @@ class SubjectSerializer(serializers.ModelSerializer):
 
 class ExamAttemptSerializer(serializers.ModelSerializer):
 
-  questions = serializers.Serializer()
-  time_left_seconds = serializers.SerializerMethodField()
   attempt_duration_minutes = serializers.SerializerMethodField()
+  time_left_seconds = serializers.SerializerMethodField()
   question_count = serializers.SerializerMethodField()
 
   def get_question_count(self, obj):

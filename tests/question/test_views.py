@@ -158,6 +158,16 @@ class UserViewTestCase(TestCase):
 
     self.assertEqual(response.status_code, 404)
 
+    # Check for case when question does not exist in db.
+    response = self.client.get(
+        reverse('question_answers_api',
+                kwargs={
+                    'attempt_id': attempt.id,
+                    'question_id': 5
+                }))
+
+    self.assertEqual(response.status_code, 404)
+
     attempt.questions.add(question)
     answer_attempt.answers.add(correct_answer)
     with mock.patch('random.shuffle', return_value=lambda x: x):

@@ -12,6 +12,7 @@ from apps.question.serializers import QuestionSerializer
 
 
 class APIAttemptBase(APIView):
+
   permission_classes = (IsAuthenticated,)
 
   def dispatch(self, request, *args, **kwargs):
@@ -76,13 +77,12 @@ class QuestionAnswerView(APIAttemptBase):
   def get(self, request, **kwargs):
     """Returns answered question and picked answers from AttemptAnswer."""
 
-    attempt = self.attempt
-    question = Question.objects.get(id=self.kwargs['question_id'])
+    question = get_object_or_404(Question, id=self.kwargs['question_id'])
 
-    if question not in attempt.questions.all():
+    if question not in self.attempt.questions.all():
       raise Http404
 
-    answer_attempt = AnswerAttempt.objects.get(attempt=attempt.id,
+    answer_attempt = AnswerAttempt.objects.get(attempt=self.attempt.id,
                                                question=question.id)
 
     answer_ids = [answer.id for answer in answer_attempt.answers.all()]
