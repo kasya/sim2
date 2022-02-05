@@ -94,7 +94,10 @@ class ExamViewTestCase(TestCase):
         reverse('exam_intro', kwargs={'exam_id': exam.id}))
 
     self.assertEqual(response.status_code, 302)
-    # self.assertRedirects(response, reverse('login'))
+    self.assertRedirects(
+        response,
+        f'{reverse("login")}?next={reverse("exam_intro", kwargs={"exam_id": exam.id})}'
+    )
 
     # Check extra time addition to exam.
     self.client.login(username=user.username, password=self.password)
