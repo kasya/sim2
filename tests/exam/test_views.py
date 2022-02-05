@@ -89,10 +89,24 @@ class ExamViewTestCase(TestCase):
 
     exam = Exam.objects.get(name=self.exam_name)
     user = User.objects.get(username=self.username)
-
-    self.client.login(username=user.username, password=self.password)
+    # Try to access page without authentication.
     response = self.client.post(
         reverse('exam_intro', kwargs={'exam_id': exam.id}))
+
+    self.assertEqual(response.status_code, 302)
+    # self.assertRedirects(response, reverse('login'))
+
+    # Check extra time addition to exam.
+    self.client.login(username=user.username, password=self.password)
+    user.requires_extra_time = True
+    user.save()
+    response = self.client.post(
+        reverse('exam_intro', kwargs={'exam_id': exam.id}))
+    exam_attempt = ExamAttempt.objects.get(user=user, exam=exam)
+    self.assertEqual(exam_attempt.duration_minutes, exam.duration_minutes + 30)
+    # Check question count for an exam attempt:
+    self.assertEqual(exam_attempt.questions.all().count(),
+                     exam.question_set.all().count())
 
     self.assertRedirects(
         response,
