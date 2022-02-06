@@ -31,7 +31,9 @@ class Question(models.Model):
   wrong_answers = models.ManyToManyField(Answer, related_name='wrong_answers')
 
   category = models.ForeignKey('QuestionCategory', on_delete=models.CASCADE)
-  exam = models.ForeignKey('exam.Exam', on_delete=models.CASCADE)
+  exam = models.ForeignKey('exam.Exam',
+                           related_name='questions',
+                           on_delete=models.CASCADE)
 
   def __str__(self):
     return f'<Question>: {self.text}, id# {self.id}:'

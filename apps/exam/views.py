@@ -1,5 +1,7 @@
 """Exam views methods."""
 
+import random
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect
@@ -13,6 +15,7 @@ from rest_framework.views import APIView
 from apps.exam.models import Exam, ExamAttempt, Subject
 from apps.exam.serializers import (ExamAttemptSerializer, ExamSerializer,
                                    SubjectSerializer)
+from apps.question.models import Question
 
 
 class SubjectList(APIView):
@@ -59,8 +62,13 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
 
     current_attempt = ExamAttempt.objects.create(
         user=request.user, exam=exam, duration_minutes=exam_duration_minutes)
-    for question in exam.question_set.all():
-      current_attempt.questions.add(question)
+
+    question_pool_ids = [question.id for question in exam.questions.all()]
+    if exam.questions.count() > exam.question_count:
+      question_pool_ids = random.sample(question_pool_ids, exam.question_count)
+
+    current_attempt.questions.set(
+        Question.objects.filter(id__in=question_pool_ids))
 
     return redirect(reverse('exam_page', args=(exam_id, current_attempt.id)))
 

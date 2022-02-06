@@ -22,6 +22,7 @@ class Exam(models.Model):
   name = models.CharField(max_length=1000)
   passing_grade = models.IntegerField(default=75)
   subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+  question_count = models.IntegerField(default=50)
 
   def __str__(self):
     return f'<Exam>: {self.name}, id# {self.id}'
