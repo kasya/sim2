@@ -120,4 +120,6 @@ class UserViewTestCase(TestCase):
             'last_name': 'Doe',
         })
     self.assertEqual(User.objects.count(), 3)
+    self.assertIn('You already have an account with us.',
+                  response.content.decode('utf-8'))
     self.assertTemplateUsed('user/signup.html')
