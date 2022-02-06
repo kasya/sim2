@@ -12,6 +12,9 @@ class UserViewTestCase(TestCase):
   client = Client()
   fixtures = ["user.json"]
 
+  user_id = 4
+  user_password = 'mypassword'
+
   def test_login_get(self):
     """Check that login page renders correctly."""
 
@@ -22,17 +25,17 @@ class UserViewTestCase(TestCase):
   def test_login_post_correct_user(self):
     """Check that user logged in correctly and redirected to profile page."""
 
-    user = User.objects.get(id=4)
+    user = User.objects.get(id=self.user_id)
     response = self.client.post(reverse('login'), {
         'email': user.email,
-        'password': 'mypassword',
+        'password': self.user_password,
     })
     self.assertRedirects(response, reverse('profile'))
 
   def test_login_post_invalid_password(self):
     """Check that invalid password redirects back to login."""
 
-    user = User.objects.get(id=4)
+    user = User.objects.get(id=self.user_id)
     response = self.client.post(reverse('login'), {
         'email': user.email,
         'password': 'wrongpass',
@@ -43,8 +46,8 @@ class UserViewTestCase(TestCase):
   def test_logout_get(self):
     """Check that user logged out and redirected to login page."""
 
-    user = User.objects.get(id=4)
-    self.client.login(email=user.email, password='mypassword')
+    user = User.objects.get(id=self.user_id)
+    self.client.login(email=user.email, password=self.user_password)
 
     response = self.client.get(reverse('logout'))
 
@@ -60,8 +63,8 @@ class UserViewTestCase(TestCase):
   def test_profile_get(self):
     """Check that profile page renders correctly."""
 
-    user = User.objects.get(id=4)
-    self.client.login(username=user.email, password='mypassword')
+    user = User.objects.get(id=self.user_id)
+    self.client.login(username=user.email, password=self.user_password)
 
     response = self.client.get(reverse('profile'))
     self.assertEqual(response.status_code, 200)
@@ -70,8 +73,8 @@ class UserViewTestCase(TestCase):
   def test_profile_get_message(self):
     """Check that page shows greeting message with username."""
 
-    user = User.objects.get(id=4)
-    self.client.login(username=user.email, password='mypassword')
+    user = User.objects.get(id=self.user_id)
+    self.client.login(username=user.email, password=self.user_password)
 
     response = self.client.get(reverse('profile'))
     self.assertIn(f'Hello, {user.email}', response.content.decode('utf-8'))
@@ -102,9 +105,18 @@ class UserViewTestCase(TestCase):
 
     response = self.client.post(
         reverse('signup'), {
-            'email': 'test@email.com',
+            'email': 'secondtest@email.com',
             'password': 'password',
-            'first_name': 'Julie',
+            'first_name': 'Janice',
+            'last_name': 'Doe',
+        })
+    self.assertRedirects(response, reverse('login'))
+
+    response = self.client.post(
+        reverse('signup'), {
+            'email': 'secondtest@email.com',
+            'password': 'password',
+            'first_name': 'Janice',
             'last_name': 'Doe',
         })
     self.assertEqual(User.objects.count(), 3)
