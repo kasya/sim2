@@ -63,14 +63,15 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     current_attempt = ExamAttempt.objects.create(
         user=request.user, exam=exam, duration_minutes=exam_duration_minutes)
 
-    if exam.question_set.all().count() < exam.question_count:
-      question_pool_ids = [question.id for question in exam.question_set.all()]
+    if exam.questions.count() < exam.question_count:
+      question_pool_ids = [question.id for question in exam.questions.all()]
     else:
-      question_pool_ids = random.sample(range(exam.question_set.all().count()),
-                                        exam.question_count)
+      question_pool_ids = random.sample(
+          [question.id for question in exam.questions.all()],
+          exam.question_count)
 
-    for question in Question.objects.filter(id__in=question_pool_ids):
-      current_attempt.questions.add(question)
+    current_attempt.questions.set(
+        Question.objects.filter(id__in=question_pool_ids))
 
     return redirect(reverse('exam_page', args=(exam_id, current_attempt.id)))
 

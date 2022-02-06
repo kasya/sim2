@@ -108,8 +108,7 @@ class ExamViewTestCase(TestCase):
     exam_attempt = ExamAttempt.objects.get(user=user, exam=exam)
     self.assertEqual(exam_attempt.duration_minutes, exam.duration_minutes + 30)
     # Check question count for an exam attempt:
-    self.assertEqual(exam_attempt.questions.all().count(),
-                     exam.question_set.all().count())
+    self.assertEqual(exam_attempt.questions.count(), exam.questions.count())
 
     self.assertRedirects(
         response,
