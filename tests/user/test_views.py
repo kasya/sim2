@@ -1,14 +1,19 @@
 """Tests for User app views."""
 
-from apps.user.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
+
+from apps.user.models import User
 
 
 class UserViewTestCase(TestCase):
   """Test cases for user views."""
 
   client = Client()
+  fixtures = ["user.json"]
+
+  user_id = 4
+  user_password = 'mypassword'
 
   def test_login_get(self):
     """Check that login page renders correctly."""
@@ -17,54 +22,62 @@ class UserViewTestCase(TestCase):
     self.assertEqual(response.status_code, 200)
     self.assertTemplateUsed('user/login.html')
 
-  def test_login_post(self):
+  def test_login_post_correct_user(self):
     """Check that user logged in correctly and redirected to profile page."""
 
-    email = 'john@test.com'
-    password = 'smith'
-
-    User.objects.create_user(username=email, password=password)
+    user = User.objects.get(id=self.user_id)
     response = self.client.post(reverse('login'), {
-        'email': email,
-        'password': password,
+        'email': user.email,
+        'password': self.user_password,
     })
     self.assertRedirects(response, reverse('profile'))
 
-    response = self.client.get(reverse('profile'))
-    self.assertIn('Logout', response.content.decode('utf-8'))
+  def test_login_post_invalid_password(self):
+    """Check that invalid password redirects back to login."""
+
+    user = User.objects.get(id=self.user_id)
+    response = self.client.post(reverse('login'), {
+        'email': user.email,
+        'password': 'wrongpass',
+    })
+    self.assertTemplateUsed('user/login.html')
+    self.assertEqual(response.status_code, 200)
 
   def test_logout_get(self):
     """Check that user logged out and redirected to login page."""
 
-    email = 'john@test.com'
-    password = 'smith'
-
-    User.objects.create_user(username=email, password=password)
-    self.client.login(email=email, password=password)
+    user = User.objects.get(id=self.user_id)
+    self.client.login(email=user.email, password=self.user_password)
 
     response = self.client.get(reverse('logout'))
 
     self.assertRedirects(response, reverse('login'))
 
-  def test_profile_get(self):
-    """Check that profile page renders correctly."""
+  def test_profile_get_incognito(self):
+    """Check that profile page is not available for unauthorized users."""
 
-    # try to access page incognito.
     response = self.client.get(reverse('profile'))
     self.assertRedirects(response,
                          f'{reverse("login")}?next={reverse("profile")}')
 
-    # login user and try to access page.
-    email = 'john@test.com'
-    password = 'smith'
+  def test_profile_get(self):
+    """Check that profile page renders correctly."""
 
-    User.objects.create_user(username=email, password=password)
-    self.client.login(username=email, password=password)
+    user = User.objects.get(id=self.user_id)
+    self.client.login(username=user.email, password=self.user_password)
 
     response = self.client.get(reverse('profile'))
     self.assertEqual(response.status_code, 200)
     self.assertTemplateUsed('user/profile.html')
-    self.assertIn(f'Hello, {email}', response.content.decode('utf-8'))
+
+  def test_profile_get_message(self):
+    """Check that page shows greeting message with username."""
+
+    user = User.objects.get(id=self.user_id)
+    self.client.login(username=user.email, password=self.user_password)
+
+    response = self.client.get(reverse('profile'))
+    self.assertIn(f'Hello, {user.email}', response.content.decode('utf-8'))
 
   def test_signup_get(self):
     """Check that signup page renders correctly."""
@@ -74,30 +87,39 @@ class UserViewTestCase(TestCase):
     self.assertTemplateUsed('user/signup.html')
 
   def test_signup_post(self):
-    """Check that user is signed up and added to database."""
-
-    # Signup user.
-    email = 'john@test.com'
-    password = 'smith'
-    first_name = 'john'
-    last_name = 'smith'
+    """Check that user is redirected to login page after signing up
+    and that user has been added to db.."""
 
     response = self.client.post(
         reverse('signup'), {
-            'email': email,
-            'password': password,
-            'first_name': first_name,
-            'last_name': last_name,
+            'email': 'test@email.com',
+            'password': 'password',
+            'first_name': 'Julie',
+            'last_name': 'Doe',
         })
     self.assertRedirects(response, reverse('login'))
-    self.assertEqual(User.objects.count(), 1)
+    self.assertEqual(User.objects.count(), 3)
 
-    # try to signup same user again.
+  def test_signup_post_same_user(self):
+    """Check that system doesn't add same user to db twice."""
+
     response = self.client.post(
         reverse('signup'), {
-            'email': email,
-            'password': password,
-            'first_name': first_name,
-            'last_name': last_name,
+            'email': 'secondtest@email.com',
+            'password': 'password',
+            'first_name': 'Janice',
+            'last_name': 'Doe',
         })
-    self.assertEqual(User.objects.count(), 1)
+    self.assertRedirects(response, reverse('login'))
+
+    response = self.client.post(
+        reverse('signup'), {
+            'email': 'secondtest@email.com',
+            'password': 'password',
+            'first_name': 'Janice',
+            'last_name': 'Doe',
+        })
+    self.assertEqual(User.objects.count(), 3)
+    self.assertIn('You already have an account with us.',
+                  response.content.decode('utf-8'))
+    self.assertTemplateUsed('user/signup.html')
