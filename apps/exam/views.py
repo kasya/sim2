@@ -63,12 +63,9 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     current_attempt = ExamAttempt.objects.create(
         user=request.user, exam=exam, duration_minutes=exam_duration_minutes)
 
-    if exam.questions.count() < exam.question_count:
-      question_pool_ids = [question.id for question in exam.questions.all()]
-    else:
-      question_pool_ids = random.sample(
-          [question.id for question in exam.questions.all()],
-          exam.question_count)
+    question_pool_ids = [question.id for question in exam.questions.all()]
+    if exam.questions.count() > exam.question_count:
+      question_pool_ids = random.sample(question_pool_ids, exam.question_count)
 
     current_attempt.questions.set(
         Question.objects.filter(id__in=question_pool_ids))
