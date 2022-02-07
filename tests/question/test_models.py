@@ -10,8 +10,8 @@ class QuestionModelTestCase(TestCase):
   """Test cases for Question models."""
 
   fixtures = [
-      'exam_attempt.json', 'user.json', 'exam.json', 'subject.json',
-      'question.json', 'question_category.json', 'answer.json'
+      'answer.json', 'exam.json', 'exam_attempt.json', 'question.json',
+      'question_category.json', 'subject.json', 'user.json'
   ]
 
   def test_answer_model(self):
