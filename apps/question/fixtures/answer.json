@@ -1,0 +1,30 @@
+[
+{
+    "model": "question.answer",
+    "pk": 1,
+    "fields": {
+        "text": "Correct!"
+    }
+},
+{
+    "model": "question.answer",
+    "pk": 2,
+    "fields": {
+        "text": "Wrong!"
+    }
+},
+{
+    "model": "question.answer",
+    "pk": 3,
+    "fields": {
+        "text": "Wrong again!"
+    }
+},
+{
+    "model": "question.answer",
+    "pk": 4,
+    "fields": {
+        "text": "Correctomundo!"
+    }
+}
+]
