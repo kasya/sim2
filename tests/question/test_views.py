@@ -25,9 +25,9 @@ class QuestionViewTestCase(TestCase):
   def setUp(self):
 
     self.attempt = ExamAttempt.objects.get(id=1)
-    self.user = User.objects.get(id=4)
     self.exam = Exam.objects.get(id=1)
     self.question = Question.objects.get(id=1)
+    self.user = User.objects.get(id=4)
 
   def test_api_get_question_anonymous(self):
     """Try to access page with anonymous user."""
@@ -36,8 +36,8 @@ class QuestionViewTestCase(TestCase):
         reverse('question_api', kwargs={'attempt_id': self.attempt.id}))
     self.assertEqual(response.status_code, 404)
 
-  def test_api_get_question_wrong_user(self):
-    """Try to login wrong user and access page."""
+  def test_api_get_question_unauthorized_user(self):
+    """Try to login unauthorized user and access page."""
 
     user = User.objects.get(id=5)
     self.client.login(username=user.username, password=self.user_password)
@@ -46,7 +46,7 @@ class QuestionViewTestCase(TestCase):
     self.assertEqual(response.status_code, 404)
 
   def test_api_get_question(self):
-    """Check that method send correct data to frontend."""
+    """Check that method sends correct data to frontend."""
 
     self.client.login(username=self.user.username, password=self.user_password)
     with mock.patch('random.shuffle', return_value=lambda x: x):
@@ -57,7 +57,6 @@ class QuestionViewTestCase(TestCase):
       data = json.loads(response.content)
       self.assertEqual(response.status_code, 200)
       self.assertEqual(QuestionSerializer(self.question).data, data)
-      AnswerAttempt.objects.create(attempt=self.attempt, question=self.question)
 
   def test_api_get_question_no_more_questions(self):
     """
@@ -87,16 +86,16 @@ class QuestionViewTestCase(TestCase):
     """
 
     self.client.login(username=self.user.username, password=self.user_password)
-    required_data = ({}, {'question_id': 1})
+    invalid_data = ({}, {'question_id': 1})
 
-    for data in required_data:
+    for data in invalid_data:
       response = self.client.post(reverse(
           'question_api', kwargs={'attempt_id': self.attempt.id}),
                                   data=data)
       self.assertEqual(response.status_code, 404)
 
   def test_api_post_question(self):
-    """Check that method create Answer Attempt and save answer to db."""
+    """Check that method creates Answer Attempt and saves answer to db."""
 
     correct_answer = Answer.objects.get(id=1)
     attempt = ExamAttempt.objects.create(user=self.user, exam=self.exam)
@@ -117,9 +116,9 @@ class QuestionViewTestCase(TestCase):
   def test_api_post_update_answers(self):
     """Check that answer id in db changes when we change our answers."""
 
+    attempt = ExamAttempt.objects.create(user=self.user, exam=self.exam)
     correct_answer = Answer.objects.get(id=1)
     wrong_answer = Answer.objects.get(id=2)
-    attempt = ExamAttempt.objects.create(user=self.user, exam=self.exam)
 
     self.client.login(username=self.user.username, password=self.user_password)
 
