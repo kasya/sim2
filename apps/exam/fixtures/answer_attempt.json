@@ -1,0 +1,23 @@
+[
+{
+    "model": "exam.answerattempt",
+    "pk": 2,
+    "fields": {
+        "attempt": 1,
+        "question": 1,
+        "answers": [
+            3
+        ]
+    }
+},
+{
+    "model": "exam.answerattempt",
+    "pk": 3,
+    "fields": {
+        "attempt": 2,
+        "question": 1,
+        "answers": [
+        ]
+    }
+}
+]

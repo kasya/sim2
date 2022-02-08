@@ -1,0 +1,41 @@
+[
+{
+    "model": "exam.examattempt",
+    "pk": 1,
+    "fields": {
+        "created": "2022-01-26T01:49:12.793Z",
+        "duration_minutes": 120,
+        "grade": 100,
+        "status": "in_progress",
+        "user": 4,
+        "exam": 1,
+        "questions": [1]
+    }
+},
+{
+    "model": "exam.examattempt",
+    "pk": 2,
+    "fields": {
+        "created": "2022-01-26T01:49:17.028Z",
+        "duration_minutes": 120,
+        "grade": 0,
+        "status": "in_progress",
+        "user": 4,
+        "exam": 2,
+        "questions": []
+    }
+},
+{
+    "model": "exam.examattempt",
+    "pk": 3,
+    "fields": {
+        "created": "2022-01-26T01:49:26.379Z",
+        "duration_minutes": 120,
+        "grade": 0,
+        "status": "in_progress",
+        "user": 5,
+        "exam": 1,
+        "questions": []
+    }
+}
+]

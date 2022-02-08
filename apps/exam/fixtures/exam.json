@@ -1,0 +1,35 @@
+[
+{
+    "model": "exam.exam",
+    "pk": 1,
+    "fields": {
+        "duration_minutes": 120,
+        "name": "English Grammar",
+        "passing_grade": 75,
+        "subject": 1,
+        "question_count": 50
+    }
+},
+{
+    "model": "exam.exam",
+    "pk": 2,
+    "fields": {
+        "duration_minutes": 120,
+        "name": "Exam 2",
+        "passing_grade": 75,
+        "subject": 2,
+        "question_count": 50
+    }
+},
+{
+    "model": "exam.exam",
+    "pk": 3,
+    "fields": {
+        "duration_minutes": 120,
+        "name": "English Vocabular",
+        "passing_grade": 75,
+        "subject": 1,
+        "question_count": 50
+    }
+}
+]
