@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from rest_framework.response import Response
 
-from apps.exam.models import Exam, ExamAttempt, Subject, AnswerAttempt
+from apps.exam.models import AnswerAttempt, Exam, ExamAttempt, Subject
 from apps.exam.serializers import (ExamAttemptSerializer, ExamSerializer,
                                    SubjectSerializer)
 from apps.question.models import Answer, Question, QuestionCategory
@@ -32,8 +32,8 @@ class ExamViewTestCase(TestCase):
     self.subject = Subject.objects.get(id=1)
     self.user = User.objects.get(id=4)
 
-  def test_api_subject_list_get_unauthorized(self):
-    """Check access for unauthorized user."""
+  def test_api_subject_list_get_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
 
     response = self.client.get(reverse('subject_list')).render()
     self.assertEqual(response.status_code, 403)
@@ -42,16 +42,13 @@ class ExamViewTestCase(TestCase):
     """Check that method returns a list of all available subjects."""
 
     self.client.login(username=self.user.username, password=self.password)
-    response = self.client.get(reverse('subject_list')).render()
-    data = json.loads(response.content)
-    subjects = [
-        SubjectSerializer(subject).data for subject in Subject.objects.all()
-    ]
+    response = self.client.get(reverse('subject_list'))
     self.assertEqual(response.status_code, 200)
-    self.assertEqual(subjects, data)
+    self.assertEqual(
+        SubjectSerializer(Subject.objects.all(), many=True).data, response.data)
 
-  def test_api_exam_list_get_unauthorized(self):
-    """Check access for unauthorized user."""
+  def test_api_exam_list_get_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
 
     response = self.client.get(
         reverse('exam_list',
@@ -63,18 +60,14 @@ class ExamViewTestCase(TestCase):
 
     self.client.login(username=self.user.username, password=self.password)
     response = self.client.get(
-        reverse('exam_list',
-                kwargs={'subject_id': self.exam.subject.id})).render()
-    data = json.loads(response.content)
-    exams = [
-        ExamSerializer(exam).data
-        for exam in Exam.objects.filter(subject=self.subject)
-    ]
+        reverse('exam_list', kwargs={'subject_id': self.exam.subject.id}))
     self.assertEqual(response.status_code, 200)
-    self.assertEqual(exams, data)
+    self.assertEqual(
+        ExamSerializer(Exam.objects.filter(subject=self.exam.subject),
+                       many=True).data, response.data)
 
-  def test_exam_intro_get_unauthorized(self):
-    """Check access for unauthorized user."""
+  def test_exam_intro_get_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
 
     response = self.client.get(
         reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
@@ -95,17 +88,16 @@ class ExamViewTestCase(TestCase):
     self.assertEqual(response.status_code, 200)
     self.assertEqual(self.exam, response.context['exam'])
 
-  def test_exam_intro_post_unauthorized(self):
-    """Check access for unauthorized user."""
+  def test_exam_intro_post_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
 
     response = self.client.post(
         reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
 
     self.assertEqual(response.status_code, 302)
     self.assertRedirects(
-        response,
-        f'{reverse("login")}?next={reverse("exam_intro", kwargs={"exam_id": self.exam.id})}'
-    )
+        response, f'{reverse("login")}?next='
+        f'{reverse("exam_intro", kwargs={"exam_id": self.exam.id})}')
 
   def test_exam_intro_post_extra_time(self):
     """Check extra time addition to exam."""
@@ -118,7 +110,6 @@ class ExamViewTestCase(TestCase):
         reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
     exam_attempt = ExamAttempt.objects.filter(user=self.user,
                                               exam=self.exam).last()
-
     self.assertEqual(exam_attempt.duration_minutes,
                      self.exam.duration_minutes + 30)
 
@@ -172,7 +163,7 @@ class ExamViewTestCase(TestCase):
     self.assertEqual('http://127.0.0.1:8000/', response.context['api_url'])
 
   def test_exam_finish_get_unauthorized_user(self):
-    """Check access for unauthorized user."""
+    """Check access denied for unauthorized user."""
 
     user = User.objects.get(id=5)
     self.client.login(username=user.username, password=self.password)
@@ -218,14 +209,14 @@ class ExamViewTestCase(TestCase):
     self.assertEqual(response.context['exam'], self.exam)
     self.assertEqual(response.context['grade'], self.attempt.grade)
 
-  def test_get_attempt_unauthorized(self):
-    """Check access for unauthorized user."""
+  def test_get_attempt_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
 
     response = self.client.get(reverse('get_attempt', kwargs={'attempt_id': 1}))
     self.assertEqual(response.status_code, 403)
 
   def test_get_attempt_no_attempt(self):
-    """Check case when there's no such attempt in db."""
+    """Check case when there's no such attempt in DB."""
 
     self.client.login(username=self.user.username, password=self.password)
     response = self.client.get(reverse('get_attempt',
