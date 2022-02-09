@@ -25,7 +25,7 @@
         "type": "multiple_choice",
         "weight": 1,
         "category": 1,
-        "exam": 1,
+        "exam": 2,
         "correct_answers": [
             1
         ],

@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from rest_framework.response import Response
 
-from apps.exam.models import Exam, ExamAttempt, Subject
+from apps.exam.models import AnswerAttempt, Exam, ExamAttempt, Subject
 from apps.exam.serializers import (ExamAttemptSerializer, ExamSerializer,
                                    SubjectSerializer)
 from apps.question.models import Answer, Question, QuestionCategory
@@ -17,161 +17,218 @@ class ExamViewTestCase(TestCase):
   """Test cases for user views."""
 
   client = Client()
-  username = 'John'
-  password = 'password'
-  exam_name = 'Exam 1'
-  subject_name = 'Subject 1'
+  fixtures = [
+      'answer.json', 'exam.json', 'exam_attempt.json', 'question.json',
+      'question_category.json', 'subject.json', 'user.json'
+  ]
+  password = 'mypassword'
 
   def setUp(self):
 
-    subject = Subject.objects.create(name=self.subject_name)
-    exam = Exam.objects.create(name=self.exam_name, subject=subject)
-    user = User.objects.create_user(username=self.username,
-                                    password=self.password)
-    question_category = QuestionCategory.objects.create(name='Category 1')
-    question = Question.objects.create(text='Question 1',
-                                       category=question_category,
-                                       exam=exam)
-    correct_answers = Answer.objects.create(text='Answer 1')
-    wrong_answers = Answer.objects.create(text='Answer 2')
-    question.correct_answers.add(correct_answers)
-    question.wrong_answers.add(wrong_answers)
+    self.answer = Answer.objects.get(id=1)
+    self.attempt = ExamAttempt.objects.get(id=1)
+    self.exam = Exam.objects.get(id=1)
+    self.question = Question.objects.get(id=1)
+    self.subject = Subject.objects.get(id=1)
+    self.user = User.objects.get(id=4)
+
+  def test_api_subject_list_get_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
+
+    response = self.client.get(reverse('subject_list')).render()
+    self.assertEqual(response.status_code, 403)
 
   def test_api_subject_list_get(self):
     """Check that method returns a list of all available subjects."""
 
-    subject = Subject.objects.get(name=self.subject_name)
-    response = self.client.get(reverse('subject_list')).render()
-    # check that authentication works.
-    self.assertEqual(response.status_code, 403)
-    # login user and check again
-    user = User.objects.get(username=self.username)
-    self.client.login(username=user.username, password=self.password)
-    response = self.client.get(reverse('subject_list')).render()
-    data = json.loads(response.content)
-
+    self.client.login(username=self.user.username, password=self.password)
+    response = self.client.get(reverse('subject_list'))
     self.assertEqual(response.status_code, 200)
-    self.assertEqual([SubjectSerializer(subject).data], data)
+    self.assertEqual(
+        SubjectSerializer(Subject.objects.all(), many=True).data, response.data)
+
+  def test_api_exam_list_get_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
+
+    response = self.client.get(
+        reverse('exam_list',
+                kwargs={'subject_id': self.exam.subject.id})).render()
+    self.assertEqual(response.status_code, 403)
 
   def test_api_exam_list_get(self):
     """Check that method returns a list of all available exams."""
 
-    exam = Exam.objects.get(name=self.exam_name)
+    self.client.login(username=self.user.username, password=self.password)
     response = self.client.get(
-        reverse('exam_list', kwargs={'subject_id': exam.subject.id})).render()
-    # check that authentication works.
-    self.assertEqual(response.status_code, 403)
-    # login user and check again
-    user = User.objects.get(username=self.username)
-    self.client.login(username=user.username, password=self.password)
-    response = self.client.get(
-        reverse('exam_list', kwargs={'subject_id': exam.subject.id})).render()
-    data = json.loads(response.content)
-
+        reverse('exam_list', kwargs={'subject_id': self.exam.subject.id}))
     self.assertEqual(response.status_code, 200)
-    self.assertEqual([ExamSerializer(exam).data], data)
+    self.assertEqual(
+        ExamSerializer(Exam.objects.filter(subject=self.exam.subject),
+                       many=True).data, response.data)
 
-  def test_exam_intro_get(self):
-    """Check that intro page for a given exam renders correctly."""
-
-    user = User.objects.get(username=self.username)
-
-    self.client.login(username=user.username, password=self.password)
-    exam = Exam.objects.get(name=self.exam_name)
+  def test_exam_intro_get_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
 
     response = self.client.get(
-        reverse('exam_intro', kwargs={'exam_id': exam.id}))
-
-    self.assertEqual(response.status_code, 200)
-    self.assertEqual(exam, response.context['exam'])
-
-  def test_exam_intro_post(self):
-
-    exam = Exam.objects.get(name=self.exam_name)
-    user = User.objects.get(username=self.username)
-    # Try to access page without authentication.
-    response = self.client.post(
-        reverse('exam_intro', kwargs={'exam_id': exam.id}))
+        reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
 
     self.assertEqual(response.status_code, 302)
     self.assertRedirects(
         response,
-        f'{reverse("login")}?next={reverse("exam_intro", kwargs={"exam_id": exam.id})}'
+        f'{reverse("login")}?next={reverse("exam_intro", kwargs={"exam_id": self.exam.id})}'
     )
 
-    # Check extra time addition to exam.
-    self.client.login(username=user.username, password=self.password)
-    user.requires_extra_time = True
-    user.save()
+  def test_exam_intro_get(self):
+    """Check that intro page for a given exam renders correctly."""
+
+    self.client.login(username=self.user.username, password=self.password)
+    response = self.client.get(
+        reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(self.exam, response.context['exam'])
+
+  def test_exam_intro_post_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
+
     response = self.client.post(
-        reverse('exam_intro', kwargs={'exam_id': exam.id}))
-    exam_attempt = ExamAttempt.objects.get(user=user, exam=exam)
-    self.assertEqual(exam_attempt.duration_minutes, exam.duration_minutes + 30)
-    # Check question count for an exam attempt:
-    self.assertEqual(exam_attempt.questions.count(), exam.questions.count())
+        reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
+
+    self.assertEqual(response.status_code, 302)
+    self.assertRedirects(
+        response, f'{reverse("login")}?next='
+        f'{reverse("exam_intro", kwargs={"exam_id": self.exam.id})}')
+
+  def test_exam_intro_post_extra_time(self):
+    """Check extra time addition to exam."""
+
+    self.client.login(username=self.user.username, password=self.password)
+    self.user.requires_extra_time = True
+    self.user.save()
+
+    response = self.client.post(
+        reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
+    exam_attempt = ExamAttempt.objects.filter(user=self.user,
+                                              exam=self.exam).last()
+    self.assertEqual(exam_attempt.duration_minutes,
+                     self.exam.duration_minutes + 30)
+
+  def test_exam_intro_post(self):
+    """
+    Check question count for an exam attempt 
+    and that method redirects to exam page.
+    """
+
+    self.client.login(username=self.user.username, password=self.password)
+    response = self.client.post(
+        reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
+    exam_attempt = ExamAttempt.objects.filter(user=self.user,
+                                              exam=self.exam).last()
+    self.assertEqual(exam_attempt.questions.count(),
+                     self.exam.questions.count())
 
     self.assertRedirects(
         response,
-        reverse(
-            'exam_page',
-            kwargs={
-                'exam_id': exam.id,
-                'attempt_id': ExamAttempt.objects.get(user=user, exam=exam).id
-            }))
+        reverse('exam_page',
+                kwargs={
+                    'exam_id':
+                        self.exam.id,
+                    'attempt_id':
+                        ExamAttempt.objects.filter(user=self.user,
+                                                   exam=self.exam).last().id
+                }))
 
   def test_exam_page_get(self):
-    """Check that page renders with the right attempt_id."""
-
-    exam = Exam.objects.get(name=self.exam_name)
-    user = User.objects.get(username=self.username)
-    exam_attempt = ExamAttempt.objects.create(user=user, exam=exam)
-    attempt = ExamAttempt.objects.get(exam=exam)
+    """Check that method renders correctly."""
 
     response = self.client.get(
         reverse('exam_page',
                 kwargs={
-                    'exam_id': exam.id,
-                    'attempt_id': exam_attempt.id
+                    'exam_id': self.exam.id,
+                    'attempt_id': self.attempt.id
                 }))
     self.assertEqual(response.status_code, 200)
     self.assertTemplateUsed('exam/exam_attempt.html')
-    self.assertEqual(exam_attempt, response.context['attempt'])
+
+  def test_exam_page_get_context(self):
+    """Check that method returns correct context data."""
+
+    response = self.client.get(
+        reverse('exam_page',
+                kwargs={
+                    'exam_id': self.exam.id,
+                    'attempt_id': self.attempt.id
+                }))
+    self.assertEqual(self.attempt, response.context['attempt'])
     self.assertEqual('http://127.0.0.1:8000/', response.context['api_url'])
 
-  def test_exam_finish_get(self):
-    """Check that finish page renders correctly and shows grade for the exam."""
+  def test_exam_finish_get_unauthorized_user(self):
+    """Check access denied for unauthorized user."""
 
-    exam = Exam.objects.get(name=self.exam_name)
-    user = User.objects.get(username=self.username)
+    user = User.objects.get(id=5)
     self.client.login(username=user.username, password=self.password)
-
-    exam_attempt = ExamAttempt.objects.create(user=user, exam=exam)
-    attempt = ExamAttempt.objects.get(exam=exam)
-
     response = self.client.get(
-        reverse('exam_finish', kwargs={'attempt_id': exam_attempt.id}))
-
-    self.assertEqual(response.status_code, 200)
-    self.assertTemplateUsed('exam/finish.html')
-    self.assertEqual(exam, response.context['exam'])
-    self.assertEqual(exam_attempt.grade, response.context['grade'])
-
-  def test_get_attempt(self):
-
-    exam = Exam.objects.get(name=self.exam_name)
-    user = User.objects.get(username=self.username)
-
-    # Check case when user is not authorized.
-    response = self.client.get(reverse('get_attempt', kwargs={'attempt_id': 1}))
-    self.assertEqual(response.status_code, 403)
-    # Check case when there's no attempt yet.
-    self.client.login(username=user.username, password=self.password)
-    response = self.client.get(reverse('get_attempt', kwargs={'attempt_id': 1}))
+        reverse('exam_finish', kwargs={'attempt_id': self.attempt.id}))
     self.assertEqual(response.status_code, 404)
 
-    exam_attempt = ExamAttempt.objects.create(exam=exam, user=user)
+  def test_exam_finish_get_not_all_questions(self):
+    """Check that method returns 404 if exam is not finished."""
+
+    self.client.login(username=self.user.username, password=self.password)
     response = self.client.get(
-        reverse('get_attempt', kwargs={'attempt_id': exam_attempt.id}))
+        reverse('exam_finish', kwargs={'attempt_id': self.attempt.id}))
+    self.assertEqual(response.status_code, 404)
+    self.assertTemplateUsed('exam/finish.html')
+
+  def test_exam_finish_get(self):
+    """Check that finish page renders correctly."""
+
+    self.client.login(username=self.user.username, password=self.password)
+    answer_attempt = AnswerAttempt.objects.create(attempt=self.attempt,
+                                                  question=self.question)
+    answer_attempt.answers.add(self.answer)
+    answer_attempt.save()
+
+    response = self.client.get(
+        reverse('exam_finish', kwargs={'attempt_id': self.attempt.id}))
+    self.assertEqual(response.status_code, 200)
+    self.assertTemplateUsed('exam/finish.html')
+
+  def test_exam_finish_get_context(self):
+    """Check that method returns correct context."""
+
+    self.client.login(username=self.user.username, password=self.password)
+    answer_attempt = AnswerAttempt.objects.create(attempt=self.attempt,
+                                                  question=self.question)
+    answer_attempt.answers.add(self.answer)
+    answer_attempt.save()
+
+    response = self.client.get(
+        reverse('exam_finish', kwargs={'attempt_id': self.attempt.id}))
+
+    self.assertEqual(response.context['exam'], self.exam)
+    self.assertEqual(response.context['grade'], self.attempt.grade)
+
+  def test_get_attempt_unauthenticated(self):
+    """Check access denied for unauthenticated user."""
+
+    response = self.client.get(reverse('get_attempt', kwargs={'attempt_id': 1}))
+    self.assertEqual(response.status_code, 403)
+
+  def test_get_attempt_no_attempt(self):
+    """Check case when there's no such attempt in DB."""
+
+    self.client.login(username=self.user.username, password=self.password)
+    response = self.client.get(reverse('get_attempt',
+                                       kwargs={'attempt_id': 10}))
+    self.assertEqual(response.status_code, 404)
+
+  def test_get_attempt(self):
+    """Check that method returns correct exam attempt."""
+
+    self.client.login(username=self.user.username, password=self.password)
+    response = self.client.get(
+        reverse('get_attempt', kwargs={'attempt_id': self.attempt.id}))
 
     self.assertEqual(response.status_code, 200)
-    self.assertEqual(response.data, ExamAttemptSerializer(exam_attempt).data)
+    self.assertEqual(response.data, ExamAttemptSerializer(self.attempt).data)

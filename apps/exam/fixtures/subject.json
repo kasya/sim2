@@ -1,0 +1,16 @@
+[
+{
+    "model": "exam.subject",
+    "pk": 1,
+    "fields": {
+        "name": "English"
+    }
+},
+{
+    "model": "exam.subject",
+    "pk": 2,
+    "fields": {
+        "name": "AWS"
+    }
+}
+]
