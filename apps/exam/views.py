@@ -55,13 +55,12 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     Pre-populate attempt_questions table with questions from this exam.
     """
     exam = Exam.objects.get(id=exam_id)
-    exam_duration_minutes = exam.duration_minutes
-
-    if request.user.requires_extra_time:
-      exam_duration_minutes += 30
 
     current_attempt = ExamAttempt.objects.create(
-        user=request.user, exam=exam, duration_minutes=exam_duration_minutes)
+        user=request.user,
+        exam=exam,
+        duration_minutes=exam.duration_minutes +
+        request.user.required_extra_time)
 
     question_pool_ids = [question.id for question in exam.questions.all()]
     if exam.questions.count() > exam.question_count:
