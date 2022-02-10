@@ -52,6 +52,7 @@ class ExamAttempt(models.Model):
     return f'<ExamAttempt>: id# {self.id}'
 
   def save(self, *args, **kwargs):
+    """Add user required extra time to attempt duration and save attempt."""
 
     if not self.id:
       self.duration_minutes += self.user.required_extra_time
