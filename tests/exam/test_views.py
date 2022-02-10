@@ -103,7 +103,7 @@ class ExamViewTestCase(TestCase):
     """Check extra time addition to exam."""
 
     self.client.login(username=self.user.username, password=self.password)
-    self.user.requires_extra_time = True
+    self.user.required_extra_time = 30
     self.user.save()
 
     response = self.client.post(
@@ -111,7 +111,7 @@ class ExamViewTestCase(TestCase):
     exam_attempt = ExamAttempt.objects.filter(user=self.user,
                                               exam=self.exam).last()
     self.assertEqual(exam_attempt.duration_minutes,
-                     self.exam.duration_minutes + 30)
+                     self.exam.duration_minutes + self.user.required_extra_time)
 
   def test_exam_intro_post(self):
     """

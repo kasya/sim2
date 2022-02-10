@@ -46,7 +46,10 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     """Render intro page template for chosen exam. """
 
     context = super().get_context_data(**kwargs)
-    context['exam'] = Exam.objects.get(id=self.kwargs['exam_id'])
+    exam = Exam.objects.get(id=self.kwargs['exam_id'])
+    context['exam'] = exam
+    context[
+        'attempt_duration'] = exam.duration_minutes + self.request.user.required_extra_time
     return context
 
   def post(self, request, exam_id):
@@ -55,13 +58,8 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     Pre-populate attempt_questions table with questions from this exam.
     """
     exam = Exam.objects.get(id=exam_id)
-    exam_duration_minutes = exam.duration_minutes
 
-    if request.user.requires_extra_time:
-      exam_duration_minutes += 30
-
-    current_attempt = ExamAttempt.objects.create(
-        user=request.user, exam=exam, duration_minutes=exam_duration_minutes)
+    current_attempt = ExamAttempt.objects.create(user=request.user, exam=exam)
 
     question_pool_ids = [question.id for question in exam.questions.all()]
     if exam.questions.count() > exam.question_count:
