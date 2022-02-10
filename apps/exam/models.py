@@ -51,6 +51,13 @@ class ExamAttempt(models.Model):
   def __str__(self):
     return f'<ExamAttempt>: id# {self.id}'
 
+  def save(self, *args, **kwargs):
+
+    if not self.id:
+      self.duration_minutes += self.user.required_extra_time
+
+    super().save(*args, **kwargs)
+
   @property
   def all_questions_answered(self):
     """Check if user answered all questions in current exam attempt."""
