@@ -42,7 +42,7 @@ PROJECT_APPS = [
     'apps.exam.apps.ExamConfig'
 ]
 
-EXTRA_APPS = ['rest_framework']
+EXTRA_APPS = ['rest_framework', 'webpack_loader']
 
 INSTALLED_APPS = DJANGO_APPS + EXTRA_APPS + PROJECT_APPS
 
@@ -166,3 +166,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'dist/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'vue/webpack-stats.json'),
+        'POLL_INTERVAL': 1,
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+    }
+}

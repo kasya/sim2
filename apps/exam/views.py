@@ -81,7 +81,6 @@ class ExamPageView(TemplateView, LoginRequiredMixin):
     context = super().get_context_data(**kwargs)
     context['attempt'] = ExamAttempt.objects.get(exam_id=self.kwargs['exam_id'],
                                                  id=self.kwargs['attempt_id'])
-    context['api_url'] = 'http://127.0.0.1:8000/'
 
     return context
 
