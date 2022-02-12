@@ -1,63 +1,65 @@
 <template>
-  <div v-if="error">{{ error }}</div>
   <div>
-    <h4>{{ question.text }}</h4>
-    <form class="form-check">
-      <ul>
-        <li v-for="a in question.answers" v-bind:key="a.id">
-          <input
-            v-if="question.type == 'multiple_choice'"
-            class="form-check-input"
-            type="radio"
-            name="single-answer"
-            v-bind:id="a.id"
-            v-bind:value="a.id"
-            v-model="selected"
-          />
-
-          <input
-            v-else
-            class="form-check-input"
-            type="checkbox"
-            name="multiple-answer"
-            v-bind:id="a.id"
-            v-bind:value="a.id"
-            v-model="checked"
-          />
-          <label v-bind:for="a.id"></label>
-          <p>{{ a.text }}</p>
-        </li>
-      </ul>
-    </form>
+    <div v-if="error">{{ error }}</div>
     <div>
-      <button
-        class="btn bg-gradient-info w-auto me-1 mb-0"
-        type="button"
-        v-on:click="recordAnswer"
-        v-show="question.text"
-        :disabled="!selected && !checked.length"
-      >
-        Submit
-      </button>
+      <h4>{{ question.text }}</h4>
+      <form class="form-check">
+        <ul>
+          <li v-for="a in question.answers" v-bind:key="a.id">
+            <input
+              v-if="question.type == 'multiple_choice'"
+              class="form-check-input"
+              type="radio"
+              name="single-answer"
+              v-bind:id="a.id"
+              v-bind:value="a.id"
+              v-model="selected"
+            />
 
-      <nav>
-        <ul class="pagination d-flex justify-content-center">
-          <li
-            class="page-item"
-            v-for="i in attempt.question_count"
-            v-bind:key="id"
-          >
-            <a
-              class="page-link"
-              href="#"
-              @click="getQuestion"
-              v-bind:id="'q_' + i"
-              :data-q-id="answered_questions[i - 1]"
-              >{{ i }}</a
-            >
+            <input
+              v-else
+              class="form-check-input"
+              type="checkbox"
+              name="multiple-answer"
+              v-bind:id="a.id"
+              v-bind:value="a.id"
+              v-model="checked"
+            />
+            <label v-bind:for="a.id"></label>
+            <p>{{ a.text }}</p>
           </li>
         </ul>
-      </nav>
+      </form>
+      <div>
+        <button
+          class="btn bg-gradient-info w-auto me-1 mb-0"
+          type="button"
+          v-on:click="recordAnswer"
+          v-show="question.text"
+          :disabled="!selected && !checked.length"
+        >
+          Submit
+        </button>
+
+        <nav>
+          <ul class="pagination d-flex justify-content-center">
+            <li
+              class="page-item"
+              v-for="i in attempt.question_count"
+              v-bind:key="id"
+            >
+              <a
+                class="page-link"
+                href="#"
+                @click="getQuestion"
+                v-bind:id="'q_' + i"
+                :data-q-id="answered_questions[i - 1]"
+                >{{ i }}</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
   </div>
 </template>
