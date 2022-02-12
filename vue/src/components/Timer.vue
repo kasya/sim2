@@ -2,6 +2,7 @@
   <div class="progress">
     <div
       class="progress-bar progress-bar-striped bg-info"
+      id="progress_bar"
       role="progressbar"
       aria-valuemin="0"
       aria-valuemax="100"
@@ -13,7 +14,7 @@
 import axios from "axios";
 
 export default {
-  name: "Timer",
+  name: "TimerComponent",
   props: {
     attemptId: String,
   },
@@ -36,8 +37,10 @@ export default {
                 (that.attempt.attempt_duration_minutes * 60)
             );
             if (percent >= 0) {
-              $(".progress-bar").css("width", percent + "%");
-              $(".progress-bar").text(
+              document
+                .getElementById("progress_bar")
+                .css("width", percent + "%");
+              document.getElementById("progress_bar").text(
                 Math.floor(that.attempt.time_left_seconds / 60)
                   .toString()
                   .padStart(2, "0") +
@@ -56,7 +59,7 @@ export default {
         })
         .catch((error) => {
           // eslint-disable-next-line
-          this.error = error.response.data.message;
+					this.error = error.response.data.message;
           console.error(error.response);
         });
     },
