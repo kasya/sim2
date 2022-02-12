@@ -11,8 +11,7 @@ from apps.exam.views import (AttemptView, ExamFinishView, ExamIntro, ExamList,
 urlpatterns = [
     path('start/',
          TemplateView.as_view(
-             template_name='exam/subject.html',
-             extra_context={'api_url': 'http://127.0.0.1:8000/'}),
+             template_name='exam/subject.html'),
          name='start'),
     path('api/subject/', SubjectList.as_view(), name='subject_list'),
     path('api/subject/<subject_id>/exams/',

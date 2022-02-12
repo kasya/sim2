@@ -1,15 +1,12 @@
 """Tests for Exam app views."""
-import json
 
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from rest_framework.response import Response
-
 from apps.exam.models import AnswerAttempt, Exam, ExamAttempt, Subject
 from apps.exam.serializers import (ExamAttemptSerializer, ExamSerializer,
                                    SubjectSerializer)
-from apps.question.models import Answer, Question, QuestionCategory
+from apps.question.models import Answer, Question
 from apps.user.models import User
 
 
@@ -106,8 +103,7 @@ class ExamViewTestCase(TestCase):
     self.user.required_extra_time = 30
     self.user.save()
 
-    response = self.client.post(
-        reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
+    self.client.post(reverse('exam_intro', kwargs={'exam_id': self.exam.id}))
     exam_attempt = ExamAttempt.objects.filter(user=self.user,
                                               exam=self.exam).last()
     self.assertEqual(exam_attempt.duration_minutes,
@@ -115,7 +111,7 @@ class ExamViewTestCase(TestCase):
 
   def test_exam_intro_post(self):
     """
-    Check question count for an exam attempt 
+    Check question count for an exam attempt
     and that method redirects to exam page.
     """
 
@@ -160,7 +156,6 @@ class ExamViewTestCase(TestCase):
                     'attempt_id': self.attempt.id
                 }))
     self.assertEqual(self.attempt, response.context['attempt'])
-    self.assertEqual('http://127.0.0.1:8000/', response.context['api_url'])
 
   def test_exam_finish_get_unauthorized_user(self):
     """Check access denied for unauthorized user."""

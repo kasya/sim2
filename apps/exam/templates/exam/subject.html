@@ -1,18 +1,9 @@
 {% extends 'base.html' %}
+
 {% load static %}
+{% load webpack_loader %}
 
 {% block content %}
-
-<div id="app">
-	<subject-component api-url="{{ api_url }}"> </subject-component>
-</div>
-
-<!-- Import App -->
-<script src="{% static 'main.js' %}"></script>
-<!-- Import Component -->
-<script src="{% static 'components/Subject.js' %}"></script>
-<!-- Mount App -->
-<script>
-	const mountedApp = app.mount("#app");
-</script>
+<div id="subject"></div>
+{% render_bundle 'subject' %}
 {% endblock content %}

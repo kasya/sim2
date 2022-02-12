@@ -1,22 +1,12 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load webpack_loader %}
 
 {% block content %}
-
 <div class="container-fluid">
-	<div id="app">
-		<timer-component api-url="{{ api_url }}" attempt-id="{{ attempt.id }}"></timer-component>
-		<exam-component api-url="{{ api_url }}" attempt-id="{{ attempt.id }}">
-		</exam-component>
+	<div id="exam" data-attempt-id="{{ attempt.id }}">
 	</div>
 </div>
-
-<script src="{% static 'main.js' %}"></script>
-<script src="{% static 'components/Timer.js' %}"></script>
-<script src="{% static 'components/Exam.js' %}"></script>
-
-<script>
-	const mountedApp = app.mount("#app");
-</script>
+{% render_bundle 'exam' %}
 {% endblock %}
