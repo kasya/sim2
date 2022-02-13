@@ -187,19 +187,13 @@ export default {
 				.get(this.attemptPath)
 				.then((res) => {
 					this.attempt = res.data;
-					for (var i = 0; i < this.attempt.answer_attempts.length; i++) {
-						if (
-							this.answered_questions.indexOf(
-								this.attempt.answer_attempts[i]["question"]
-							) == -1
-						)
-							this.answered_questions.push(
-								this.attempt.answer_attempts[i]["question"]
-							);
+					for (let i = 0; i < this.attempt.answer_attempts.length; i++) {
+						let question_id = this.attempt.answer_attempts[i]["question"];
+						if (this.answered_questions.indexOf(question_id) == -1)
+							this.answered_questions.push(question_id);
 					}
 				})
 				.catch((error) => {
-					// eslint-disable-next-line
 					this.error = error.message;
 					console.error(error);
 				});
