@@ -222,6 +222,10 @@ class ExamViewTestCase(TestCase):
     """Check that method returns correct exam attempt."""
 
     self.client.login(username=self.user.username, password=self.password)
+    answer_attempt = AnswerAttempt.objects.create(attempt=self.attempt,
+                                                  question=self.question)
+    answer_attempt.answers.set([self.answer])
+
     response = self.client.get(
         reverse('get_attempt', kwargs={'attempt_id': self.attempt.id}))
 

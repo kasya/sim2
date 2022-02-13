@@ -187,14 +187,14 @@ export default {
 				.get(this.attemptPath)
 				.then((res) => {
 					this.attempt = res.data;
-					for (var i = 0; i < this.attempt.attempt_answers.length; i++) {
+					for (var i = 0; i < this.attempt.answer_attempts.length; i++) {
 						if (
 							this.answered_questions.indexOf(
-								this.attempt.attempt_answers[i].question_id
+								this.attempt.answer_attempts[i]["question"]
 							) == -1
 						)
 							this.answered_questions.push(
-								this.attempt.attempt_answers[i].question_id
+								this.attempt.answer_attempts[i]["question"]
 							);
 					}
 				})
