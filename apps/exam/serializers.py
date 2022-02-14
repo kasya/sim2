@@ -26,10 +26,10 @@ class SubjectSerializer(serializers.ModelSerializer):
 
 class ExamAttemptSerializer(serializers.ModelSerializer):
 
-  attempt_duration_minutes = serializers.SerializerMethodField()
-  time_left_seconds = serializers.SerializerMethodField()
-  question_count = serializers.SerializerMethodField()
   answer_attempts = serializers.SerializerMethodField()
+  attempt_duration_minutes = serializers.SerializerMethodField()
+  question_count = serializers.SerializerMethodField()
+  time_left_seconds = serializers.SerializerMethodField()
 
   def get_question_count(self, obj):
     return obj.questions.count()
@@ -48,5 +48,5 @@ class ExamAttemptSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = ExamAttempt
-    fields = ('user', 'exam', 'questions', 'time_left_seconds',
-              'attempt_duration_minutes', 'question_count', 'answer_attempts')
+    fields = ('answer_attempts', 'attempt_duration_minutes', 'exam',
+              'time_left_seconds', 'questions', 'question_count', 'user')

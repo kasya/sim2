@@ -102,7 +102,6 @@ export default {
 					}
 				})
 				.catch((error) => {
-					// eslint-disable-next-line
 					this.error = error.response.data.message;
 					console.error(error.response);
 				});
@@ -124,7 +123,6 @@ export default {
 					}
 				})
 				.catch((error) => {
-					// eslint-disable-next-line
 					this.error = error.response.data.message;
 					console.error(error.response);
 				});
@@ -137,7 +135,6 @@ export default {
 					this.is_checked = true;
 				})
 				.catch((error) => {
-					// eslint-disable-next-line
 					this.error = error.response.data.message;
 					console.error(error.response);
 				});
