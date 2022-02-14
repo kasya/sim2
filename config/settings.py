@@ -42,7 +42,7 @@ PROJECT_APPS = [
     'apps.exam.apps.ExamConfig'
 ]
 
-EXTRA_APPS = ['rest_framework', 'webpack_loader']
+EXTRA_APPS = ['django_extensions', 'rest_framework', 'webpack_loader']
 
 INSTALLED_APPS = DJANGO_APPS + EXTRA_APPS + PROJECT_APPS
 

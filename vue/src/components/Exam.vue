@@ -102,7 +102,6 @@ export default {
 					}
 				})
 				.catch((error) => {
-					// eslint-disable-next-line
 					this.error = error.response.data.message;
 					console.error(error.response);
 				});
@@ -124,7 +123,6 @@ export default {
 					}
 				})
 				.catch((error) => {
-					// eslint-disable-next-line
 					this.error = error.response.data.message;
 					console.error(error.response);
 				});
@@ -137,7 +135,6 @@ export default {
 					this.is_checked = true;
 				})
 				.catch((error) => {
-					// eslint-disable-next-line
 					this.error = error.response.data.message;
 					console.error(error.response);
 				});
@@ -187,19 +184,13 @@ export default {
 				.get(this.attemptPath)
 				.then((res) => {
 					this.attempt = res.data;
-					for (var i = 0; i < this.attempt.attempt_answers.length; i++) {
-						if (
-							this.answered_questions.indexOf(
-								this.attempt.attempt_answers[i].question_id
-							) == -1
-						)
-							this.answered_questions.push(
-								this.attempt.attempt_answers[i].question_id
-							);
+					for (let i = 0; i < this.attempt.answer_attempts.length; i++) {
+						let question_id = this.attempt.answer_attempts[i]["question"];
+						if (this.answered_questions.indexOf(question_id) == -1)
+							this.answered_questions.push(question_id);
 					}
 				})
 				.catch((error) => {
-					// eslint-disable-next-line
 					this.error = error.message;
 					console.error(error);
 				});
