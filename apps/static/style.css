@@ -1,0 +1,78 @@
+h1 {
+	color: #377ba8;
+}
+
+h3 {
+	color: grey;
+}
+
+#app {
+	position: relative;
+	left: 20px;
+}
+
+label {
+	padding: 0 0 0 1rem;
+	font-weight: 500;
+	font-size: 18px;
+	display: block;
+	margin-bottom: 0px;
+}
+
+input[type="radio"] {
+	opacity: 100;
+	vertical-align: middle;
+	margin-top: 0 !important;
+}
+
+#next-question {
+	position: relative;
+	right: 0;
+}
+
+ul {
+	list-style-type: none;
+	padding-bottom: 0px;
+}
+
+#navbarMenuHeroA {
+	float: right;
+}
+
+.pagination .page-link {
+	background: white;
+	color: black;
+}
+
+.page-item.active .page-link {
+	background: lightgray;
+	border-color: grey;
+	color: black;
+}
+div.row {
+	padding-right: 50px;
+}
+
+div.right-align {
+	text-align: right;
+}
+
+.progress {
+	align-content: center;
+	width: 97%;
+	height: 20px;
+}
+
+.progress-bar {
+	margin-top: 0px;
+	width: 0px;
+}
+.link-border {
+	border: white solid 1px;
+	border-radius: 10px;
+}
+.form-check:not(.form-switch) .form-check-input[type="checkbox"],
+.form-check:not(.form-switch) .form-check-input[type="radio"] {
+	margin-top: 5px !important;
+	position: absolute ;
+}
