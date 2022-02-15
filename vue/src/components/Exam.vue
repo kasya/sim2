@@ -26,7 +26,6 @@
 							v-model="checked"
 						/>
 						<label v-bind:for="a.id">{{ a.text }}</label>
-						<p></p>
 					</li>
 				</ul>
 			</form>
