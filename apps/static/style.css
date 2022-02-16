@@ -49,12 +49,13 @@ ul {
 	border-color: grey;
 	color: black;
 }
-div.row {
-	padding-right: 50px;
-}
 
 div.right-align {
 	text-align: right;
+}
+
+.exam-progress {
+	width: 100%;
 }
 
 .progress {
