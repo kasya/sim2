@@ -54,6 +54,10 @@ div.right-align {
 	text-align: right;
 }
 
+.canvas {
+	width: 100%;
+}
+
 .progress {
 	align-content: center;
 	width: 97%;

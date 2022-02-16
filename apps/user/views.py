@@ -3,7 +3,6 @@
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, TemplateView
 

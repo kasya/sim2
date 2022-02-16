@@ -1,6 +1,6 @@
 <template>
 	<div class="row">
-		<chart v-for="examId in examIds" :exam-id="examId" :key="examId" />
+		<chart v-for="examId in examIdList" :exam-id="examId" :key="examId" />
 	</div>
 </template>
 
@@ -9,21 +9,22 @@ import Chart from "../../components/Chart.vue";
 
 export default {
 	props: {
-		examId: String,
+		examIds: String,
 	},
 	components: {
 		Chart,
 	},
 	data() {
 		return {
-			examIds: [],
+			examIdList: [],
 		};
 	},
 	mounted() {
-		let examIds = this.examId;
-		examIds = examIds.slice(1, examIds.length - 1);
-
-		this.examIds = examIds.split(",").map(Number);
+		let examIdList = this.examIds;
+		this.examIdList = examIdList
+			.slice(1, examIdList.length - 1)
+			.split(",")
+			.map(Number);
 	},
 };
 </script>

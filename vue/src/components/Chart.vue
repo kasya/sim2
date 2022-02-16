@@ -1,6 +1,6 @@
 <template>
 	<div class="col-sm col-md col-lg-6">
-		<canvas v-bind:id="'chart-' + examId" style="width: 100%"></canvas>
+		<canvas class="canvas" v-bind:id="'chart-' + examId"></canvas>
 	</div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
 	methods: {
 		getCharts() {
 			axios
-				.get(`${this.path}/${this.examId}`)
+				.get(`${this.path}`)
 				.then((res) => {
 					if (!res.data.grades || !res.data.dates) {
 						return;
@@ -61,14 +61,13 @@ export default {
 					});
 				})
 				.catch((error) => {
-					// eslint-disable-next-line
 					console.error(error);
 				});
 		},
 	},
 	computed: {
 		path() {
-			return "/api/progress";
+			return `/api/progress/${this.examId}`;
 		},
 	},
 	created() {

@@ -9,5 +9,4 @@ axios.defaults.xsrfHeaderName = "x-csrftoken";
 const rootElementId = "#chart";
 const rootElement = document.querySelector(rootElementId);
 
-const app = createApp(App, { ...rootElement.dataset });
-app.mount(rootElementId);
+createApp(App, { ...rootElement.dataset }).mount(rootElementId);
