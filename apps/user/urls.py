@@ -9,4 +9,7 @@ urlpatterns = [
     path('profile', views.Profile.as_view(), name='profile'),
     path('signup', views.Signup.as_view(), name='signup'),
     path('logout', views.Logout.as_view(), name='logout'),
+    path('api/progress/<int:exam_id>',
+         views.ProfileChart.as_view(),
+         name='profile-chart'),
 ]

@@ -1,2 +1,47 @@
-{% extends "base.html" %} {% block content %} Hello, {{ user.username }}
-{%endblock %}
+{% extends "base.html" %}
+
+{% load static %}
+{% load webpack_loader %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <h1 class="title">Welcome, {{ name }}!</h1>
+  {% if exam_ids %}
+  <h2>Progress report on all your subjects.</h2>
+  <p>It shows your progress over time for each subject you took exams on.</p>
+
+  <div id="chart" data-exam-id="{{ exam_ids }}"></div>
+  <div class="right-align">
+    {% if exams_count > 2 %}
+    <a href="/profile/progress-charts">See all charts</a>
+    {% endif %}
+  </div>
+  <div>Here's a history of all your exams:</div>
+  <div>
+    <table class="table table-sm table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>Date</th>
+          <th>Exam Name</th>
+          <th>Your grade</th>
+        </tr>
+      </thead>
+      {% for attempt in page_obj %}
+      <tr>
+        <td>{{ attempt.created }}</td>
+        <td>{{ attempt.exam.name }}</td>
+        <td>{{ attempt.grade }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% include 'includes/pagination.html' %}
+  </div>
+</div>
+
+<div class="d-flex justify-content-center">{{ pagination.links }}</div>
+{% else %} You haven't taken any exams yet.
+<a href="/start">Go check them out!</a>
+{% endif %}
+{% render_bundle 'chart' %}
+{% endblock %}
