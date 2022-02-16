@@ -1,6 +1,6 @@
 <template>
 	<div class="col-sm col-md col-lg-6">
-		<canvas class="canvas" v-bind:id="'chart-' + examId"></canvas>
+		<canvas class="exam-progress" v-bind:id="'chart-' + examId"></canvas>
 	</div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
 	methods: {
 		getCharts() {
 			axios
-				.get(`${this.path}`)
+				.get(this.path)
 				.then((res) => {
 					if (!res.data.grades || !res.data.dates) {
 						return;

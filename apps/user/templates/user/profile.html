@@ -14,7 +14,7 @@
   <div id="chart" data-exam-ids="{{ exam_ids }}"></div>
   <div class="right-align">
     {% if exams_count > 2 %}
-    <a href={% url "progress-charts" %}>See all charts</a>
+    <a href="{% url 'progress-charts' %}">See all charts</a>
     {% endif %}
   </div>
   <div>Here's a history of all your exams:</div>
