@@ -41,13 +41,13 @@ ul {
 
 .pagination .page-link {
 	background: white;
-	color: black;
+	color: #535a9c;;
 }
 
 .page-item.active .page-link {
-	background: lightgray;
-	border-color: grey;
-	color: black;
+	background: #636cb3;
+	border-color: #535a9c;
+	color: white;
 }
 
 div.right-align {
