@@ -1,3 +1,4 @@
+"""Subtraction filter for Django templates."""
 from django import template
 
 register = template.Library()
