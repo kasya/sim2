@@ -38,8 +38,10 @@ DJANGO_APPS = [
 ]
 
 PROJECT_APPS = [
-    'apps.user.apps.UserConfig', 'apps.question.apps.QuestionConfig',
-    'apps.exam.apps.ExamConfig'
+    'apps.core.apps.CoreConfig',
+    'apps.exam.apps.ExamConfig',
+    'apps.question.apps.QuestionConfig',
+    'apps.user.apps.UserConfig',
 ]
 
 EXTRA_APPS = ['django_extensions', 'rest_framework', 'webpack_loader']
