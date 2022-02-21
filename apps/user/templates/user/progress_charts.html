@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load webpack_loader %}
+
+{% block content %}
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+</head>
+<div class="container-fluid">
+  <h2>Progress report on all your subjects.</h2>
+  <p>It shows your progress over time for each subject you took exams on.</p>
+  <div id="chart" data-exam-ids="{{ page_obj.object_list }}"></div>
+  {% include 'includes/pagination.html' with visible=4 %}
+</div>
+
+
+<div class="d-flex justify-content-center">{{ pagination.links }}</div>
+{% render_bundle 'chart' %}
+{% endblock %}

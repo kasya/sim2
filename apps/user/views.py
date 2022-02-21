@@ -54,15 +54,17 @@ class Profile(LoginRequiredMixin, ListView):
   def get_context_data(self, **kwargs):
     """Render profile page."""
 
-    all_attempts = ExamAttempt.objects.filter(
-        user=self.request.user).distinct().order_by('-created')[:2]
     exam_ids = ExamAttempt.objects.filter(
-        user=self.request.user).values('exam').distinct()
+        user=self.request.user).values('exam').distinct()[:2]
     context = super().get_context_data(**kwargs)
     context.update({
-        'exams_count': len(exam_ids),
+        'exams_count':
+            len(
+                ExamAttempt.objects.filter(
+                    user=self.request.user).values('exam').distinct()),
         'exam_ids': [exam['exam'] for exam in exam_ids],
-        'name': self.request.user.first_name,
+        'name':
+            self.request.user.first_name,
     })
 
     return context
@@ -78,13 +80,8 @@ class ProfileChart(APIView):
 
   def get(self, request, exam_id):
     """Sends attempts data to frontend for charts."""
-
     attempts = ExamAttempt.objects.filter(exam=exam_id,
-                                          user_id=self.request.user.id)[:50]
-
-    dates = (attempt.created.strftime("%b %d %Y") for attempt in attempts)
-
-    grades = (attempt.grade for attempt in attempts)
+                                          user_id=request.user.id)[:50]
     data = {
         'dates': (attempt.created.strftime("%b %d %Y") for attempt in attempts),
         'grades': (attempt.grade for attempt in attempts),
@@ -115,3 +112,16 @@ class Signup(TemplateView):
       return redirect('login')
 
     return render(request, self.template_name, {'form': form})
+
+
+class ProgressCharts(ListView):
+
+  template_name = 'user/progress_charts.html'
+  paginate_by = 2
+
+  def get_queryset(self):
+    """Return list of exam ids for current user."""
+
+    return list(
+        ExamAttempt.objects.filter(user=self.request.user).values_list(
+            'exam', flat=True).distinct())

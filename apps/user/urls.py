@@ -12,4 +12,7 @@ urlpatterns = [
     path('api/progress/<int:exam_id>',
          views.ProfileChart.as_view(),
          name='profile-chart'),
+    path('profile/progress-charts',
+         views.ProgressCharts.as_view(),
+         name='progress-charts'),
 ]
