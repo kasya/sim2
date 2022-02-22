@@ -3,6 +3,7 @@
 from django.test import Client, TestCase
 from django.urls import reverse
 
+from apps.exam.models import Exam, ExamAttempt
 from apps.user.models import User
 
 
@@ -10,7 +11,10 @@ class UserViewTestCase(TestCase):
   """Test cases for user views."""
 
   client = Client()
-  fixtures = ["user.json"]
+  fixtures = [
+      "answer.json", "answer_attempt.json", "exam.json", "exam_attempt.json",
+      "question.json", "question_category.json", "subject.json", "user.json"
+  ]
 
   user_id = 4
   user_password = 'mypassword'
@@ -77,7 +81,8 @@ class UserViewTestCase(TestCase):
     self.client.login(username=user.email, password=self.user_password)
 
     response = self.client.get(reverse('profile'))
-    self.assertIn(f'Hello, {user.email}', response.content.decode('utf-8'))
+    self.assertIn(f'Welcome, {user.first_name}',
+                  response.content.decode('utf-8'))
 
   def test_signup_get(self):
     """Check that signup page renders correctly."""
@@ -123,3 +128,31 @@ class UserViewTestCase(TestCase):
     self.assertIn('You already have an account with us.',
                   response.content.decode('utf-8'))
     self.assertTemplateUsed('user/signup.html')
+
+  def test_profile_get_context(self):
+    """Check that method updates context data. """
+
+    user = User.objects.get(id=self.user_id)
+    self.client.login(username=user.email, password=self.user_password)
+
+    response = self.client.get(reverse('profile'))
+    self.assertEqual(
+        response.context['exams_count'],
+        ExamAttempt.objects.filter(user=user).values('exam').distinct().count())
+    self.assertEqual(
+        response.context['exam_ids'],
+        list(
+            ExamAttempt.objects.filter(user=user).values_list('exam',
+                                                              flat=True)))
+
+  def test_profile_chart_get(self):
+    """Check that methods sends data to frontend."""
+
+    user = User.objects.get(id=self.user_id)
+    self.client.login(username=user.email, password=self.user_password)
+    exam = Exam.objects.get(id=1)
+
+    response = self.client.get(
+        reverse('profile-chart', kwargs={'exam_id': exam.id}))
+
+    self.assertEqual(response.data['exam_name'], exam.name)

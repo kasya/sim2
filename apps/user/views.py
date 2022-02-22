@@ -20,7 +20,7 @@ class Login(LoginView):
   form_class = LoginForm
   template_name = 'user/login.html'
 
-  def get(self, request):
+  def get(self, request, **kwargs):
     """Render login page."""
 
     form = self.form_class()
@@ -52,17 +52,18 @@ class Profile(LoginRequiredMixin, ListView):
   template_name = 'user/profile.html'
 
   def get_context_data(self, **kwargs):
-    """Render profile page."""
+    """Get context."""
 
-    all_attempts = ExamAttempt.objects.filter(
-        user=self.request.user).distinct().order_by('-created')[:2]
-    exam_ids = ExamAttempt.objects.filter(
-        user=self.request.user).values('exam').distinct()
+    show_charts = 2
+    exam_ids = ExamAttempt.objects.filter(user=self.request.user).values_list(
+        'exam', flat=True).distinct()[:show_charts]
     context = super().get_context_data(**kwargs)
     context.update({
-        'exams_count': len(exam_ids),
-        'exam_ids': [exam['exam'] for exam in exam_ids],
-        'name': self.request.user.first_name,
+        'exams_count':
+            ExamAttempt.objects.filter(user=self.request.user
+                                      ).values('exam').distinct().count(),
+        'exam_ids':
+            list(exam_ids)
     })
 
     return context
@@ -78,13 +79,9 @@ class ProfileChart(APIView):
 
   def get(self, request, exam_id):
     """Sends attempts data to frontend for charts."""
-
-    attempts = ExamAttempt.objects.filter(exam=exam_id,
-                                          user_id=self.request.user.id)[:50]
-
-    dates = (attempt.created.strftime("%b %d %Y") for attempt in attempts)
-
-    grades = (attempt.grade for attempt in attempts)
+    show_entries = 50
+    attempts = ExamAttempt.objects.filter(
+        exam=exam_id, user_id=request.user.id)[:show_entries]
     data = {
         'dates': (attempt.created.strftime("%b %d %Y") for attempt in attempts),
         'grades': (attempt.grade for attempt in attempts),
@@ -115,3 +112,16 @@ class Signup(TemplateView):
       return redirect('login')
 
     return render(request, self.template_name, {'form': form})
+
+
+class ProgressCharts(ListView):
+
+  paginate_by = 2
+  template_name = 'user/progress_charts.html'
+
+  def get_queryset(self):
+    """Return list of exam ids for current user."""
+
+    return list(
+        ExamAttempt.objects.filter(user=self.request.user).values_list(
+            'exam', flat=True).distinct())

@@ -6,7 +6,7 @@
 {% block content %}
 
 <div class="container-fluid">
-  <h1 class="title">Welcome, {{ name }}!</h1>
+  <h1 class="title">Welcome, {{ user.first_name }}!</h1>
   {% if exam_ids %}
   <h2>Progress report on all your subjects.</h2>
   <p>It shows your progress over time for each subject you took exams on.</p>
