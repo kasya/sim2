@@ -1,3 +1,5 @@
+"""Question Views Methods."""
+
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
@@ -7,11 +9,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.exam.models import AnswerAttempt, ExamAttempt
+from apps.exam.serializers import ExamAttemptSerializer
 from apps.question.models import Answer, Question
 from apps.question.serializers import QuestionSerializer
 
 
 class APIAttemptBase(APIView):
+  """Base API View class."""
 
   permission_classes = (IsAuthenticated,)
 
@@ -64,15 +68,16 @@ class QuestionView(APIAttemptBase):
       pass
 
     # Create a new answer attempt.
-    aa = AnswerAttempt.objects.create(attempt_id=self.attempt.id,
-                                      question_id=data['question_id'])
+    current_answer_attempt = AnswerAttempt.objects.create(
+        attempt_id=self.attempt.id, question_id=data['question_id'])
     for answer_id in answer_ids:
-      aa.answers.add(Answer.objects.get(id=answer_id))
+      current_answer_attempt.answers.add(Answer.objects.get(id=answer_id))
 
     return Response(status=status.HTTP_201_CREATED)
 
 
 class QuestionAnswerView(APIAttemptBase):
+  """Question and Answer objects view."""
 
   def get(self, request, **kwargs):
     """Returns answered question and picked answers from AttemptAnswer."""
@@ -90,3 +95,24 @@ class QuestionAnswerView(APIAttemptBase):
         'answer_ids': answer_ids,
         'question': QuestionSerializer(question).data
     })
+
+
+class QuestionFlag(APIAttemptBase):
+  """Question flagging view."""
+
+  def get(self, request, **kwargs):
+    """Get a list of all flagged question ids."""
+
+    return Response(ExamAttemptSerializer(self.attempt).data)
+
+  def post(self, request, **kwargs):
+    """Add or remove question id from flagged_questions."""
+
+    question = get_object_or_404(Question, id=self.kwargs['question_id'])
+
+    if question not in self.attempt.flagged_questions.all():
+      self.attempt.flagged_questions.add(question)
+    else:
+      self.attempt.flagged_questions.remove(question)
+
+    return Response(ExamAttemptSerializer(self.attempt).data)

@@ -6,8 +6,8 @@ from unittest import mock
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from apps.exam.models import AnswerAttempt, Exam, ExamAttempt, Subject
-from apps.question.models import Answer, Question, QuestionCategory
+from apps.exam.models import AnswerAttempt, Exam, ExamAttempt
+from apps.question.models import Answer, Question
 from apps.question.serializers import QuestionSerializer
 from apps.user.models import User
 
@@ -60,7 +60,7 @@ class QuestionViewTestCase(TestCase):
 
   def test_api_get_question_no_more_questions(self):
     """
-    Check that method returns status code 200 
+    Check that method returns status code 200
     when there's no more unanswered questions.
     """
 
@@ -122,19 +122,17 @@ class QuestionViewTestCase(TestCase):
 
     self.client.login(username=self.user.username, password=self.user_password)
 
-    response = self.client.post(reverse('question_api',
-                                        kwargs={'attempt_id': attempt.id}),
-                                data={
-                                    'answers': [correct_answer.id],
-                                    'question_id': self.question.id
-                                })
+    self.client.post(reverse('question_api', kwargs={'attempt_id': attempt.id}),
+                     data={
+                         'answers': [correct_answer.id],
+                         'question_id': self.question.id
+                     })
 
-    response = self.client.post(reverse('question_api',
-                                        kwargs={'attempt_id': attempt.id}),
-                                data={
-                                    'answers': [wrong_answer.id],
-                                    'question_id': self.question.id
-                                })
+    self.client.post(reverse('question_api', kwargs={'attempt_id': attempt.id}),
+                     data={
+                         'answers': [wrong_answer.id],
+                         'question_id': self.question.id
+                     })
     answer_attempt = AnswerAttempt.objects.get(attempt=attempt.id)
     self.assertIsNotNone(answer_attempt)
     self.assertEqual(answer_attempt.answers.first().id, wrong_answer.id)
@@ -201,3 +199,52 @@ class QuestionViewTestCase(TestCase):
       self.assertEqual(response.data['answer_ids'], [correct_answer.id])
       self.assertEqual(response.data['question'],
                        QuestionSerializer(self.question).data)
+
+  def test_get_question_flag_no_flags(self):
+    """Check that method returns empty list when there's no flagged questions."""
+
+    self.client.login(username=self.user.username, password=self.user_password)
+    response = self.client.get(
+        reverse('get_flagged_questions',
+                kwargs={'attempt_id': self.attempt.id}))
+
+    self.assertEqual(response.data['flagged_questions'], [])
+
+  def test_get_question_flag(self):
+    """Check that method returns list of flagged questions."""
+
+    self.client.login(username=self.user.username, password=self.user_password)
+    self.attempt.flagged_questions.add(self.question)
+
+    response = self.client.get(
+        reverse('get_flagged_questions',
+                kwargs={'attempt_id': self.attempt.id}))
+
+    self.assertEqual(response.data['flagged_questions'], [self.question.id])
+
+  def test_post_question_flag_add(self):
+    """Check that method adds flag from list of flagged questions."""
+
+    self.client.login(username=self.user.username, password=self.user_password)
+
+    response = self.client.post(
+        reverse('question_set_flag',
+                kwargs={
+                    'attempt_id': self.attempt.id,
+                    'question_id': self.question.id
+                }))
+    self.assertEqual(response.data['flagged_questions'], [self.question.id])
+
+  def test_post_question_flag_remove(self):
+    """Check that method removes flag from list of flagged questions."""
+
+    self.client.login(username=self.user.username, password=self.user_password)
+    self.attempt.flagged_questions.add(self.question)
+
+    response = self.client.post(
+        reverse('question_set_flag',
+                kwargs={
+                    'attempt_id': self.attempt.id,
+                    'question_id': self.question.id
+                }))
+    self.assertEqual(response.data['flagged_questions'], [])

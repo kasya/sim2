@@ -47,6 +47,8 @@ class ExamAttempt(models.Model):
   exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
 
   questions = models.ManyToManyField('question.Question')
+  flagged_questions = models.ManyToManyField('question.Question',
+                                             related_name='flagged_questions')
 
   def __str__(self):
     return f'<ExamAttempt>: id# {self.id}'
