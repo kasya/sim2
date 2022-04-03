@@ -205,8 +205,7 @@ class QuestionViewTestCase(TestCase):
 
     self.client.login(username=self.user.username, password=self.user_password)
     response = self.client.get(
-        reverse('get_flagged_questions',
-                kwargs={'attempt_id': self.attempt.id}))
+        reverse('get_attempt', kwargs={'attempt_id': self.attempt.id}))
 
     self.assertEqual(response.data['flagged_questions'], [])
 
@@ -217,8 +216,7 @@ class QuestionViewTestCase(TestCase):
     self.attempt.flagged_questions.add(self.question)
 
     response = self.client.get(
-        reverse('get_flagged_questions',
-                kwargs={'attempt_id': self.attempt.id}))
+        reverse('get_attempt', kwargs={'attempt_id': self.attempt.id}))
 
     self.assertEqual(response.data['flagged_questions'], [self.question.id])
 
@@ -228,7 +226,7 @@ class QuestionViewTestCase(TestCase):
     self.client.login(username=self.user.username, password=self.user_password)
 
     response = self.client.post(
-        reverse('question_set_flag',
+        reverse('question_toggle_flag',
                 kwargs={
                     'attempt_id': self.attempt.id,
                     'question_id': self.question.id
@@ -242,7 +240,7 @@ class QuestionViewTestCase(TestCase):
     self.attempt.flagged_questions.add(self.question)
 
     response = self.client.post(
-        reverse('question_set_flag',
+        reverse('question_toggle_flag',
                 kwargs={
                     'attempt_id': self.attempt.id,
                     'question_id': self.question.id

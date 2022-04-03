@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+INTERNAL_IPS = ['127.0.0.1']
+
 # Application definition
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -44,11 +46,14 @@ PROJECT_APPS = [
     'apps.user.apps.UserConfig',
 ]
 
-EXTRA_APPS = ['django_extensions', 'rest_framework', 'webpack_loader']
+EXTRA_APPS = [
+    'django_extensions', 'debug_toolbar', 'rest_framework', 'webpack_loader'
+]
 
 INSTALLED_APPS = DJANGO_APPS + EXTRA_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

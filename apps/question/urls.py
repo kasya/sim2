@@ -11,10 +11,7 @@ urlpatterns = [
     path('api/attempt/<int:attempt_id>/<int:question_id>/',
          QuestionAnswerView.as_view(),
          name='question_answers_api'),
-    path('api/attempt/<int:attempt_id>/get_flags',
+    path('api/attempt/<int:attempt_id>/<int:question_id>/flag',
          QuestionFlag.as_view(),
-         name='get_flagged_questions'),
-    path('api/attempt/<int:attempt_id>/<int:question_id>/set_flag',
-         QuestionFlag.as_view(),
-         name='question_set_flag')
+         name='question_toggle_flag')
 ]

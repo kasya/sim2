@@ -68,10 +68,10 @@ class QuestionView(APIAttemptBase):
       pass
 
     # Create a new answer attempt.
-    current_answer_attempt = AnswerAttempt.objects.create(
+    answer_attempt = AnswerAttempt.objects.create(
         attempt_id=self.attempt.id, question_id=data['question_id'])
     for answer_id in answer_ids:
-      current_answer_attempt.answers.add(Answer.objects.get(id=answer_id))
+      answer_attempt.answers.add(Answer.objects.get(id=answer_id))
 
     return Response(status=status.HTTP_201_CREATED)
 
@@ -100,19 +100,14 @@ class QuestionAnswerView(APIAttemptBase):
 class QuestionFlag(APIAttemptBase):
   """Question flagging view."""
 
-  def get(self, request, **kwargs):
-    """Get a list of all flagged question ids."""
-
-    return Response(ExamAttemptSerializer(self.attempt).data)
-
   def post(self, request, **kwargs):
     """Add or remove question id from flagged_questions."""
 
     question = get_object_or_404(Question, id=self.kwargs['question_id'])
 
-    if question not in self.attempt.flagged_questions.all():
-      self.attempt.flagged_questions.add(question)
-    else:
+    if self.attempt.flagged_questions.filter(id=question.id).exists():
       self.attempt.flagged_questions.remove(question)
+    else:
+      self.attempt.flagged_questions.add(question)
 
     return Response(ExamAttemptSerializer(self.attempt).data)

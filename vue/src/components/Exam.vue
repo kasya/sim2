@@ -172,20 +172,9 @@ export default {
           console.error(error.response);
         });
     },
-    getFlaggedQuestions() {
-      axios
-        .get(`/api/attempt/${this.attemptId}/get_flags`)
-        .then((res) => {
-          this.flagged_questions = res.data["flagged_questions"];
-        })
-        .catch((error) => {
-          this.error = error.response.data.message;
-          console.error(error.response);
-        });
-    },
     flagQuestion() {
       axios
-        .post(`/api/attempt/${this.attemptId}/${this.question.id}/set_flag`)
+        .post(`/api/attempt/${this.attemptId}/${this.question.id}/flag`)
         .then((res) => {
           this.flagged_questions = res.data["flagged_questions"];
         })
@@ -239,6 +228,7 @@ export default {
         .get(this.attemptPath)
         .then((res) => {
           this.attempt = res.data;
+          this.flagged_questions = res.data["flagged_questions"];
           for (let i = 0; i < this.attempt.answer_attempts.length; i++) {
             let question_id = this.attempt.answer_attempts[i]["question"];
             if (this.answered_questions.indexOf(question_id) == -1)
@@ -262,7 +252,6 @@ export default {
   created() {
     this.getAttempt();
     this.getNextQuestion();
-    this.getFlaggedQuestions();
   },
 };
 </script>
