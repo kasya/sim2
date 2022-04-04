@@ -9,7 +9,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.exam.models import AnswerAttempt, ExamAttempt
-from apps.exam.serializers import ExamAttemptSerializer
 from apps.question.models import Answer, Question
 from apps.question.serializers import QuestionSerializer
 
@@ -95,19 +94,3 @@ class QuestionAnswerView(APIAttemptBase):
         'answer_ids': answer_ids,
         'question': QuestionSerializer(question).data
     })
-
-
-class QuestionFlag(APIAttemptBase):
-  """Question flagging view."""
-
-  def post(self, request, **kwargs):
-    """Add or remove question id from flagged_questions."""
-
-    question = get_object_or_404(Question, id=self.kwargs['question_id'])
-
-    if self.attempt.flagged_questions.filter(id=question.id).exists():
-      self.attempt.flagged_questions.remove(question)
-    else:
-      self.attempt.flagged_questions.add(question)
-
-    return Response(ExamAttemptSerializer(self.attempt).data)

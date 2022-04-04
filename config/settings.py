@@ -47,13 +47,17 @@ PROJECT_APPS = [
 ]
 
 EXTRA_APPS = [
-    'django_extensions', 'debug_toolbar', 'rest_framework', 'webpack_loader'
+    'django_extensions',
+    'rest_framework',
+    'webpack_loader',
 ]
+
+if DEBUG:
+  EXTRA_APPS.insert(1, 'debug_toolbar')
 
 INSTALLED_APPS = DJANGO_APPS + EXTRA_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,6 +66,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+  MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
 # https://docs.djangoproject.com/en/4.0/ref/settings/#password-hashers
 

@@ -35,8 +35,8 @@
           <input
             id="flag"
             type="checkbox"
-            v-on:click="flagQuestion"
-            v-model="active_flag"
+            v-on:click="toggleQuestion"
+            v-model="activeFlag"
           />
           <label for="flag">Come back to this question later</label>
         </div>
@@ -59,9 +59,7 @@
           >
             <span
               class="flag"
-              v-show="
-                flagged_questions.indexOf(answered_questions[i - 1]) != -1
-              "
+              v-show="flaggedQuestions.indexOf(answeredQuestions[i - 1]) != -1"
             >
               🔴
             </span>
@@ -70,7 +68,7 @@
               href="#"
               @click="getQuestion"
               v-bind:id="'q_' + i"
-              :data-q-id="answered_questions[i - 1]"
+              :data-q-id="answeredQuestions[i - 1]"
               >{{ i }}</a
             >
           </li>
@@ -91,36 +89,34 @@ export default {
   },
   data() {
     return {
-      answered_questions: [],
+      answeredQuestions: [],
       attempt: {},
       checked: [],
       count: 1,
       error: null,
-      flagged_questions: [],
-      active_flag: false,
-      is_checked: false,
+      flaggedQuestions: [],
+      activeFlag: false,
+      isChecked: false,
       result: false,
       selected: null,
       question: {},
-      question_id: -1,
-      multiple_choice: "multiple_choice",
+      questionId: -1,
+      multipleChoice: "multiple_choice",
     };
   },
   methods: {
     getNextQuestion() {
-      this.is_checked = false;
-      this.active_flag = false;
+      this.isChecked = false;
+      this.activeFlag = false;
       this.error = "";
       axios
         .get(this.path)
         .then((res) => {
           if (res.data.id) {
             this.question = res.data;
-          } else if (this.flagged_questions.length > 0) {
-            this.getQuestion(
-              undefined,
-              parseInt(this.flagged_questions.shift())
-            );
+          } else if (this.flaggedQuestions.length > 0) {
+            /* after all questions has been answered, go through flagged questions */
+            this.getQuestion(undefined, this.flaggedQuestions.shift());
           } else {
             window.location.href = `/exam/${this.attemptId}/finish`;
           }
@@ -131,22 +127,22 @@ export default {
         });
     },
     getQuestion(event, id) {
-      this.flagged_questions.push(id);
+      this.flaggedQuestions.push(id);
       if (event === undefined) {
-        this.question_id = parseInt(id);
+        this.questionId = parseInt(id);
       }
       if (id === undefined) {
-        this.question_id = parseInt($(event.target).attr("data-q-id"));
+        this.questionId = parseInt($(event.target).attr("data-q-id"));
       }
       axios
-        .get(`/api/attempt/${this.attemptId}/${this.question_id}`)
+        .get(`/api/attempt/${this.attemptId}/${this.questionId}`)
         .then((res) => {
           if (res.data["question"]) {
             this.question = res.data["question"];
-            this.active_flag =
-              this.flagged_questions.indexOf(this.question.id) != -1;
+            this.activeFlag =
+              this.flaggedQuestions.indexOf(this.question.id) != -1;
 
-            if (this.question.type == this.multiple_choice) {
+            if (this.question.type == this.multipleChoice) {
               this.selected = res.data["answer_ids"][0];
             } else {
               this.checked = res.data["answer_ids"];
@@ -165,18 +161,18 @@ export default {
         .post(this.path, { answers: this.selected })
         .then((res) => {
           this.result = res.data["is_correct"];
-          this.is_checked = true;
+          this.isChecked = true;
         })
         .catch((error) => {
           this.error = error.response.data.message;
           console.error(error.response);
         });
     },
-    flagQuestion() {
+    toggleQuestion() {
       axios
         .post(`/api/attempt/${this.attemptId}/${this.question.id}/flag`)
         .then((res) => {
-          this.flagged_questions = res.data["flagged_questions"];
+          this.flaggedQuestions = res.data["flagged_questions"];
         })
         .catch((error) => {
           this.error = error.response.data.message;
@@ -184,22 +180,22 @@ export default {
         });
     },
     recordAnswer() {
-      this.answer_ids = [];
-      if (this.question.type == this.multiple_choice) {
+      this.answerIds = [];
+      if (this.question.type == this.multipleChoice) {
         if (this.selected != null) {
-          this.answer_ids.push(this.selected);
+          this.answerIds.push(this.selected);
           this.selected = null;
         }
       } else {
-        this.answer_ids.push(...this.checked);
+        this.answerIds.push(...this.checked);
         this.checked = [];
       }
-      if (!this.answer_ids) {
+      if (!this.answerIds) {
         return;
       }
       axios
         .post(this.path, {
-          answers: this.answer_ids,
+          answers: this.answerIds,
           question_id: this.question.id,
         })
         .then((res) => {
@@ -215,11 +211,11 @@ export default {
           console.error(error);
         });
       if (
-        !this.answered_questions.length ||
-        this.answered_questions.indexOf(this.question.id) == -1
+        !this.answeredQuestions.length ||
+        this.answeredQuestions.indexOf(this.question.id) == -1
       ) {
         $("#q_" + this.count).attr("data-q-id", this.question.id);
-        this.answered_questions.push(this.question.id);
+        this.answeredQuestions.push(this.question.id);
         this.count += 1;
       }
     },
@@ -228,11 +224,11 @@ export default {
         .get(this.attemptPath)
         .then((res) => {
           this.attempt = res.data;
-          this.flagged_questions = res.data["flagged_questions"];
+          this.flaggedQuestions = res.data["flagged_questions"];
           for (let i = 0; i < this.attempt.answer_attempts.length; i++) {
-            let question_id = this.attempt.answer_attempts[i]["question"];
-            if (this.answered_questions.indexOf(question_id) == -1)
-              this.answered_questions.push(question_id);
+            let questionId = this.attempt.answer_attempts[i]["question"];
+            if (this.answeredQuestions.indexOf(questionId) == -1)
+              this.answeredQuestions.push(questionId);
           }
         })
         .catch((error) => {
