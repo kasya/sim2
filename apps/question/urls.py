@@ -1,7 +1,6 @@
 """Question app URL configuration."""
 
 from django.urls import path
-from django.views.generic import TemplateView
 
 from apps.question.views import QuestionAnswerView, QuestionView
 

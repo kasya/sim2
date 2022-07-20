@@ -4,7 +4,7 @@ import random
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 
@@ -132,3 +132,22 @@ class AttemptView(APIView):
 
     except ExamAttempt.DoesNotExist:
       raise Http404
+
+
+class QuestionFlag(APIView):
+  """Question flagging view."""
+
+  def post(self, request, **kwargs):
+    """Add or remove question id from flagged_questions."""
+
+    attempt = get_object_or_404(ExamAttempt,
+                                id=self.kwargs['attempt_id'],
+                                user=request.user.id)
+    question = get_object_or_404(Question, id=self.kwargs['question_id'])
+
+    if attempt.flagged_questions.filter(id=question.id).exists():
+      attempt.flagged_questions.remove(question)
+    else:
+      attempt.flagged_questions.add(question)
+
+    return Response(ExamAttemptSerializer(attempt).data)

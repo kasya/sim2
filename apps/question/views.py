@@ -1,3 +1,5 @@
+"""Question Views Methods."""
+
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
@@ -12,6 +14,7 @@ from apps.question.serializers import QuestionSerializer
 
 
 class APIAttemptBase(APIView):
+  """Base API View class."""
 
   permission_classes = (IsAuthenticated,)
 
@@ -64,15 +67,16 @@ class QuestionView(APIAttemptBase):
       pass
 
     # Create a new answer attempt.
-    aa = AnswerAttempt.objects.create(attempt_id=self.attempt.id,
-                                      question_id=data['question_id'])
+    answer_attempt = AnswerAttempt.objects.create(
+        attempt_id=self.attempt.id, question_id=data['question_id'])
     for answer_id in answer_ids:
-      aa.answers.add(Answer.objects.get(id=answer_id))
+      answer_attempt.answers.add(Answer.objects.get(id=answer_id))
 
     return Response(status=status.HTTP_201_CREATED)
 
 
 class QuestionAnswerView(APIAttemptBase):
+  """Question and Answer objects view."""
 
   def get(self, request, **kwargs):
     """Returns answered question and picked answers from AttemptAnswer."""

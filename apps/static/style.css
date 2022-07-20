@@ -15,7 +15,6 @@ label {
 	padding: 0 0 0 1rem;
 	font-weight: 500;
 	font-size: 18px;
-	display: block;
 	margin-bottom: 0px;
 }
 
@@ -76,4 +75,16 @@ div.right-align {
 .form-check:not(.form-switch) .form-check-input[type="radio"] {
 	margin-top: 5px !important;
 	position: absolute ;
+
+}
+
+span.flag {
+	position: absolute;
+  z-index: 1;
+  padding: 0px 0px 20px 20px;
+  font-size: 10px;
+}
+#flag {
+	text-align: center;
+
 }

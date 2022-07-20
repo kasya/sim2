@@ -9,7 +9,8 @@
         "status": "in_progress",
         "user": 4,
         "exam": 1,
-        "questions": [1]
+        "questions": [1],
+        "flagged_questions": []
     }
 },
 {

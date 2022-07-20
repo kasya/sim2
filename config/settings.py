@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+INTERNAL_IPS = ['127.0.0.1']
+
 # Application definition
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -44,7 +46,14 @@ PROJECT_APPS = [
     'apps.user.apps.UserConfig',
 ]
 
-EXTRA_APPS = ['django_extensions', 'rest_framework', 'webpack_loader']
+EXTRA_APPS = [
+    'django_extensions',
+    'rest_framework',
+    'webpack_loader',
+]
+
+if DEBUG:
+  EXTRA_APPS.insert(1, 'debug_toolbar')
 
 INSTALLED_APPS = DJANGO_APPS + EXTRA_APPS + PROJECT_APPS
 
@@ -57,6 +66,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+  MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
 # https://docs.djangoproject.com/en/4.0/ref/settings/#password-hashers
 
