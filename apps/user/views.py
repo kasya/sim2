@@ -82,10 +82,12 @@ class ProfileChart(APIView):
     show_entries = 50
     attempts = ExamAttempt.objects.filter(
         exam=exam_id, user_id=request.user.id)[:show_entries]
+    exam = Exam.objects.get(id=exam_id)
     data = {
         'dates': (attempt.created.strftime("%b %d %Y") for attempt in attempts),
         'grades': (attempt.grade for attempt in attempts),
-        'exam_name': Exam.objects.get(id=exam_id).name
+        'exam_name': exam.name,
+        'exam_subject': exam.subject.name
     }
     return Response(data)
 

@@ -156,3 +156,4 @@ class UserViewTestCase(TestCase):
         reverse('profile-chart', kwargs={'exam_id': exam.id}))
 
     self.assertEqual(response.data['exam_name'], exam.name)
+    self.assertEqual(response.data['exam_subject'], exam.subject.name)
