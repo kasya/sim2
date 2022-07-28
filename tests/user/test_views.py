@@ -93,7 +93,7 @@ class UserViewTestCase(TestCase):
 
   def test_signup_post(self):
     """Check that user is redirected to login page after signing up
-    and that user has been added to db.."""
+    and that user has been added to db."""
 
     response = self.client.post(
         reverse('signup'), {
@@ -146,7 +146,7 @@ class UserViewTestCase(TestCase):
                                                               flat=True)))
 
   def test_profile_chart_get(self):
-    """Check that methods sends data to frontend."""
+    """Check that method sends data to frontend."""
 
     user = User.objects.get(id=self.user_id)
     self.client.login(username=user.email, password=self.user_password)
@@ -157,3 +157,52 @@ class UserViewTestCase(TestCase):
 
     self.assertEqual(response.data['exam_name'], exam.name)
     self.assertEqual(response.data['exam_subject'], exam.subject.name)
+
+  def test_edit_profile_get_incognito(self):
+    """Check that edit profile page is not available for unauthorized users."""
+
+    response = self.client.get(reverse('edit-profile'))
+    self.assertRedirects(response,
+                         f'{reverse("login")}?next={reverse("edit-profile")}')
+
+  def test_edit_profile_get(self):
+    """Check that edit profile page renders correctly."""
+
+    user = User.objects.get(id=self.user_id)
+    self.client.login(username=user.email, password=self.user_password)
+
+    response = self.client.get(reverse('edit-profile'))
+
+    self.assertEqual(response.status_code, 200)
+    self.assertTemplateUsed('user/edit_profile.html')
+
+  def test_edit_profile_post(self):
+    """Check that user has been redirected to profile page after edit."""
+
+    user = User.objects.get(id=self.user_id)
+    print(user.first_name, user.last_name, user.username)
+    self.client.login(username=user.email, password=self.user_password)
+
+    response = self.client.post(reverse('edit-profile'), {
+        'first_name': 'Janine',
+        'last_name': 'Doe',
+    })
+
+    self.assertRedirects(response, reverse('profile'))
+
+  def test_edit_profile_post_no_change(self):
+    """Check that other profile details hasn't been changed after edit."""
+
+    user = User.objects.get(id=self.user_id)
+    test_user_username = user.username
+    test_user_password = self.user_password
+
+    self.client.login(email=user.email, password=self.user_password)
+
+    response = self.client.post(reverse('edit-profile'), {
+        'first_name': 'Jane',
+        'last_name': 'Smith',
+    })
+
+    self.assertEquals(test_user_username, user.username)
+    self.assertEquals(test_user_password, self.user_password)

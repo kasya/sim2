@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.exam.models import Exam, ExamAttempt
-from apps.user.forms import LoginForm, SignupForm
+from apps.user.forms import EditProfileForm, LoginForm, SignupForm
 
 
 class Login(LoginView):
@@ -112,6 +112,33 @@ class Signup(TemplateView):
     if form.is_valid():
       form.save()
       return redirect('login')
+
+    return render(request, self.template_name, {'form': form})
+
+
+class EditProfile(LoginRequiredMixin, TemplateView):
+  """Edit Profile methods."""
+
+  form_class = EditProfileForm
+  template_name = 'user/edit_profile.html'
+
+  def get(self, request):
+    """Render edit profile page."""
+
+    form = self.form_class(initial={
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name
+    })
+    return render(request, self.template_name, {'form': form})
+
+  def post(self, request):
+    """Get the data from edit form and update it in database."""
+
+    form = self.form_class(data=request.POST, instance=request.user)
+
+    if form.is_valid():
+      form.update()
+      return redirect('profile')
 
     return render(request, self.template_name, {'form': form})
 

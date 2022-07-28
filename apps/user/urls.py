@@ -15,4 +15,5 @@ urlpatterns = [
     path('profile/progress-charts',
          views.ProgressCharts.as_view(),
          name='progress-charts'),
+    path('profile/edit', views.EditProfile.as_view(), name='edit-profile'),
 ]
