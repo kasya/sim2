@@ -30,7 +30,7 @@
       {% for attempt in page_obj %}
       <tr>
         <td>{{ attempt.created }}</td>
-        <td>{{attempt.exam.subject.name}} {{ attempt.exam.name }}</td>
+        <td>{{ attempt.exam.subject.name }} {{ attempt.exam.name }}</td>
         <td>{{ attempt.grade }}</td>
       </tr>
       {% endfor %}

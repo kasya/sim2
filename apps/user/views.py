@@ -84,7 +84,7 @@ class ProfileChart(APIView):
         exam=exam_id, user_id=request.user.id)[:show_entries]
     exam = Exam.objects.get(id=exam_id)
     data = {
-        'dates': (attempt.created.strftime("%b %d %Y") for attempt in attempts),
+        'dates': (attempt.created.strftime('%b %d %Y') for attempt in attempts),
         'grades': (attempt.grade for attempt in attempts),
         'exam_name': exam.name,
         'exam_subject': exam.subject.name
@@ -125,5 +125,5 @@ class ProgressCharts(ListView):
     """Return list of exam ids for current user."""
 
     return list(
-        ExamAttempt.objects.filter(user=self.request.user).values_list(
-            'exam', flat=True).distinct())
+        ExamAttempt.objects.filter(user=self.request.user).select_related(
+            'exam', 'exam__subject').values_list('exam', flat=True).distinct())
