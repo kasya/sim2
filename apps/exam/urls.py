@@ -3,8 +3,6 @@
 from django.urls import path
 from django.views.generic import TemplateView
 
-from apps.exam.models import Exam
-from apps.exam.serializers import ExamSerializer
 from apps.exam.views import (AttemptView, ExamFinishView, ExamIntro, ExamList,
                              ExamPageView, QuestionFlag, SubjectList)
 
@@ -16,7 +14,9 @@ urlpatterns = [
     path('api/subject/<subject_id>/exams/',
          ExamList.as_view(),
          name='exam_list'),
-    path('exam/<exam_id>/intro/', ExamIntro.as_view(), name='exam_intro'),
+    path('exam/<exam_id>/<exam_mode>/intro/',
+         ExamIntro.as_view(),
+         name='exam_intro'),
     path('exam/<exam_id>/<attempt_id>/',
          ExamPageView.as_view(),
          name='exam_page'),

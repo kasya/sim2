@@ -25,11 +25,32 @@
 				</option>
 			</select>
 		</div>
+
+		<div v-show="exam_selected > 0">
+			<input
+				type="radio"
+				id="practice_mode"
+				name="mode"
+				value="1"
+				v-model="picked"
+			/><label for="practice_mode"
+				><p>Practice mode (you will see correct answers right away)</p></label
+			><br />
+			<input
+				type="radio"
+				id="exam_mode"
+				name="mode"
+				value="2"
+				v-model="picked"
+			/><label for="exam_mode"
+				><p>Exam mode (your answers will be graded at the end)</p></label
+			><br />
+		</div>
 		<button
 			class="btn bg-gradient-info w-auto me-1 mb-0"
 			type="button"
 			v-on:click="startExam"
-			v-show="exam_selected != -1"
+			v-show="picked > 0"
 		>
 			Select
 		</button>
@@ -47,6 +68,7 @@ export default {
 			exams: {},
 			selected: -1,
 			exam_selected: -1,
+			picked: -1,
 		};
 	},
 	methods: {
@@ -73,7 +95,7 @@ export default {
 				});
 		},
 		startExam() {
-			window.location.href = "/exam/" + this.exam_selected + "/intro/";
+			window.location.href = `/exam/${this.exam_selected}/${this.picked}/intro/`;
 		},
 	},
 	computed: {

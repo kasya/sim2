@@ -40,6 +40,7 @@ class ExamAttempt(models.Model):
   created = models.DateTimeField(default=timezone.now, editable=False)
   duration_minutes = models.IntegerField(default=120)
   grade = models.IntegerField(default=0)
+  mode = models.IntegerField(default=0)
   status = models.CharField(max_length=25,
                             default=STATUS_IN_PROGRESS,
                             choices=STATUSES)

@@ -10,7 +10,8 @@
         "user": 4,
         "exam": 1,
         "questions": [1],
-        "flagged_questions": []
+        "flagged_questions": [],
+        "mode": 1
     }
 },
 {
@@ -23,7 +24,8 @@
         "status": "in_progress",
         "user": 4,
         "exam": 2,
-        "questions": []
+        "questions": [],
+        "mode": 2
     }
 },
 {

@@ -3,12 +3,22 @@
 {% block content %}
 
 <div class="container-fluid">
+	{% if exam_mode == 1 %}
+	<p>You chose to practice {{ exam.subject.name}} {{ exam.name }}.</p>
+	<p>This practice mode doesn't have a time limit - you can go at your desired
+		speed.</p>
+	<p> You'll have {{ exam.question_count }} questions to answer.
+		After picking an answer - click "Check answer" button, to see if you were
+		right. Click "Submit" to go to next question.
+		Good luck!
+	</p>
+	{% elif exam_mode == 2 %}
 	<p>You chose {{ exam.name }} as your exam.</p>
 	<p>
 		This exam has {{ exam.question_count }} questions. The time to finish this
-		exam is limited to {{ attempt_duration }} minutes.
+		exam is limited to {{ attempt_duration }} minutes. Good luck!
 	</p>
-	<p>Are you ready?</p>
+	{% endif %}
 	<form method="POST">
 		{% csrf_token %}
 		<button class="btn bg-gradient-info w-auto me-1 mb-0" type="submit">

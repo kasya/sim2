@@ -30,7 +30,6 @@ export default {
 				.then((res) => {
 					this.attempt = res.data;
 					let that = this;
-					console.log(this.attempt);
 					const counterBack = setInterval(function () {
 						let percent = parseInt(
 							(that.attempt.time_left_seconds * 100) /
