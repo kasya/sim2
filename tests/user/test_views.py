@@ -230,4 +230,4 @@ class UserViewTestCase(TestCase):
     self.assertEqual(test_user_username, user.username)
     self.assertEqual(test_user_password, self.user_password)
     self.assertEqual(user.required_extra_time, test_user_required_extra_time)
-    self.assertEqual(user.username, test_user_username)
+    self.assertEqual(test_user_username, user.username)
