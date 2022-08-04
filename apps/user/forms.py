@@ -73,3 +73,15 @@ class SignupForm(ModelForm):
     widgets = {
         'password': forms.PasswordInput(),
     }
+
+
+class EditProfileForm(ModelForm):
+  """User Edit Profile form."""
+
+  class Meta:
+    """Meta class for Edit Profile form."""
+    model = User
+    fields = (
+        'first_name',
+        'last_name',
+    )

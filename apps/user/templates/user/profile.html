@@ -7,6 +7,15 @@
 
 <div class="container-fluid">
   <h1 class="title">Welcome, {{ user.first_name }}!</h1>
+  <hr>
+  Name: {{user.first_name}} <br>
+  Lastname: {{user.last_name}}<br>
+  Joined on: {{user.date_joined}}<br>
+  {% if user.required_extra_time %}
+  Require extra time for exams? Yes <br>
+  {% endif %}
+  <a href="{% url 'edit-profile' %}">Edit details ✏️</a>
+  <hr>
   {% if exam_ids %}
   <h2>Progress report on all your subjects.</h2>
   <p>It shows your progress over time for each subject you took exams on.</p>
