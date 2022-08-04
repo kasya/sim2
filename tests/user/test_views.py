@@ -206,7 +206,7 @@ class UserViewTestCase(TestCase):
 
     self.assertEqual(test_user_username, user.username)
     self.assertEqual(test_user_password, self.user_password)
-    self.assertEqual(user.required_extra_time, test_user_required_extra_time)
+    self.assertEqual(test_user_required_extra_time, user.required_extra_time)
 
   def test_edit_profile_post_change_extra_field(self):
     """Check that user can not edit anything else except what's allowed."""
