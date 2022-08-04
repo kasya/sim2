@@ -180,7 +180,6 @@ class UserViewTestCase(TestCase):
     """Check that user has been redirected to profile page after edit."""
 
     user = User.objects.get(id=self.user_id)
-    print(user.first_name, user.last_name, user.username)
     self.client.login(username=user.email, password=self.user_password)
 
     response = self.client.post(reverse('edit-profile'), {
@@ -196,6 +195,7 @@ class UserViewTestCase(TestCase):
     user = User.objects.get(id=self.user_id)
     test_user_username = user.username
     test_user_password = self.user_password
+    test_user_required_extra_time = user.required_extra_time
 
     self.client.login(email=user.email, password=self.user_password)
 
@@ -204,5 +204,30 @@ class UserViewTestCase(TestCase):
         'last_name': 'Smith',
     })
 
-    self.assertEquals(test_user_username, user.username)
-    self.assertEquals(test_user_password, self.user_password)
+    self.assertEqual(test_user_username, user.username)
+    self.assertEqual(test_user_password, self.user_password)
+    self.assertEqual(user.required_extra_time, test_user_required_extra_time)
+
+  def test_edit_profile_post_change_extra_field(self):
+    """Check that user can not edit anything else except what's allowed."""
+
+    user = User.objects.get(id=self.user_id)
+    test_user_username = user.username
+    test_user_password = self.user_password
+    test_user_required_extra_time = user.required_extra_time
+    test_user_username = user.username
+
+    self.client.login(email=user.email, password=self.user_password)
+
+    response = self.client.post(
+        reverse('edit-profile'), {
+            'first_name': 'Jane',
+            'last_name': 'Smith',
+            'required_extra_time': 10,
+            'username': 'new_username'
+        })
+
+    self.assertEqual(test_user_username, user.username)
+    self.assertEqual(test_user_password, self.user_password)
+    self.assertEqual(user.required_extra_time, test_user_required_extra_time)
+    self.assertEqual(user.username, test_user_username)

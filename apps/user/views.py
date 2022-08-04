@@ -137,7 +137,8 @@ class EditProfile(LoginRequiredMixin, TemplateView):
     form = self.form_class(data=request.POST, instance=request.user)
 
     if form.is_valid():
-      form.update()
+      obj = form.save(commit=False)
+      obj.save(update_fields=['first_name', 'last_name'])
       return redirect('profile')
 
     return render(request, self.template_name, {'form': form})

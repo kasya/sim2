@@ -78,14 +78,6 @@ class SignupForm(ModelForm):
 class EditProfileForm(ModelForm):
   """User Edit Profile form."""
 
-  def update(self, commit=True):
-    user = super().save(commit=False)
-
-    if commit:
-      user.save()
-
-    return user
-
   class Meta:
     """Meta class for Edit Profile form."""
     model = User
