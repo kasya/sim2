@@ -31,7 +31,7 @@
 				type="radio"
 				id="practice_mode"
 				name="mode"
-				value="1"
+				value="practice"
 				v-model="picked"
 			/><label for="practice_mode"
 				><p>Practice mode (you will see correct answers right away)</p></label
@@ -40,7 +40,7 @@
 				type="radio"
 				id="exam_mode"
 				name="mode"
-				value="2"
+				value="exam"
 				v-model="picked"
 			/><label for="exam_mode"
 				><p>Exam mode (your answers will be graded at the end)</p></label
@@ -50,7 +50,7 @@
 			class="btn bg-gradient-info w-auto me-1 mb-0"
 			type="button"
 			v-on:click="startExam"
-			v-show="picked > 0"
+			v-show="picked.length > 0"
 		>
 			Select
 		</button>
@@ -68,7 +68,7 @@ export default {
 			exams: {},
 			selected: -1,
 			exam_selected: -1,
-			picked: -1,
+			picked: "",
 		};
 	},
 	methods: {

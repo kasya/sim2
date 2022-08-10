@@ -54,7 +54,7 @@
         </p>
       </div>
 
-      <div v-show="attempt.mode == 1">
+      <div v-show="attempt.mode == 'practice'">
         <button
           class="btn bg-gradient-info w-auto me-1 mb-0"
           type="button"

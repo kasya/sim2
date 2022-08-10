@@ -37,10 +37,20 @@ class ExamAttempt(models.Model):
   STATUSES = ((STATUS_FINISHED, 'Finished'), (STATUS_IN_PROGRESS,
                                               'In progress'))
 
+  PRACTICE_MODE = 'practice'
+  EXAM_MODE = 'exam'
+
+  EXAM_MODES = [
+      (PRACTICE_MODE, 'Practice mode'),
+      (EXAM_MODE, 'Exam mode'),
+  ]
+
   created = models.DateTimeField(default=timezone.now, editable=False)
   duration_minutes = models.IntegerField(default=120)
   grade = models.IntegerField(default=0)
-  mode = models.IntegerField(default=0)
+  mode = models.CharField(max_length=30,
+                          default=PRACTICE_MODE,
+                          choices=EXAM_MODES)
   status = models.CharField(max_length=25,
                             default=STATUS_IN_PROGRESS,
                             choices=STATUSES)

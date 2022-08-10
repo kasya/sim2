@@ -11,7 +11,7 @@
         "exam": 1,
         "questions": [1],
         "flagged_questions": [],
-        "mode": 1
+        "mode": "practice"
     }
 },
 {
@@ -25,7 +25,7 @@
         "user": 4,
         "exam": 2,
         "questions": [],
-        "mode": 2
+        "mode": "exam"
     }
 },
 {
