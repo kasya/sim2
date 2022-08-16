@@ -118,6 +118,16 @@ class ExamAttempt(models.Model):
 
     return self.grade >= self.exam.passing_grade
 
+  @property
+  def in_exam_mode(self):
+    """Check if exam attempt mode is exam."""
+    return self.mode == self.EXAM_MODE
+
+  @property
+  def in_practice_mode(self):
+    """Check if exam attempt mode is practice."""
+    return self.mode == self.PRACTICE_MODE
+
 
 class AnswerAttempt(models.Model):
   """Answer attempt model."""
