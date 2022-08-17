@@ -55,13 +55,15 @@ class Profile(LoginRequiredMixin, ListView):
     """Get context."""
 
     show_charts = 2
-    exam_ids = ExamAttempt.objects.filter(user=self.request.user).values_list(
-        'exam', flat=True).distinct()[:show_charts]
+    exam_ids = ExamAttempt.objects.filter(
+        user=self.request.user,
+        mode='exam').values_list('exam', flat=True).distinct()[:show_charts]
     context = super().get_context_data(**kwargs)
     context.update({
         'exams_count':
-            ExamAttempt.objects.filter(user=self.request.user
-                                      ).values('exam').distinct().count(),
+            ExamAttempt.objects.filter(
+                user=self.request.user,
+                mode='exam').values('exam').distinct().count(),
         'exam_ids':
             list(exam_ids)
     })
@@ -69,8 +71,8 @@ class Profile(LoginRequiredMixin, ListView):
     return context
 
   def get_queryset(self):
-    return ExamAttempt.objects.filter(
-        user=self.request.user).order_by('-created')
+    return ExamAttempt.objects.filter(user=self.request.user,
+                                      mode='exam').order_by('-created')
 
 
 class ProfileChart(APIView):
@@ -80,8 +82,9 @@ class ProfileChart(APIView):
   def get(self, request, exam_id):
     """Sends attempts data to frontend for charts."""
     show_entries = 50
-    attempts = ExamAttempt.objects.filter(
-        exam=exam_id, user_id=request.user.id)[:show_entries]
+    attempts = ExamAttempt.objects.filter(exam=exam_id,
+                                          user_id=request.user.id,
+                                          mode='exam')[:show_entries]
     exam = Exam.objects.get(id=exam_id)
     data = {
         'dates': (attempt.created.strftime('%b %d %Y') for attempt in attempts),

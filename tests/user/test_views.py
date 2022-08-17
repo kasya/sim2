@@ -138,12 +138,14 @@ class UserViewTestCase(TestCase):
     response = self.client.get(reverse('profile'))
     self.assertEqual(
         response.context['exams_count'],
-        ExamAttempt.objects.filter(user=user).values('exam').distinct().count())
+        ExamAttempt.objects.filter(
+            user=user, mode='exam').values('exam').distinct().count())
     self.assertEqual(
         response.context['exam_ids'],
         list(
-            ExamAttempt.objects.filter(user=user).values_list('exam',
-                                                              flat=True)))
+            ExamAttempt.objects.filter(user=user,
+                                       mode='exam').values_list('exam',
+                                                                flat=True)))
 
   def test_profile_chart_get(self):
     """Check that method sends data to frontend."""
