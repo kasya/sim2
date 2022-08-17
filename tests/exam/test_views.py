@@ -70,7 +70,7 @@ class ExamViewTestCase(TestCase):
         reverse('exam_intro',
                 kwargs={
                     'exam_id': self.exam.id,
-                    'exam_mode': 'practice',
+                    'exam_mode': ExamAttempt.PRACTICE_MODE,
                 }))
 
     self.assertEqual(response.status_code, 302)
@@ -87,12 +87,12 @@ class ExamViewTestCase(TestCase):
         reverse('exam_intro',
                 kwargs={
                     'exam_id': self.exam.id,
-                    'exam_mode': 'practice',
+                    'exam_mode': ExamAttempt.PRACTICE_MODE,
                 }))
 
     self.assertEqual(response.status_code, 200)
     self.assertEqual(self.exam, response.context['exam'])
-    self.assertEqual('practice', response.context['exam_mode'])
+    self.assertEqual(ExamAttempt.PRACTICE_MODE, response.context['exam_mode'])
     self.assertInHTML(
         f'<p>You chose to practice {self.exam.subject.name}  {self.exam.name}.</p>',
         response.content.decode('utf-8'))
@@ -105,7 +105,7 @@ class ExamViewTestCase(TestCase):
         reverse('exam_intro',
                 kwargs={
                     'exam_id': self.exam.id,
-                    'exam_mode': 'exam',
+                    'exam_mode': ExamAttempt.EXAM_MODE,
                 }))
 
     self.assertEqual(response.status_code, 200)
@@ -122,7 +122,7 @@ class ExamViewTestCase(TestCase):
         reverse('exam_intro',
                 kwargs={
                     'exam_id': self.exam.id,
-                    'exam_mode': 'practice',
+                    'exam_mode': ExamAttempt.PRACTICE_MODE,
                 }))
 
     self.assertEqual(response.status_code, 302)
@@ -142,7 +142,7 @@ class ExamViewTestCase(TestCase):
         reverse('exam_intro',
                 kwargs={
                     'exam_id': self.exam.id,
-                    'exam_mode': 'practice',
+                    'exam_mode': ExamAttempt.PRACTICE_MODE,
                 }))
     exam_attempt = ExamAttempt.objects.filter(user=self.user,
                                               exam=self.exam).last()
@@ -160,13 +160,13 @@ class ExamViewTestCase(TestCase):
         reverse('exam_intro',
                 kwargs={
                     'exam_id': self.exam.id,
-                    'exam_mode': 'practice',
+                    'exam_mode': ExamAttempt.PRACTICE_MODE,
                 }))
     exam_attempt = ExamAttempt.objects.filter(user=self.user,
                                               exam=self.exam).last()
     self.assertEqual(exam_attempt.questions.count(),
                      self.exam.questions.count())
-    self.assertEqual(exam_attempt.mode, 'practice')
+    self.assertEqual(exam_attempt.mode, ExamAttempt.PRACTICE_MODE)
 
     self.assertRedirects(
         response,
@@ -190,7 +190,7 @@ class ExamViewTestCase(TestCase):
         reverse('exam_intro',
                 kwargs={
                     'exam_id': self.exam.id,
-                    'exam_mode': 'exam',
+                    'exam_mode': ExamAttempt.EXAM_MODE,
                 }))
     exam_attempt = ExamAttempt.objects.filter(user=self.user,
                                               exam=self.exam).last()
@@ -231,7 +231,7 @@ class ExamViewTestCase(TestCase):
                     'attempt_id': self.attempt.id
                 }))
     self.assertEqual(self.attempt, response.context['attempt'])
-    self.assertEqual(self.attempt.mode, 'practice')
+    self.assertEqual(self.attempt.mode, ExamAttempt.PRACTICE_MODE)
 
   def test_exam_finish_get_unauthorized_user(self):
     """Check access denied for unauthorized user."""
