@@ -84,7 +84,7 @@ class ProfileChart(APIView):
     show_entries = 50
     attempts = ExamAttempt.objects.filter(
         exam=exam_id, user=request.user,
-        mode=ExamAttempt.EXAM_MODE)[:show_entries]
+        mode=ExamAttempt.EXAM_MODE).order_by('created')[:show_entries]
     exam = Exam.objects.get(id=exam_id)
     data = {
         'dates': (attempt.created.strftime('%b %d %Y') for attempt in attempts),
