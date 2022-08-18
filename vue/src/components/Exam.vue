@@ -41,6 +41,30 @@
           <label for="flag">Come back to this question later</label>
         </div>
       </form>
+      <div v-show="correct_answers_text.length > 0">
+        Oops! You've made a mistake. You should have picked:
+        <p v-for="text in correct_answers_text" v-bind:key="text">
+          • {{ text }}
+        </p>
+      </div>
+      <div v-show="result == 'correct'">
+        Everything correct! Good job!
+        <p v-for="text in correct_answers_text" v-bind:key="text">
+          • {{ text }}
+        </p>
+      </div>
+
+      <div v-show="attempt.mode == 'practice'">
+        <button
+          class="btn bg-gradient-info w-auto me-1 mb-0"
+          type="button"
+          v-on:click="checkAnswer"
+          v-show="question.text"
+          :disabled="!selected && !checked.length"
+        >
+          Check answer
+        </button>
+      </div>
       <button
         class="btn bg-gradient-info w-auto me-1 mb-0"
         type="button"
@@ -92,6 +116,7 @@ export default {
       answeredQuestions: [],
       attempt: {},
       checked: [],
+      correct_answers_text: "",
       count: 1,
       error: null,
       flaggedQuestions: [],
@@ -106,9 +131,11 @@ export default {
   },
   methods: {
     getNextQuestion() {
-      this.isChecked = false;
       this.activeFlag = false;
+      this.correct_answers_text = "";
       this.error = "";
+      this.isChecked = false;
+      this.result = false;
       axios
         .get(this.path)
         .then((res) => {
@@ -127,6 +154,7 @@ export default {
         });
     },
     getQuestion(event, id) {
+      this.result = false;
       this.flaggedQuestions.push(id);
       if (event === undefined) {
         this.questionId = parseInt(id);
@@ -157,11 +185,36 @@ export default {
         });
     },
     checkAnswer() {
+      this.answerIds = [];
+      this.correct_answers_text = "";
+
+      if (this.question.type == this.multipleChoice) {
+        if (this.selected != null) {
+          this.answerIds.push(this.selected);
+          this.selected = null;
+        }
+      } else {
+        this.answerIds.push(...this.checked);
+        this.checked = [];
+      }
+      if (!this.answerIds) {
+        return;
+      }
       axios
-        .post(this.path, { answers: this.selected })
+        .post(this.checkAnswerPath, {
+          answer_ids: this.answerIds,
+          question_id: this.question.id,
+        })
         .then((res) => {
-          this.result = res.data["is_correct"];
-          this.isChecked = true;
+          this.result = res.data["result"];
+          if (res.data["correct_answers"]) {
+            this.correct_answers_text = res.data["correct_answers"];
+          }
+          if (this.question.type == this.multipleChoice) {
+            this.selected = this.answerIds[0];
+          } else {
+            this.checked = this.answerIds;
+          }
         })
         .catch((error) => {
           this.error = error.response.data.message;
@@ -243,6 +296,9 @@ export default {
     },
     attemptPath() {
       return `/api/attempt/${this.attemptId}`;
+    },
+    checkAnswerPath() {
+      return `/api/${this.question.id}/check_answer/`;
     },
   },
   created() {

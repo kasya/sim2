@@ -49,8 +49,10 @@ class QuestionView(APIAttemptBase):
 
     data = request.data
     answer_ids = data.get('answers')
+    if self.attempt.in_exam_mode and not self.attempt.time_left_seconds:
+      raise Http404
 
-    if not data or not answer_ids or not self.attempt.time_left_seconds:
+    if not data or not answer_ids:
       raise Http404
 
     # Try to update an existing answer attempt.
@@ -93,4 +95,23 @@ class QuestionAnswerView(APIAttemptBase):
     return Response({
         'answer_ids': answer_ids,
         'question': QuestionSerializer(question).data
+    })
+
+
+class CheckAnswerView(APIView):
+
+  def post(self, request, **kwargs):
+
+    data = request.data
+    question = Question.objects.get(id=self.kwargs['question_id'])
+    correct_answer_ids = (int(answer_id) for answer_id in data['answer_ids'])
+    if set(correct_answer_ids) == set((question.correct_answer_ids())):
+      return Response({'result': 'correct'})
+
+    return Response({
+        'result':
+            'wrong',
+        'correct_answers': [
+            answer.text for answer in question.correct_answers.all()
+        ]
     })

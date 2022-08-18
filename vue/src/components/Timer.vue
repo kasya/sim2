@@ -1,5 +1,5 @@
 <template>
-	<div class="progress">
+	<div class="progress" v-show="attempt.mode == 'exam'">
 		<div
 			class="progress-bar progress-bar-striped bg-info"
 			id="progress_bar"
@@ -29,31 +29,32 @@ export default {
 				.get(this.attemptPath)
 				.then((res) => {
 					this.attempt = res.data;
-					let that = this;
-					console.log(this.attempt);
-					const counterBack = setInterval(function () {
-						let percent = parseInt(
-							(that.attempt.time_left_seconds * 100) /
-								(that.attempt.attempt_duration_minutes * 60)
-						);
-						if (percent >= 0) {
-							document.getElementById("progress_bar").style.width =
-								percent + "%";
-							document.getElementById("progress_bar").innerHTML =
-								Math.floor(that.attempt.time_left_seconds / 60)
-									.toString()
-									.padStart(2, "0") +
-								":" +
-								(that.attempt.time_left_seconds % 60)
-									.toString()
-									.padStart(2, "0");
+					if (this.attempt.mode == "exam") {
+						let that = this;
+						const counterBack = setInterval(function () {
+							let percent = parseInt(
+								(that.attempt.time_left_seconds * 100) /
+									(that.attempt.attempt_duration_minutes * 60)
+							);
+							if (percent >= 0) {
+								document.getElementById("progress_bar").style.width =
+									percent + "%";
+								document.getElementById("progress_bar").innerHTML =
+									Math.floor(that.attempt.time_left_seconds / 60)
+										.toString()
+										.padStart(2, "0") +
+									":" +
+									(that.attempt.time_left_seconds % 60)
+										.toString()
+										.padStart(2, "0");
 
-							that.attempt.time_left_seconds--;
-						} else {
-							clearInterval(counterBack);
-							window.location.href = `/exam/${that.attemptId}/finish`;
-						}
-					}, 1000);
+								that.attempt.time_left_seconds--;
+							} else {
+								clearInterval(counterBack);
+								window.location.href = `/exam/${that.attemptId}/finish`;
+							}
+						}, 1000);
+					}
 				})
 				.catch((error) => {
 					// eslint-disable-next-line

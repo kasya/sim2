@@ -246,3 +246,33 @@ class QuestionViewTestCase(TestCase):
                     'question_id': self.question.id
                 }))
     self.assertEqual(response.data['flagged_questions'], [])
+
+  def test_post_check_answer_wrong(self):
+
+    attempt = ExamAttempt.objects.create(user=self.user, exam=self.exam)
+    wrong_answer_id = [1, 2]
+
+    self.client.login(username=self.user.username, password=self.user_password)
+
+    response = self.client.post(reverse(
+        'check_answer_api', kwargs={'question_id': self.question.id}),
+                                data={
+                                    'answer_ids': wrong_answer_id,
+                                    'question_id': self.question.id
+                                })
+
+    self.assertEqual(response.data['result'], 'wrong')
+
+  def test_post_check_answer_correct(self):
+
+    attempt = ExamAttempt.objects.create(user=self.user, exam=self.exam)
+    correct_answer_id = 1
+
+    self.client.login(username=self.user.username, password=self.user_password)
+    response = self.client.post(reverse(
+        'check_answer_api', kwargs={'question_id': self.question.id}),
+                                data={
+                                    'answer_ids': [correct_answer_id],
+                                    'question_id': self.question.id,
+                                })
+    self.assertEqual(response.data['result'], 'correct')

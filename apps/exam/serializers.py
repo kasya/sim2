@@ -33,6 +33,7 @@ class ExamAttemptSerializer(serializers.ModelSerializer):
 
   answer_attempts = serializers.SerializerMethodField()
   attempt_duration_minutes = serializers.SerializerMethodField()
+  mode = serializers.SerializerMethodField()
   question_count = serializers.SerializerMethodField()
   time_left_seconds = serializers.SerializerMethodField()
 
@@ -59,8 +60,11 @@ class ExamAttemptSerializer(serializers.ModelSerializer):
         for obj in obj.answerattempt_set.all()
     ]
 
+  def get_mode(self, obj):
+    return obj.mode
+
   class Meta:
     model = ExamAttempt
     fields = ('answer_attempts', 'attempt_duration_minutes', 'exam',
-              'flagged_questions', 'time_left_seconds', 'questions',
+              'flagged_questions', 'mode', 'time_left_seconds', 'questions',
               'question_count', 'user')

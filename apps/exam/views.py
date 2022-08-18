@@ -50,16 +50,20 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     context['exam'] = exam
     context[
         'attempt_duration'] = exam.duration_minutes + self.request.user.required_extra_time
+    context['exam_mode'] = self.kwargs['exam_mode']
+
     return context
 
-  def post(self, request, exam_id):
+  def post(self, request, exam_id, exam_mode):
     """
     Create an attempt entity with chosen exam_id.
     Pre-populate attempt_questions table with questions from this exam.
     """
     exam = Exam.objects.get(id=exam_id)
 
-    current_attempt = ExamAttempt.objects.create(user=request.user, exam=exam)
+    current_attempt = ExamAttempt.objects.create(user=request.user,
+                                                 exam=exam,
+                                                 mode=self.kwargs['exam_mode'])
 
     question_pool_ids = [question.id for question in exam.questions.all()]
     if exam.questions.count() > exam.question_count:
@@ -81,7 +85,6 @@ class ExamPageView(TemplateView, LoginRequiredMixin):
     context = super().get_context_data(**kwargs)
     context['attempt'] = ExamAttempt.objects.get(exam_id=self.kwargs['exam_id'],
                                                  id=self.kwargs['attempt_id'])
-
     return context
 
 
@@ -109,12 +112,13 @@ class ExamFinishView(TemplateView, LoginRequiredMixin):
     context = super().get_context_data(**kwargs)
     context['exam'] = current_attempt.exam
     context['grade'] = current_attempt.calculate_grade()
+
     if current_attempt.passed:
       context[
-          'status'] = f"Congratulations! You've passed the exam in {current_attempt.exam.name}! Your grade is {current_attempt.grade}%."
+          'status'] = f"Congratulations! You've finished {current_attempt.mode} in {current_attempt.exam.subject.name} {current_attempt.exam.name}! Your grade is {current_attempt.grade}%."
     else:
       context[
-          'status'] = f"Sorry, you haven't passed the exam in {current_attempt.exam.name}. Your grade is {current_attempt.grade}%."
+          'status'] = f"Sorry, you haven't passed the {current_attempt.exam.subject.name} {current_attempt.exam.name} {current_attempt.mode}. Your grade is {current_attempt.grade}%."
 
     return context
 
