@@ -55,7 +55,7 @@ class ExamAttempt(models.Model):
                             default=STATUS_IN_PROGRESS,
                             choices=STATUSES)
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-  exam = models.ManyToManyField(Exam, related_name='exams')
+  exams = models.ManyToManyField(Exam)
 
   questions = models.ManyToManyField('question.Question')
   flagged_questions = models.ManyToManyField('question.Question',
