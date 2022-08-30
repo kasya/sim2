@@ -98,7 +98,8 @@ class QuestionViewTestCase(TestCase):
     """Check that method creates Answer Attempt and saves answer to db."""
 
     correct_answer = Answer.objects.get(id=1)
-    attempt = ExamAttempt.objects.create(user=self.user, exam=self.exam)
+    attempt = ExamAttempt.objects.create(user=self.user)
+    attempt.exam.set([self.exam])
 
     self.client.login(username=self.user.username, password=self.user_password)
 
@@ -116,7 +117,8 @@ class QuestionViewTestCase(TestCase):
   def test_api_post_update_answers(self):
     """Check that answer id in db changes when we change our answers."""
 
-    attempt = ExamAttempt.objects.create(user=self.user, exam=self.exam)
+    attempt = ExamAttempt.objects.create(user=self.user)
+    attempt.exam.set([self.exam])
     correct_answer = Answer.objects.get(id=1)
     wrong_answer = Answer.objects.get(id=2)
 
@@ -249,7 +251,8 @@ class QuestionViewTestCase(TestCase):
 
   def test_post_check_answer_wrong(self):
 
-    attempt = ExamAttempt.objects.create(user=self.user, exam=self.exam)
+    attempt = ExamAttempt.objects.create(user=self.user)
+    attempt.exam.set([self.exam])
     wrong_answer_id = [1, 2]
 
     self.client.login(username=self.user.username, password=self.user_password)
@@ -265,7 +268,8 @@ class QuestionViewTestCase(TestCase):
 
   def test_post_check_answer_correct(self):
 
-    attempt = ExamAttempt.objects.create(user=self.user, exam=self.exam)
+    attempt = ExamAttempt.objects.create(user=self.user)
+    attempt.exam.set([self.exam])
     correct_answer_id = 1
 
     self.client.login(username=self.user.username, password=self.user_password)

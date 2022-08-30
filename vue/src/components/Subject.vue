@@ -1,6 +1,7 @@
 <template>
 	<div class="container-fluid">
-		<h2>Please choose the subject of your exam:</h2>
+		<h2>Let's get started.</h2>
+		<h4>Please choose the subject of your exam:</h4>
 		<select
 			class="form-select"
 			name="subjects"
@@ -13,20 +14,43 @@
 			</option>
 		</select>
 		<div v-show="exams.length > 0">
-			<p>Please choose the exam you want to take:</p>
+			<h4>Now choose what would you like to do:</h4>
+			<input
+				type="radio"
+				id="subject_exam"
+				name="subject_or_category"
+				value="subject_exam"
+				v-model="exam_type"
+			/><label for="subject_exam">
+				Take en exam on whole subject (covers all categories from chosen
+				subject) </label
+			><br />
+			<input
+				type="radio"
+				id="category_exam"
+				name="subject_or_category"
+				value="category_exam"
+				v-model="exam_type"
+			/><label for="category_exam"
+				>Choose one category to take an exam on.</label
+			><br />
+			<h4 v-show="exam_type == 'category_exam'">
+				Now choose the exam category:
+			</h4>
 			<select
 				class="form-select"
 				name="exams"
 				id="exams"
 				v-model="exam_selected"
+				v-show="exam_type == 'category_exam'"
 			>
 				<option v-bind:key="e.id" v-bind:value="e.id" v-for="e in exams">
 					{{ e.name }}
 				</option>
 			</select>
 		</div>
-
-		<div v-show="exam_selected > 0">
+		<div v-show="exam_type.length > 0">
+			<h4>Pick exam or practice mode:</h4>
 			<input
 				type="radio"
 				id="practice_mode"
@@ -69,6 +93,7 @@ export default {
 			selected: -1,
 			exam_selected: -1,
 			picked: "",
+			exam_type: "",
 		};
 	},
 	methods: {
@@ -95,7 +120,11 @@ export default {
 				});
 		},
 		startExam() {
-			window.location.href = `/exam/${this.exam_selected}/${this.picked}/intro/`;
+			if (this.exam_selected > 0) {
+				window.location.href = `/exam/${this.exam_selected}/${this.picked}/intro/`;
+			} else {
+				window.location.href = `/exam/subject/${this.selected}/${this.picked}/intro/`;
+			}
 		},
 	},
 	computed: {

@@ -8,7 +8,7 @@
         "grade": 100,
         "status": "in_progress",
         "user": 4,
-        "exam": 1,
+        "exam": [1],
         "questions": [1],
         "flagged_questions": [],
         "mode": "practice"
@@ -20,11 +20,11 @@
     "fields": {
         "created": "2022-01-26T01:49:17.028Z",
         "duration_minutes": 120,
-        "grade": 0,
+        "grade": 100,
         "status": "in_progress",
         "user": 4,
-        "exam": 2,
-        "questions": [],
+        "exam": [1, 2],
+        "questions": [1],
         "mode": "exam"
     }
 },
@@ -37,7 +37,7 @@
         "grade": 0,
         "status": "in_progress",
         "user": 5,
-        "exam": 1,
+        "exam": [1],
         "questions": []
     }
 }

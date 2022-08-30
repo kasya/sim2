@@ -46,33 +46,55 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     """Render intro page template for chosen exam. """
 
     context = super().get_context_data(**kwargs)
-    exam = Exam.objects.get(id=self.kwargs['exam_id'])
-    context['exam'] = exam
-    context[
-        'attempt_duration'] = exam.duration_minutes + self.request.user.required_extra_time
+    if 'exam_id' in self.kwargs:
+      exam = Exam.objects.filter(id=self.kwargs['exam_id'])
+      context['subject'] = Subject.objects.get(exam=exam[0])
+      context['exam'] = exam[0]
+
+    if 'subject_id' in self.kwargs:
+      context['subject'] = Subject.objects.get(id=self.kwargs['subject_id'])
+      exam = Exam.objects.filter(subject_id=self.kwargs['subject_id'])
+      context['subject_question_count'] = 50
+
+    context['attempt_duration'] = int(
+        sum([e.duration_minutes for e in exam]) / len(exam) +
+        self.request.user.required_extra_time)
     context['exam_mode'] = self.kwargs['exam_mode']
 
     return context
 
-  def post(self, request, exam_id, exam_mode):
+  def post(self, request, exam_mode, subject_id=None, exam_id=None):
     """
     Create an attempt entity with chosen exam_id.
     Pre-populate attempt_questions table with questions from this exam.
     """
-    exam = Exam.objects.get(id=exam_id)
+    if subject_id:
+      exams = Exam.objects.filter(subject_id=subject_id)
+      current_attempt = ExamAttempt.objects.create(
+          user=request.user, mode=self.kwargs['exam_mode'])
+      current_attempt.exam.set(exams)
+      question_pool_ids = []
+      for exam in exams:
+        question_pool_ids.extend(
+            Question.objects.filter(exam=exam).values_list('id', flat=True))
+      if len(question_pool_ids) > 50:
+        question_pool_ids = random.sample(question_pool_ids, 50)
 
-    current_attempt = ExamAttempt.objects.create(user=request.user,
-                                                 exam=exam,
-                                                 mode=self.kwargs['exam_mode'])
+    elif exam_id:
+      exam = Exam.objects.get(id=exam_id)
+      current_attempt = ExamAttempt.objects.create(
+          user=request.user, mode=self.kwargs['exam_mode'])
+      current_attempt.exam.set(Exam.objects.filter(id=exam_id))
 
-    question_pool_ids = [question.id for question in exam.questions.all()]
-    if exam.questions.count() > exam.question_count:
-      question_pool_ids = random.sample(question_pool_ids, exam.question_count)
+      question_pool_ids = [question.id for question in exam.questions.all()]
+      if exam.questions.count() > exam.question_count:
+        question_pool_ids = random.sample(question_pool_ids,
+                                          exam.question_count)
 
     current_attempt.questions.set(
         Question.objects.filter(id__in=question_pool_ids))
 
-    return redirect(reverse('exam_page', args=(exam_id, current_attempt.id)))
+    return redirect(reverse('exam_page', args=[current_attempt.id]))
 
 
 class ExamPageView(TemplateView, LoginRequiredMixin):
@@ -83,8 +105,7 @@ class ExamPageView(TemplateView, LoginRequiredMixin):
     """Render page with actual questions. """
 
     context = super().get_context_data(**kwargs)
-    context['attempt'] = ExamAttempt.objects.get(exam_id=self.kwargs['exam_id'],
-                                                 id=self.kwargs['attempt_id'])
+    context['attempt'] = ExamAttempt.objects.get(id=self.kwargs['attempt_id'])
     return context
 
 
@@ -108,17 +129,20 @@ class ExamFinishView(TemplateView, LoginRequiredMixin):
 
     current_attempt.status = ExamAttempt.STATUS_FINISHED
     current_attempt.save()
+    exams = current_attempt.exam.all()
 
     context = super().get_context_data(**kwargs)
-    context['exam'] = current_attempt.exam
-    context['grade'] = current_attempt.calculate_grade()
 
+    context['grade'] = current_attempt.calculate_grade()
+    context['passing_grade'] = int(
+        sum([exam.passing_grade for exam in exams]) /
+        len(current_attempt.exam.all()))
     if current_attempt.passed:
       context[
-          'status'] = f"Congratulations! You've finished {current_attempt.mode} in {current_attempt.exam.subject.name} {current_attempt.exam.name}! Your grade is {current_attempt.grade}%."
+          'status'] = f"Congratulations! You've finished {current_attempt.mode} in {exams[0].subject.name} {exams[0].name}! Your grade is {current_attempt.grade}%."
     else:
       context[
-          'status'] = f"Sorry, you haven't passed the {current_attempt.exam.subject.name} {current_attempt.exam.name} {current_attempt.mode}. Your grade is {current_attempt.grade}%."
+          'status'] = f"Sorry, you haven't passed the {exams[0].subject.name} {exams[0].name} {current_attempt.mode}. Your grade is {current_attempt.grade}%."
 
     return context
 
