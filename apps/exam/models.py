@@ -55,7 +55,7 @@ class ExamAttempt(models.Model):
                             default=STATUS_IN_PROGRESS,
                             choices=STATUSES)
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-  exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
+  exams = models.ManyToManyField(Exam)
 
   questions = models.ManyToManyField('question.Question')
   flagged_questions = models.ManyToManyField('question.Question',
@@ -109,24 +109,35 @@ class ExamAttempt(models.Model):
 
     self.grade = grade
     self.save()
-
     return grade
 
   @property
   def passed(self):
     """Check if user passed exam."""
 
-    return self.grade >= self.exam.passing_grade
+    passing_grade = (sum([exam.passing_grade for exam in self.exams.all()]) /
+                     self.exams.count())
+    return self.grade >= passing_grade
 
   @property
-  def in_exam_mode(self):
+  def is_in_exam_mode(self):
     """Check if exam attempt mode is exam."""
     return self.mode == self.EXAM_MODE
 
   @property
-  def in_practice_mode(self):
+  def is_in_practice_mode(self):
     """Check if exam attempt mode is practice."""
     return self.mode == self.PRACTICE_MODE
+
+  @property
+  def is_subject_attempt(self):
+    """Check if exam attempt is for a whole subject."""
+    return self.exam.count() > 1
+
+  @property
+  def is_exam_attempt(self):
+    """Check if exam attempt is for a specific exam in subject."""
+    return self.exam.count() == 1
 
 
 class AnswerAttempt(models.Model):

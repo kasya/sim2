@@ -140,12 +140,12 @@ class UserViewTestCase(TestCase):
         response.context['exams_count'],
         ExamAttempt.objects.filter(
             user=user,
-            mode=ExamAttempt.EXAM_MODE).values('exam').distinct().count())
+            mode=ExamAttempt.EXAM_MODE).values('exams').distinct().count())
     self.assertEqual(
         response.context['exam_ids'],
         list(
             ExamAttempt.objects.filter(
-                user=user, mode=ExamAttempt.EXAM_MODE).values_list('exam',
+                user=user, mode=ExamAttempt.EXAM_MODE).values_list('exams',
                                                                    flat=True)))
 
   def test_profile_chart_get(self):

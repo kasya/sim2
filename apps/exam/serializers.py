@@ -65,6 +65,6 @@ class ExamAttemptSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = ExamAttempt
-    fields = ('answer_attempts', 'attempt_duration_minutes', 'exam',
+    fields = ('answer_attempts', 'attempt_duration_minutes', 'exams',
               'flagged_questions', 'mode', 'time_left_seconds', 'questions',
               'question_count', 'user')

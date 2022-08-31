@@ -4,7 +4,7 @@
 
 <div class="container-fluid">
 	{% if exam_mode == "practice" %}
-	<p>You chose to practice {{ exam.subject.name}} {{ exam.name }}.</p>
+	<p>You chose to practice {{ subject.name }} {{ exam.name }}.</p>
 	<p>This practice mode doesn't have a time limit - you can go at your desired
 		speed.</p>
 	<p> You'll have {{ exam.question_count }} questions to answer.
@@ -19,9 +19,9 @@
 		</button>
 	</form>
 	{% elif exam_mode == "exam" %}
-	<p>You chose {{ exam.subject.name}} {{ exam.name }} as your exam.</p>
+	<p>You chose {{ subject.name}} {{ exam.name }} as your exam.</p>
 	<p>
-		This exam has {{ exam.question_count }} questions. The time to finish this
+		This exam has {{ exam.question_count }} {{subject_question_count}} questions. The time to finish this
 		exam is limited to {{ attempt_duration }} minutes. Good luck!
 	</p>
 	<form method="POST">
