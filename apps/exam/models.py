@@ -132,12 +132,12 @@ class ExamAttempt(models.Model):
   @property
   def is_subject_attempt(self):
     """Check if exam attempt is for a whole subject."""
-    return len(self.exam.all()) > 1
+    return self.exam.count() > 1
 
   @property
   def is_exam_attempt(self):
     """Check if exam attempt is for a specific exam in subject."""
-    return len(self.exam.all()) == 1
+    return self.exam.count() == 1
 
 
 class AnswerAttempt(models.Model):

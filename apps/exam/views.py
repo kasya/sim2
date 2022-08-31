@@ -90,7 +90,7 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
       if exam.questions.count() > exam.question_count:
         question_pool_ids = random.sample(question_pool_ids,
                                           exam.question_count)
-    random.shuffle(question_pool_ids)
+
     current_attempt.questions.set(
         Question.objects.filter(id__in=question_pool_ids))
 
