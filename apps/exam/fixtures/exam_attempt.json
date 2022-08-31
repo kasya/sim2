@@ -8,7 +8,7 @@
         "grade": 100,
         "status": "in_progress",
         "user": 4,
-        "exam": [1],
+        "exams": [1],
         "questions": [1],
         "flagged_questions": [],
         "mode": "practice"
@@ -23,7 +23,7 @@
         "grade": 100,
         "status": "in_progress",
         "user": 4,
-        "exam": [1, 2],
+        "exams": [1, 2],
         "questions": [1],
         "mode": "exam"
     }
@@ -37,7 +37,7 @@
         "grade": 0,
         "status": "in_progress",
         "user": 5,
-        "exam": [1],
+        "exams": [1],
         "questions": []
     }
 }

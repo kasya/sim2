@@ -47,17 +47,17 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
 
     context = super().get_context_data(**kwargs)
     if 'exam_id' in self.kwargs:
-      exam = Exam.objects.filter(id=self.kwargs['exam_id'])
-      context['subject'] = Subject.objects.get(exam=exam[0])
-      context['exam'] = exam[0]
+      exams = Exam.objects.filter(id=self.kwargs['exam_id'])
+      context['subject'] = Subject.objects.get(exam=exams[0])
+      context['exam'] = exams[0]
 
     if 'subject_id' in self.kwargs:
       context['subject'] = Subject.objects.get(id=self.kwargs['subject_id'])
-      exam = Exam.objects.filter(subject_id=self.kwargs['subject_id'])
+      exams = Exam.objects.filter(subject_id=self.kwargs['subject_id'])
       context['subject_question_count'] = 50
 
     context['attempt_duration'] = int(
-        sum([e.duration_minutes for e in exam]) / len(exam) +
+        sum([exam.duration_minutes for exam in exams]) / len(exams) +
         self.request.user.required_extra_time)
     context['exam_mode'] = self.kwargs['exam_mode']
 
@@ -70,9 +70,9 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
     """
     if subject_id:
       exams = Exam.objects.filter(subject_id=subject_id)
-      current_attempt = ExamAttempt.objects.create(
-          user=request.user, mode=self.kwargs['exam_mode'])
-      current_attempt.exam.set(exams)
+      current_attempt = ExamAttempt.objects.create(user=request.user,
+                                                   mode=exam_mode)
+      current_attempt.exams.set(exams)
       question_pool_ids = []
       for exam in exams:
         question_pool_ids.extend(
@@ -82,15 +82,15 @@ class ExamIntro(LoginRequiredMixin, TemplateView):
 
     elif exam_id:
       exam = Exam.objects.get(id=exam_id)
-      current_attempt = ExamAttempt.objects.create(
-          user=request.user, mode=self.kwargs['exam_mode'])
-      current_attempt.exam.set(Exam.objects.filter(id=exam_id))
+      current_attempt = ExamAttempt.objects.create(user=request.user,
+                                                   mode=exam_mode)
+      current_attempt.exams.set(Exam.objects.filter(id=exam_id))
 
       question_pool_ids = [question.id for question in exam.questions.all()]
       if exam.questions.count() > exam.question_count:
         question_pool_ids = random.sample(question_pool_ids,
                                           exam.question_count)
-
+    random.shuffle(question_pool_ids)
     current_attempt.questions.set(
         Question.objects.filter(id__in=question_pool_ids))
 
@@ -129,20 +129,20 @@ class ExamFinishView(TemplateView, LoginRequiredMixin):
 
     current_attempt.status = ExamAttempt.STATUS_FINISHED
     current_attempt.save()
-    exams = current_attempt.exam.all()
+    exam = current_attempt.exams.first()
 
     context = super().get_context_data(**kwargs)
 
     context['grade'] = current_attempt.calculate_grade()
     context['passing_grade'] = int(
-        sum([exam.passing_grade for exam in exams]) /
-        len(current_attempt.exam.all()))
+        sum([exam.passing_grade for exam in current_attempt.exams.all()]) /
+        current_attempt.exams.count())
     if current_attempt.passed:
       context[
-          'status'] = f"Congratulations! You've finished {current_attempt.mode} in {exams[0].subject.name} {exams[0].name}! Your grade is {current_attempt.grade}%."
+          'status'] = f"Congratulations! You've finished {current_attempt.mode} in {exam.subject.name} {exam.name}! Your grade is {current_attempt.grade}%."
     else:
       context[
-          'status'] = f"Sorry, you haven't passed the {exams[0].subject.name} {exams[0].name} {current_attempt.mode}. Your grade is {current_attempt.grade}%."
+          'status'] = f"Sorry, you haven't passed the {exam.subject.name} {exam.name} {current_attempt.mode}. Your grade is {current_attempt.grade}%."
 
     return context
 

@@ -164,7 +164,7 @@ class ExamViewTestCase(TestCase):
                     'exam_mode': ExamAttempt.PRACTICE_MODE,
                 }))
     exam_attempt = ExamAttempt.objects.filter(user=self.user,
-                                              exam=self.exam).last()
+                                              exams=self.exam).last()
     self.assertEqual(exam_attempt.duration_minutes,
                      self.exam.duration_minutes + self.user.required_extra_time)
 
@@ -223,7 +223,7 @@ class ExamViewTestCase(TestCase):
                 kwargs={
                     'attempt_id':
                         ExamAttempt.objects.filter(user=self.user,
-                                                   exam=self.exam).last().id
+                                                   exams=self.exam).last().id
                 }))
 
   def test_exam_attempt_practice_mode_intro_post(self):
@@ -240,7 +240,7 @@ class ExamViewTestCase(TestCase):
                     'exam_mode': ExamAttempt.PRACTICE_MODE,
                 }))
     exam_attempt = ExamAttempt.objects.filter(user=self.user,
-                                              exam=self.exam).last()
+                                              exams=self.exam).last()
     self.assertEqual(exam_attempt.questions.count(),
                      self.exam.questions.count())
     self.assertEqual(exam_attempt.mode, ExamAttempt.PRACTICE_MODE)
@@ -251,7 +251,7 @@ class ExamViewTestCase(TestCase):
                 kwargs={
                     'attempt_id':
                         ExamAttempt.objects.filter(user=self.user,
-                                                   exam=self.exam).last().id
+                                                   exams=self.exam).last().id
                 }))
 
   def test_exam_attempt_exam_mode_intro_post(self):
@@ -268,7 +268,7 @@ class ExamViewTestCase(TestCase):
                     'exam_mode': ExamAttempt.EXAM_MODE,
                 }))
     exam_attempt = ExamAttempt.objects.filter(user=self.user,
-                                              exam=self.exam).last()
+                                              exams=self.exam).last()
     self.assertEqual(exam_attempt.questions.count(),
                      self.exam.questions.count())
     self.assertEqual(exam_attempt.mode, ExamAttempt.EXAM_MODE)
@@ -279,7 +279,7 @@ class ExamViewTestCase(TestCase):
                 kwargs={
                     'attempt_id':
                         ExamAttempt.objects.filter(user=self.user,
-                                                   exam=self.exam).last().id
+                                                   exams=self.exam).last().id
                 }))
 
   def test_exam_page_get(self):

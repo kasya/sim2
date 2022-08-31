@@ -90,8 +90,8 @@ export default {
 		return {
 			subjects: {},
 			exams: {},
-			selected: -1,
-			exam_selected: -1,
+			selected: null,
+			exam_selected: null,
 			picked: "",
 			exam_type: "",
 		};
@@ -120,7 +120,7 @@ export default {
 				});
 		},
 		startExam() {
-			if (this.exam_selected > 0) {
+			if (this.exam_selected) {
 				window.location.href = `/exam/${this.exam_selected}/${this.picked}/intro/`;
 			} else {
 				window.location.href = `/exam/subject/${this.selected}/${this.picked}/intro/`;

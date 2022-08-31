@@ -49,7 +49,7 @@ class QuestionView(APIAttemptBase):
 
     data = request.data
     answer_ids = data.get('answers')
-    if self.attempt.in_exam_mode and not self.attempt.time_left_seconds:
+    if self.attempt.is_in_exam_mode and not self.attempt.time_left_seconds:
       raise Http404
 
     if not data or not answer_ids:
