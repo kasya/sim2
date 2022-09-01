@@ -33,12 +33,9 @@ class QuestionView(APIAttemptBase):
   def get(self, request, **kwargs):
     """Send a question object to frontend."""
 
-    answered_question_ids = [
-        aa.question.id
-        for aa in AnswerAttempt.objects.filter(attempt=self.attempt)
-    ]
-    questions = self.attempt.questions.exclude(id__in=answered_question_ids)
-    while questions:
+    questions = self.attempt.questions.exclude(
+        id__in=self.attempt.answered_question_ids)
+    if questions:
       return Response(QuestionSerializer(random.choice(questions)).data)
 
     return Response(status=status.HTTP_200_OK)
