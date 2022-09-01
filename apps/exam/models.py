@@ -64,20 +64,48 @@ class ExamAttempt(models.Model):
   def __str__(self):
     return f'<ExamAttempt>: id# {self.id}'
 
-  def save(self, *args, **kwargs):
-    """Add user required extra time to attempt duration and save attempt."""
-
-    if not self.id:
-      self.duration_minutes += self.user.required_extra_time
-
-    super().save(*args, **kwargs)
-
   @property
   def all_questions_answered(self):
     """Check if user answered all questions in current exam attempt."""
 
     return AnswerAttempt.objects.filter(
         attempt=self.id).count() == self.questions.count()
+
+  @property
+  def answered_question_ids(self):
+    """Return all answered question ids for attempt."""
+    return [
+        answer_attempt.question.id
+        for answer_attempt in AnswerAttempt.objects.filter(attempt=self.id)
+    ]
+
+  @property
+  def is_in_exam_mode(self):
+    """Check if exam attempt mode is exam."""
+    return self.mode == self.EXAM_MODE
+
+  @property
+  def is_in_practice_mode(self):
+    """Check if exam attempt mode is practice."""
+    return self.mode == self.PRACTICE_MODE
+
+  @property
+  def is_subject_attempt(self):
+    """Check if exam attempt is for a whole subject."""
+    return self.exam.count() > 1
+
+  @property
+  def is_exam_attempt(self):
+    """Check if exam attempt is for a specific exam in subject."""
+    return self.exam.count() == 1
+
+  @property
+  def passed(self):
+    """Check if user passed exam."""
+
+    passing_grade = (sum([exam.passing_grade for exam in self.exams.all()]) /
+                     self.exams.count())
+    return self.grade >= passing_grade
 
   @property
   def time_left_seconds(self):
@@ -111,33 +139,13 @@ class ExamAttempt(models.Model):
     self.save()
     return grade
 
-  @property
-  def passed(self):
-    """Check if user passed exam."""
+  def save(self, *args, **kwargs):
+    """Add user required extra time to attempt duration and save attempt."""
 
-    passing_grade = (sum([exam.passing_grade for exam in self.exams.all()]) /
-                     self.exams.count())
-    return self.grade >= passing_grade
+    if not self.id:
+      self.duration_minutes += self.user.required_extra_time
 
-  @property
-  def is_in_exam_mode(self):
-    """Check if exam attempt mode is exam."""
-    return self.mode == self.EXAM_MODE
-
-  @property
-  def is_in_practice_mode(self):
-    """Check if exam attempt mode is practice."""
-    return self.mode == self.PRACTICE_MODE
-
-  @property
-  def is_subject_attempt(self):
-    """Check if exam attempt is for a whole subject."""
-    return self.exam.count() > 1
-
-  @property
-  def is_exam_attempt(self):
-    """Check if exam attempt is for a specific exam in subject."""
-    return self.exam.count() == 1
+    super().save(*args, **kwargs)
 
 
 class AnswerAttempt(models.Model):

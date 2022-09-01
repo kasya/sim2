@@ -1,4 +1,5 @@
 """Question Views Methods."""
+import random
 
 from django.http import Http404
 from django.shortcuts import get_object_or_404
@@ -32,15 +33,10 @@ class QuestionView(APIAttemptBase):
   def get(self, request, **kwargs):
     """Send a question object to frontend."""
 
-    answered_questions = [
-        aa.question.id
-        for aa in AnswerAttempt.objects.filter(attempt=self.attempt)
-    ]
-
-    for question in self.attempt.questions.all():
-      if question.id in answered_questions:
-        continue
-      return Response(QuestionSerializer(question).data)
+    questions = self.attempt.questions.exclude(
+        id__in=self.attempt.answered_question_ids)
+    if questions:
+      return Response(QuestionSerializer(random.choice(questions)).data)
 
     return Response(status=status.HTTP_200_OK)
 
