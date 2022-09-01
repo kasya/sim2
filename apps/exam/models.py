@@ -61,6 +61,9 @@ class ExamAttempt(models.Model):
   flagged_questions = models.ManyToManyField('question.Question',
                                              related_name='flagged_questions')
 
+  def __str__(self):
+    return f'<ExamAttempt>: id# {self.id}'
+
   @property
   def all_questions_answered(self):
     """Check if user answered all questions in current exam attempt."""
@@ -111,9 +114,6 @@ class ExamAttempt(models.Model):
     end_time = self.created + timedelta(minutes=self.duration_minutes)
     time_left = end_time - timezone.now()
     return max(int(time_left.total_seconds()), 0)
-
-  def __str__(self):
-    return f'<ExamAttempt>: id# {self.id}'
 
   def calculate_grade(self):
     """Calculate the grade for an attempt."""
