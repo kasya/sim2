@@ -1,4 +1,5 @@
 """Question Views Methods."""
+import random
 
 from django.http import Http404
 from django.shortcuts import get_object_or_404
@@ -36,8 +37,10 @@ class QuestionView(APIAttemptBase):
         aa.question.id
         for aa in AnswerAttempt.objects.filter(attempt=self.attempt)
     ]
+    questions = list(self.attempt.questions.all())
+    random.shuffle(questions)
 
-    for question in self.attempt.questions.all():
+    for question in questions:
       if question.id in answered_questions:
         continue
       return Response(QuestionSerializer(question).data)
