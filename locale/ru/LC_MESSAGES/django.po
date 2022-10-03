@@ -212,14 +212,17 @@ msgid "{first_name} {self.last_name}, {self.id}"
 msgstr "{first_name} {self.last_name}, {self.id}"
 
 #: apps/user/templates/user/profile.html:10
+#, python-format
 msgid "Welcome,"
 msgstr "Добро пожаловать, "
 
 #: apps/user/templates/user/profile.html:13
+#, python-format
 msgid "Name:"
 msgstr "Имя:"
 
 #: apps/user/templates/user/profile.html:14
+#, python-format
 msgid "Lastname:"
 msgstr "Фамилия:"
 
