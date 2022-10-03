@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class Subject(models.Model):
@@ -19,13 +20,16 @@ class Exam(models.Model):
   """Exam model."""
 
   duration_minutes = models.IntegerField(default=120)
-  name = models.CharField(max_length=1000)
+  name = models.CharField(verbose_name=_('name'), max_length=1000)
   passing_grade = models.IntegerField(default=75)
   subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
   question_count = models.IntegerField(default=50)
 
   def __str__(self):
     return f'<Exam>: {self.name}, id# {self.id}'
+    class Meta:
+       verbose_name = _('Exam')
+       verbose_name_plural = _('Exams')
 
 
 class ExamAttempt(models.Model):
@@ -48,7 +52,7 @@ class ExamAttempt(models.Model):
   created = models.DateTimeField(default=timezone.now, editable=False)
   duration_minutes = models.IntegerField(default=120)
   grade = models.IntegerField(default=0)
-  mode = models.CharField(max_length=30,
+  mode = models.CharField(verbose_name=_('mode'), max_length=30,
                           default=PRACTICE_MODE,
                           choices=EXAM_MODES)
   status = models.CharField(max_length=25,

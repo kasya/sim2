@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-02 15:35-0700\n"
+"POT-Creation-Date: 2022-10-03 03:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,22 +16,60 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4"
-" && (n%100<10 || n%100>=20) ? 1 : 2);"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: apps/exam/models.py:23
+msgid "name"
+msgstr "имя"
+
+#: apps/exam/models.py:31
+msgid "Exam"
+msgstr "Экзамен"
+
+#: apps/exam/models.py:32
+msgid "Exams"
+msgstr "Экзамены"
+
+#: apps/exam/models.py:55
+msgid "mode"
+msgstr "режим"
+
+#: apps/exam/views.py:143
+# python-brace-format
+msgid ""
+"Congratulations! You've finished {mode} in {subject_name} {exam_name}! Your "
+"grade is {grade}%."
+msgstr ""
+"Поздравляю! Вы закончили {mode} по {subject_name} {exam_name}! Ваша оценка "
+"{grade}%."
+
+#: apps/exam/views.py:146
+# python-brace-format
+msgid ""
+"Sorry, you haven't passed the {subject_name} {exam_name} {mode}. Your grade "
+"is {grade}%."
+msgstr ""
+"К сожалению вы не прошли {mode} по {subject_name} {exam_name}! Ваша оценка "
+"{grade}%."
 
 #: apps/user/templates/user/profile.html:10
+#, python-format
 msgid "Welcome, %(firstname)s!"
 msgstr "Добро пожаловать, %(firstname)s!"
 
 #: apps/user/templates/user/profile.html:13
+#, python-format
 msgid "Name: %(firstname)s"
 msgstr "Имя: %(firstname)s"
 
 #: apps/user/templates/user/profile.html:14
+#, python-format
 msgid "Lastname: %(lastname)s"
 msgstr "Фамилия: %(lastname)s"
 
 #: apps/user/templates/user/profile.html:15
+#, python-format
 msgid "Joined on: %(date)s"
 msgstr "Присоединился: %(date)s"
 
@@ -78,3 +116,14 @@ msgstr "Вы еще не прошли ни одного экзамена"
 #: apps/user/templates/user/profile.html:56
 msgid "Go check them out!"
 msgstr "Пройти экзамен."
+
+#: config/settings.py:168
+msgid "English"
+msgstr ""
+
+#: config/settings.py:169
+msgid "Russian"
+msgstr ""
+
+#~ msgid "Name"
+#~ msgstr "Название экзамена"

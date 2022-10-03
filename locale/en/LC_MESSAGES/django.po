@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-02 23:43+0000\n"
+"POT-Creation-Date: 2022-10-03 03:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,36 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apps/exam/models.py:23
+msgid "name"
+msgstr ""
+
+#: apps/exam/models.py:31
+msgid "Exam"
+msgstr ""
+
+#: apps/exam/models.py:32
+msgid "Exams"
+msgstr ""
+
+#: apps/exam/models.py:55
+msgid "mode"
+msgstr ""
+
+#: apps/exam/views.py:143
+#, python-brace-format
+msgid ""
+"Congratulations! You've finished {mode} in {subject_name} {exam_name}! Your "
+"grade is {grade}%."
+msgstr ""
+
+#: apps/exam/views.py:146
+#, python-brace-format
+msgid ""
+"Sorry, you haven't passed the {subject_name} {exam_name} {mode}. Your grade "
+"is {grade}%."
+msgstr ""
 
 #: apps/user/templates/user/profile.html:10
 #, python-format
