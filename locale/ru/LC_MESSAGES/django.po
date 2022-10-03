@@ -1,0 +1,80 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-02 15:35-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4"
+" && (n%100<10 || n%100>=20) ? 1 : 2);"
+
+#: apps/user/templates/user/profile.html:10
+msgid "Welcome, %(firstname)s!"
+msgstr "Добро пожаловать, %(firstname)s!"
+
+#: apps/user/templates/user/profile.html:13
+msgid "Name: %(firstname)s"
+msgstr "Имя: %(firstname)s"
+
+#: apps/user/templates/user/profile.html:14
+msgid "Lastname: %(lastname)s"
+msgstr "Фамилия: %(lastname)s"
+
+#: apps/user/templates/user/profile.html:15
+msgid "Joined on: %(date)s"
+msgstr "Присоединился: %(date)s"
+
+#: apps/user/templates/user/profile.html:18
+msgid "Require extra time for exams? Yes"
+msgstr "Требуется дополнительное время? Да"
+
+#: apps/user/templates/user/profile.html:20
+msgid "Edit details"
+msgstr "Редактировать"
+
+#: apps/user/templates/user/profile.html:23
+msgid "Progress report on all your subjects."
+msgstr "Отчет по всем пройденным темам"
+
+#: apps/user/templates/user/profile.html:24
+msgid "It shows your progress over time for each subject you took exams on."
+msgstr "Ваш прогресс с течением времени по всем экзаменам."
+
+#: apps/user/templates/user/profile.html:29
+msgid "See all charts"
+msgstr "Посмотреть все графики"
+
+#: apps/user/templates/user/profile.html:32
+msgid "Here's a history of all your exams:"
+msgstr "История всех экзаменов:"
+
+#: apps/user/templates/user/profile.html:37
+msgid "Date"
+msgstr "Дата"
+
+#: apps/user/templates/user/profile.html:38
+msgid "Exam Name"
+msgstr "Название экзамена"
+
+#: apps/user/templates/user/profile.html:39
+msgid "Your grade"
+msgstr "Оценка"
+
+#: apps/user/templates/user/profile.html:55
+msgid "You haven't taken any exams yet"
+msgstr "Вы еще не прошли ни одного экзамена"
+
+#: apps/user/templates/user/profile.html:56
+msgid "Go check them out!"
+msgstr "Пройти экзамен."
