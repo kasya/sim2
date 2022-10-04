@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-03 03:11+0000\n"
+"POT-Creation-Date: 2022-10-04 00:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,20 +18,100 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: apps/exam/models.py:23
+#: apps/exam/models.py:13 apps/exam/models.py:28 apps/question/models.py:59
 msgid "name"
 msgstr ""
 
+#: apps/exam/models.py:17
+msgid "subject"
+msgstr ""
+
+#: apps/exam/models.py:18
+msgid "subjects"
+msgstr ""
+
+#: apps/exam/models.py:21
+#, python-brace-format
+msgid "<Subject>: {name}, id# {id}"
+msgstr ""
+
+#: apps/exam/models.py:27 apps/exam/models.py:61
+msgid "duration"
+msgstr ""
+
+#: apps/exam/models.py:29 apps/exam/models.py:62
+msgid "grade"
+msgstr ""
+
 #: apps/exam/models.py:31
-msgid "Exam"
+msgid "question count"
 msgstr ""
 
-#: apps/exam/models.py:32
-msgid "Exams"
+#: apps/exam/models.py:35
+msgid "exam"
 msgstr ""
 
-#: apps/exam/models.py:55
+#: apps/exam/models.py:36
+msgid "exams"
+msgstr ""
+
+#: apps/exam/models.py:39
+#, python-brace-format
+msgid "<Exam>: {name}, id# {id}"
+msgstr ""
+
+#: apps/exam/models.py:48
+msgid "Finished"
+msgstr ""
+
+#: apps/exam/models.py:49
+msgid "In progress"
+msgstr ""
+
+#: apps/exam/models.py:56
+msgid "Practice mode"
+msgstr ""
+
+#: apps/exam/models.py:57
+msgid "Exam mode"
+msgstr ""
+
+#: apps/exam/models.py:60
+msgid "created"
+msgstr ""
+
+#: apps/exam/models.py:63
 msgid "mode"
+msgstr ""
+
+#: apps/exam/models.py:66
+msgid "status"
+msgstr ""
+
+#: apps/exam/models.py:78
+msgid "exam attempt"
+msgstr ""
+
+#: apps/exam/models.py:79
+msgid "exam attempts"
+msgstr ""
+
+#: apps/exam/models.py:82
+#, python-brace-format
+msgid "<ExamAttempt>: id# {id}"
+msgstr ""
+
+#: apps/exam/models.py:178
+msgid "answer attempt"
+msgstr ""
+
+#: apps/exam/models.py:179
+msgid "answer attempts"
+msgstr ""
+
+#: apps/exam/models.py:182
+#, python-brace-format
+msgid "<AnswerAttempt>: id# {id}"
 msgstr ""
 
 #: apps/exam/views.py:143
@@ -46,6 +126,82 @@ msgstr ""
 msgid ""
 "Sorry, you haven't passed the {subject_name} {exam_name} {mode}. Your grade "
 "is {grade}%."
+msgstr ""
+
+#: apps/question/models.py:12
+msgid "answer"
+msgstr ""
+
+#: apps/question/models.py:13
+msgid "answers"
+msgstr ""
+
+#: apps/question/models.py:16
+#, python-brace-format
+msgid "<Answer>: {text}, id# {id}"
+msgstr ""
+
+#: apps/question/models.py:26
+msgid "Multiple choice"
+msgstr ""
+
+#: apps/question/models.py:27
+msgid "Multiple select"
+msgstr ""
+
+#: apps/question/models.py:30
+msgid "text"
+msgstr ""
+
+#: apps/question/models.py:31
+msgid "type"
+msgstr ""
+
+#: apps/question/models.py:34
+msgid "weight"
+msgstr ""
+
+#: apps/question/models.py:46
+msgid "question"
+msgstr ""
+
+#: apps/question/models.py:47
+msgid "questions"
+msgstr ""
+
+#: apps/question/models.py:50
+#, python-brace-format
+msgid "<Question>: {text}, id# {id}:"
+msgstr ""
+
+#: apps/question/models.py:63
+msgid "question category"
+msgstr ""
+
+#: apps/question/models.py:64
+msgid "question categories"
+msgstr ""
+
+#: apps/question/models.py:67
+#, python-brace-format
+msgid "<Category>: {name}, id# {id}"
+msgstr ""
+
+#: apps/user/models.py:11
+msgid "required extra time"
+msgstr ""
+
+#: apps/user/models.py:16
+msgid "user"
+msgstr ""
+
+#: apps/user/models.py:17
+msgid "users"
+msgstr ""
+
+#: apps/user/models.py:20
+#, python-brace-format
+msgid "{first_name} {self.last_name}, {self.id}"
 msgstr ""
 
 #: apps/user/templates/user/profile.html:10

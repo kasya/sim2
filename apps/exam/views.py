@@ -140,10 +140,10 @@ class ExamFinishView(TemplateView, LoginRequiredMixin):
         current_attempt.exams.count())
     if current_attempt.passed:
       context[
-          'status'] = _("Congratulations! You've finished {mode} in {subject_name} {exam_name}! Your grade is {grade}%.").format(mode=current_attempt.mode, subject_name=exam.subject.name, exam_name=exam.name, grade=current_attempt.grade)
+          'status'] = _("Congratulations! You've finished {mode} in {subject_name} {exam_name}! Your grade is {grade}%.").format(mode=current_attempt.get_mode_display().lower(), subject_name=exam.subject.name, exam_name=exam.name, grade=current_attempt.grade)
     else:
       context[
-          'status'] = _("Sorry, you haven't passed the {subject_name} {exam_name} {mode}. Your grade is {grade}%.").format(subject_name=exam.subject.name, exam_name=exam.name, mode=current_attempt.mode, grade=current_attempt.grade)
+          'status'] = _("Sorry, you haven't passed the {subject_name} {exam_name} {mode}. Your grade is {grade}%.").format(subject_name=exam.subject.name, exam_name=exam.name, mode=current_attempt.get_mode_display().lower(), grade=current_attempt.grade)
 
     return context
 

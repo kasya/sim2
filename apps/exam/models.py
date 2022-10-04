@@ -10,26 +10,33 @@ from django.utils.translation import gettext_lazy as _
 class Subject(models.Model):
   """Subject model."""
 
-  name = models.CharField(max_length=1000)
+  name = models.CharField(verbose_name=_('name'), max_length=1000)
+  class Meta:
+    """Meta class for Subject model."""
+
+    verbose_name = _('subject')
+    verbose_name_plural = _('subjects')
 
   def __str__(self):
-    return f'<Subject>: {self.name}, id# {self.id}'
+    return _('<Subject>: {name}, id# {id}').format(name=self.name, id=self.id)
 
 
 class Exam(models.Model):
   """Exam model."""
 
-  duration_minutes = models.IntegerField(default=120)
+  duration_minutes = models.IntegerField(verbose_name=_('duration'), default=120)
   name = models.CharField(verbose_name=_('name'), max_length=1000)
-  passing_grade = models.IntegerField(default=75)
+  passing_grade = models.IntegerField(verbose_name=_('grade'), default=75)
   subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-  question_count = models.IntegerField(default=50)
+  question_count = models.IntegerField(verbose_name=_('question count'), default=50)
+  class Meta:
+    """Meta class for Exam model."""
+
+    verbose_name = _('exam')
+    verbose_name_plural = _('exams')
 
   def __str__(self):
-    return f'<Exam>: {self.name}, id# {self.id}'
-    class Meta:
-       verbose_name = _('Exam')
-       verbose_name_plural = _('Exams')
+    return _('<Exam>: {name}, id# {id}').format(name=self.name, id=self.id)
 
 
 class ExamAttempt(models.Model):
@@ -38,24 +45,25 @@ class ExamAttempt(models.Model):
   STATUS_FINISHED = 'finished'
   STATUS_IN_PROGRESS = 'in_progress'
 
-  STATUSES = ((STATUS_FINISHED, 'Finished'), (STATUS_IN_PROGRESS,
-                                              'In progress'))
+  STATUSES = ((STATUS_FINISHED, _('Finished')), (STATUS_IN_PROGRESS,
+                                              _('In progress')))
 
   PRACTICE_MODE = 'practice'
   EXAM_MODE = 'exam'
 
   EXAM_MODES = [
-      (PRACTICE_MODE, 'Practice mode'),
-      (EXAM_MODE, 'Exam mode'),
+
+      (PRACTICE_MODE, _('Practice mode')),
+      (EXAM_MODE, _('Exam mode')),
   ]
 
-  created = models.DateTimeField(default=timezone.now, editable=False)
-  duration_minutes = models.IntegerField(default=120)
-  grade = models.IntegerField(default=0)
+  created = models.DateTimeField(verbose_name=_('created'), default=timezone.now, editable=False)
+  duration_minutes = models.IntegerField(verbose_name=_('duration'), default=120)
+  grade = models.IntegerField(verbose_name=_('grade'), default=0)
   mode = models.CharField(verbose_name=_('mode'), max_length=30,
                           default=PRACTICE_MODE,
                           choices=EXAM_MODES)
-  status = models.CharField(max_length=25,
+  status = models.CharField(verbose_name=_('status'), max_length=25,
                             default=STATUS_IN_PROGRESS,
                             choices=STATUSES)
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -64,9 +72,14 @@ class ExamAttempt(models.Model):
   questions = models.ManyToManyField('question.Question')
   flagged_questions = models.ManyToManyField('question.Question',
                                              related_name='flagged_questions')
+  class Meta:
+    """Meta class for Exam Attempt model."""
+
+    verbose_name = _('exam attempt')
+    verbose_name_plural = _('exam attempts')
 
   def __str__(self):
-    return f'<ExamAttempt>: id# {self.id}'
+    return _('<ExamAttempt>: id# {id}').format(id=self.id)
 
   @property
   def all_questions_answered(self):
@@ -159,6 +172,11 @@ class AnswerAttempt(models.Model):
   question = models.ForeignKey('question.Question', on_delete=models.CASCADE)
 
   answers = models.ManyToManyField('question.Answer')
+  class Meta:
+    """Meta class for Answer Attempt model."""
+
+    verbose_name = _('answer attempt')
+    verbose_name_plural = _('answer attempts')
 
   def __str__(self):
-    return f'<AnswerAttempt>: id# {self.id}'
+    return _('<AnswerAttempt>: id# {id}').format(id=self.id)
