@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
+
 {% block content %}
 
 {% if error_message %}
@@ -9,13 +11,16 @@
 	<div>
 		<p>{{ status }}</p>
 		<p>
-			To pass this exam you needed to answer at least {{ passing_grade }}%
-			questions correctly. Would you like to try again?
+			{% blocktranslate with grade=passing_grade trimmed %}To pass this exam you needed to answer at least
+			{{ grade }}% questions correctly.{% endblocktranslate %}
+		</p>
+		<p>
+			{% translate "Would you like to try again? "%}
 		</p>
 	</div>
 	<div>
 		<a href="{% url 'start' %}"><button class="btn bg-gradient-info w-auto me-1 mb-0">
-				Try again
+				{% translate "Try again"%}
 			</button></a>
 	</div>
 </div>

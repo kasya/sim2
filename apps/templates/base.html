@@ -13,6 +13,7 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+{% load i18n %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -58,39 +59,39 @@
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
 							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="/">
-							Home
+							{% translate "Home" %}
 						</a>
 					</li>
 					{% if user.is_authenticated %}
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
 							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="{% url 'profile' %}">
-							Profile
+							{% translate "Profile" %}
 						</a>
 					</li>
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
 							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="{% url 'logout' %}">
-							Logout
+							{% translate "Logout" %}
 						</a>
 					</li>
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
 							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="{% url 'start' %}">
-							Start Exam
+							{% translate "Start Exam" %}
 						</a>
 					</li>
 					{% else %}
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
 							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="{% url 'login' %}">
-							Login
+							{% translate "Login" %}
 						</a>
 					</li>
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center"
 							id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false" href="{% url 'signup' %}">
-							Signup
+							{% translate "Signup" %}
 						</a>
 					</li>
 					{% endif %}

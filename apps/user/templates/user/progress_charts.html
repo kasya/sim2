@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
+{% load i18n %}
 {% load webpack_loader %}
 
 {% block content %}
 
 <div class="container-fluid">
-  <h2>Progress report on all your subjects.</h2>
-  <p>It shows your progress over time for each subject you took exams on.</p>
+  <h2>{% translate "Progress report on all your subjects."%}</h2>
+  <p>{% translate "It shows your progress over time for each subject you took exams on."%}</p>
   <div id="chart" data-exam-ids="{{ page_obj.object_list }}"></div>
   {% include 'includes/pagination.html' with visible=4 %}
 </div>
