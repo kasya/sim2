@@ -385,5 +385,3 @@ msgstr "Английский"
 #: config/settings.py:169
 msgid "Russian"
 msgstr "Русский"
-<<<<<<< HEAD
-=======
