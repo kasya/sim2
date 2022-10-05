@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 
 from rest_framework.permissions import IsAuthenticated
@@ -139,10 +140,10 @@ class ExamFinishView(TemplateView, LoginRequiredMixin):
         current_attempt.exams.count())
     if current_attempt.passed:
       context[
-          'status'] = f"Congratulations! You've finished {current_attempt.mode} in {exam.subject.name} {exam.name}! Your grade is {current_attempt.grade}%."
+          'status'] = _("Congratulations! You've finished {mode} in {subject_name} {exam_name}! Your grade is {grade}%.").format(mode=current_attempt.get_mode_display().lower(), subject_name=exam.subject.name, exam_name=exam.name, grade=current_attempt.grade)
     else:
       context[
-          'status'] = f"Sorry, you haven't passed the {exam.subject.name} {exam.name} {current_attempt.mode}. Your grade is {current_attempt.grade}%."
+          'status'] = _("Sorry, you haven't passed the {subject_name} {exam_name} {mode}. Your grade is {grade}%.").format(subject_name=exam.subject.name, exam_name=exam.name, mode=current_attempt.get_mode_display().lower(), grade=current_attempt.grade)
 
     return context
 

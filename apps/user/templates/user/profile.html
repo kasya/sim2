@@ -1,39 +1,42 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load i18n %}
 {% load webpack_loader %}
 
 {% block content %}
 
 <div class="container-fluid">
-  <h1 class="title">Welcome, {{ user.first_name }}!</h1>
+  <h1 class="title">{% translate "Welcome,"%} {{ user.first_name }}!
+  </h1>
   <hr>
-  Name: {{user.first_name}} <br>
-  Lastname: {{user.last_name}}<br>
-  Joined on: {{user.date_joined}}<br>
+  {% translate "Name:"%} {{ user.first_name }} <br>
+  {% translate "Lastname:"%} {{ user.last_name }}<br>
+  {% translate "Joined on:"%}{{ user.date_joined }}<br>
+  <br>
   {% if user.required_extra_time %}
-  Require extra time for exams? Yes <br>
+  {% translate "Require extra time for exams? Yes" %} <br>
   {% endif %}
-  <a href="{% url 'edit-profile' %}">Edit details ✏️</a>
+  <a href="{% url 'edit-profile' %}">{% translate "Edit details" %}✏️</a>
   <hr>
   {% if exam_ids %}
-  <h2>Progress report on all your subjects.</h2>
-  <p>It shows your progress over time for each subject you took exams on.</p>
+  <h2>{% translate "Progress report on all your subjects."%}</h2>
+  <p>{% translate "It shows your progress over time for each subject you took exams on." %}</p>
 
   <div id="chart" data-exam-ids="{{ exam_ids }}"></div>
   <div class="right-align">
     {% if exams_count > 2 %}
-    <a href="{% url 'progress-charts' %}">See all charts</a>
+    <a href="{% url 'progress-charts' %}">{% translate "See all charts" %}</a>
     {% endif %}
   </div>
-  <div>Here's a history of all your exams:</div>
+  <div>{% translate "Here's a history of all your exams:" %}</div>
   <div>
     <table class="table table-sm table-striped">
       <thead class="thead-dark">
         <tr>
-          <th>Date</th>
-          <th>Exam Name</th>
-          <th>Your grade</th>
+          <th>{% translate "Date" %}</th>
+          <th>{% translate "Exam Name"%}</th>
+          <th>{% translate "Your grade"%}</th>
         </tr>
       </thead>
       {% for attempt in page_obj %}
@@ -49,8 +52,8 @@
 </div>
 
 <div class="d-flex justify-content-center">{{ pagination.links }}</div>
-{% else %} You haven't taken any exams yet.
-<a href="/start">Go check them out!</a>
+{% else %} {% translate "You haven't taken any exams yet" %}.
+<a href="/start">{% translate "Go check them out!"%}</a>
 {% endif %}
 {% render_bundle 'chart' %}
 {% endblock %}

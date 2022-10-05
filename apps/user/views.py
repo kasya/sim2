@@ -6,6 +6,7 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, TemplateView
 
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
