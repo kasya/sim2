@@ -1,16 +1,16 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# SIM2.
+# Copyright (C) Kateryna Golovanova, 2022.
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# FIRST AUTHOR <kate@kgthreads.com>, 2022.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 00:11+0000\n"
+"POT-Creation-Date: 2022-10-05 16:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Kateryna Golovanova <kate@kgthreads.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,6 @@ msgid "exam"
 msgstr "экзамен"
 
 #: apps/exam/models.py:36
-#, fuzzy
 msgid "exams"
 msgstr "экзамены"
 
@@ -136,6 +135,10 @@ msgstr ""
 "К сожалению вы не прошли {mode} по {subject_name} {exam_name}! Ваша оценка "
 "{grade}%."
 
+#: apps/question/models.py:8 apps/question/models.py:30
+msgid "text"
+msgstr "текст"
+
 #: apps/question/models.py:12
 msgid "answer"
 msgstr "ответ"
@@ -156,10 +159,6 @@ msgstr "Mножественный выбор"
 #: apps/question/models.py:27
 msgid "Multiple select"
 msgstr "Множественное выделение"
-
-#: apps/question/models.py:30
-msgid "text"
-msgstr "текст"
 
 #: apps/question/models.py:31
 msgid "type"
@@ -213,24 +212,20 @@ msgid "{first_name} {self.last_name}, {self.id}"
 msgstr "{first_name} {self.last_name}, {self.id}"
 
 #: apps/user/templates/user/profile.html:10
-#, python-format
-msgid "Welcome, %(firstname)s!"
-msgstr "Добро пожаловать, %(firstname)s!"
+msgid "Welcome,"
+msgstr "Добро пожаловать, "
 
 #: apps/user/templates/user/profile.html:13
-#, python-format
-msgid "Name: %(firstname)s"
-msgstr "Имя: %(firstname)s"
+msgid "Name:"
+msgstr "Имя:"
 
 #: apps/user/templates/user/profile.html:14
-#, python-format
-msgid "Lastname: %(lastname)s"
-msgstr "Фамилия: %(lastname)s"
+msgid "Lastname:"
+msgstr "Фамилия:"
 
 #: apps/user/templates/user/profile.html:15
-#, python-format
-msgid "Joined on: %(date)s"
-msgstr "Присоединился: %(date)s"
+msgid "Joined on:"
+msgstr "Присоединился:"
 
 #: apps/user/templates/user/profile.html:18
 msgid "Require extra time for exams? Yes"
@@ -283,18 +278,3 @@ msgstr "Английский"
 #: config/settings.py:169
 msgid "Russian"
 msgstr "Русский"
-
-#~ msgid "finished"
-#~ msgstr "окончен"
-
-#~ msgid "in_progress"
-#~ msgstr "в_процессе"
-
-#~ msgid "practice"
-#~ msgstr "практика"
-
-#~ msgid "Exam"
-#~ msgstr "Экзамен"
-
-#~ msgid "Name"
-#~ msgstr "Название экзамена"

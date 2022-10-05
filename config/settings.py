@@ -64,7 +64,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    #'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -177,9 +177,9 @@ USE_TZ = True
 
 DATETIME_FORMAT = 'N j, P'
 
-LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
+LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'apps/static')]
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'apps/static'),)
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 

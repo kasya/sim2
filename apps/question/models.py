@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 class Answer(models.Model):
   """Answer model."""
 
-  text = models.CharField(max_length=1000)
+  text = models.CharField(verbose_name=_('text'), max_length=1000)
   class Meta:
     """Meta class for Answer model."""
 

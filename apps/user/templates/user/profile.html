@@ -7,12 +7,12 @@
 {% block content %}
 
 <div class="container-fluid">
-  <h1 class="title">{% blocktranslate with firstname=user.first_name %}Welcome, {{ firstname }}!{% endblocktranslate %}
+  <h1 class="title">{% translate "Welcome,"%} {{ user.first_name }}!
   </h1>
   <hr>
-  {% blocktranslate with firstname=user.first_name %}Name: {{ firstname }}{% endblocktranslate %} <br>
-  {% blocktranslate with lastname=user.last_name %}Lastname: {{ lastname }}{% endblocktranslate %}<br>
-  {% blocktranslate with date=user.date_joined %}Joined on: {{date}}{% endblocktranslate %}<br>
+  {% translate "Name:"%} {{ user.first_name }} <br>
+  {% translate "Lastname:"%} {{ user.last_name }}<br>
+  {% translate "Joined on:"%}{{ user.date_joined }}<br>
   <br>
   {% if user.required_extra_time %}
   {% translate "Require extra time for exams? Yes" %} <br>
