@@ -6,3 +6,6 @@ djangorestframework==3.13.1
 
 # https://github.com/django-webpack/django-webpack-loader
 django-webpack-loader==1.4.1
+
+# https://pre-commit.com/
+pre-commit==2.20.0
