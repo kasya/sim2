@@ -3,6 +3,6 @@ from django.apps import AppConfig
 
 
 class ExamConfig(AppConfig):
-  """Exam app configuration."""
+    """Exam app configuration."""
 
-  name = 'apps.exam'
+    name = "apps.exam"

@@ -5,8 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, TemplateView
-
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,146 +14,161 @@ from apps.user.forms import EditProfileForm, LoginForm, SignupForm
 
 
 class Login(LoginView):
-  """Login methods."""
+    """Login methods."""
 
-  form_class = LoginForm
-  template_name = 'user/login.html'
+    form_class = LoginForm
+    template_name = "user/login.html"
 
-  def get(self, request, **kwargs):
-    """Render login page."""
+    def get(self, request, **kwargs):
+        """Render login page."""
 
-    form = self.form_class()
-    return render(request, self.template_name, {'form': form})
+        form = self.form_class()
+        return render(request, self.template_name, {"form": form})
 
-  def post(self, request):
-    """Get the data from login form and check if we have this user in db.
-    Then login user and redirect to Profile page."""
+    def post(self, request):
+        """Get the data from login form and check if we have this user in db.
+        Then login user and redirect to Profile page."""
 
-    form = self.form_class(request.POST)
-    if form.is_valid():
-      return redirect(form.login(request))
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            return redirect(form.login(request))
 
-    return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {"form": form})
 
 
 class Logout(TemplateView):
-  """Logout methods."""
+    """Logout methods."""
 
-  def get(self, request):
-    logout(request)
-    return redirect('login')
+    def get(self, request):
+        logout(request)
+        return redirect("login")
 
 
 class Profile(LoginRequiredMixin, ListView):
-  """Profile methods."""
+    """Profile methods."""
 
-  paginate_by = 10
-  template_name = 'user/profile.html'
+    paginate_by = 10
+    template_name = "user/profile.html"
 
-  def get_context_data(self, **kwargs):
-    """Get context."""
+    def get_context_data(self, **kwargs):
+        """Get context."""
 
-    show_charts = 2
-    exam_ids = ExamAttempt.objects.filter(
-        user=self.request.user, mode=ExamAttempt.EXAM_MODE).values_list(
-            'exams', flat=True).distinct()[:show_charts]
-    context = super().get_context_data(**kwargs)
-    context.update({
-        'exams_count':
+        show_charts = 2
+        exam_ids = (
             ExamAttempt.objects.filter(
-                user=self.request.user,
-                mode=ExamAttempt.EXAM_MODE).values('exams').distinct().count(),
-        'exam_ids':
-            list(exam_ids)
-    })
+                user=self.request.user, mode=ExamAttempt.EXAM_MODE
+            )
+            .values_list("exams", flat=True)
+            .distinct()[:show_charts]
+        )
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "exams_count": ExamAttempt.objects.filter(
+                    user=self.request.user, mode=ExamAttempt.EXAM_MODE
+                )
+                .values("exams")
+                .distinct()
+                .count(),
+                "exam_ids": list(exam_ids),
+            }
+        )
 
-    return context
+        return context
 
-  def get_queryset(self):
-    return ExamAttempt.objects.filter(
-        user=self.request.user, mode=ExamAttempt.EXAM_MODE).order_by('-created')
+    def get_queryset(self):
+        return ExamAttempt.objects.filter(
+            user=self.request.user, mode=ExamAttempt.EXAM_MODE
+        ).order_by("-created")
 
 
 class ProfileChart(APIView):
 
-  permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
-  def get(self, request, exam_id):
-    """Sends attempts data to frontend for charts."""
-    show_entries = 50
-    attempts = ExamAttempt.objects.filter(
-        exams=exam_id, user=request.user,
-        mode=ExamAttempt.EXAM_MODE).order_by('created')[:show_entries]
-    exam = Exam.objects.get(id=exam_id)
-    data = {
-        'dates': (attempt.created.strftime('%b %d %Y') for attempt in attempts),
-        'grades': (attempt.grade for attempt in attempts),
-        'exam_name': exam.name,
-        'exam_subject': exam.subject.name
-    }
-    return Response(data)
+    def get(self, request, exam_id):
+        """Sends attempts data to frontend for charts."""
+        show_entries = 50
+        attempts = ExamAttempt.objects.filter(
+            exams=exam_id, user=request.user, mode=ExamAttempt.EXAM_MODE
+        ).order_by("created")[:show_entries]
+        exam = Exam.objects.get(id=exam_id)
+        data = {
+            "dates": (
+                attempt.created.strftime("%b %d %Y") for attempt in attempts
+            ),
+            "grades": (attempt.grade for attempt in attempts),
+            "exam_name": exam.name,
+            "exam_subject": exam.subject.name,
+        }
+        return Response(data)
 
 
 class Signup(TemplateView):
-  """Signup methods."""
+    """Signup methods."""
 
-  form_class = SignupForm
-  template_name = 'user/signup.html'
+    form_class = SignupForm
+    template_name = "user/signup.html"
 
-  def get(self, request):
-    """Render signup page."""
+    def get(self, request):
+        """Render signup page."""
 
-    form = self.form_class()
-    return render(request, self.template_name, {'form': form})
+        form = self.form_class()
+        return render(request, self.template_name, {"form": form})
 
-  def post(self, request):
-    """Get the data from Signup form and add it to database."""
+    def post(self, request):
+        """Get the data from Signup form and add it to database."""
 
-    form = self.form_class(request.POST)
+        form = self.form_class(request.POST)
 
-    if form.is_valid():
-      form.save()
-      return redirect('login')
+        if form.is_valid():
+            form.save()
+            return redirect("login")
 
-    return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {"form": form})
 
 
 class EditProfile(LoginRequiredMixin, TemplateView):
-  """Edit Profile methods."""
+    """Edit Profile methods."""
 
-  form_class = EditProfileForm
-  template_name = 'user/edit_profile.html'
+    form_class = EditProfileForm
+    template_name = "user/edit_profile.html"
 
-  def get(self, request):
-    """Render edit profile page."""
+    def get(self, request):
+        """Render edit profile page."""
 
-    form = self.form_class(initial={
-        'first_name': request.user.first_name,
-        'last_name': request.user.last_name
-    })
-    return render(request, self.template_name, {'form': form})
+        form = self.form_class(
+            initial={
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+            }
+        )
+        return render(request, self.template_name, {"form": form})
 
-  def post(self, request):
-    """Get the data from edit form and update it in database."""
+    def post(self, request):
+        """Get the data from edit form and update it in database."""
 
-    form = self.form_class(data=request.POST, instance=request.user)
+        form = self.form_class(data=request.POST, instance=request.user)
 
-    if form.is_valid():
-      obj = form.save(commit=False)
-      obj.save(update_fields=('first_name', 'last_name'))
-      return redirect('profile')
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save(update_fields=("first_name", "last_name"))
+            return redirect("profile")
 
-    return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {"form": form})
 
 
 class ProgressCharts(ListView):
 
-  paginate_by = 2
-  template_name = 'user/progress_charts.html'
+    paginate_by = 2
+    template_name = "user/progress_charts.html"
 
-  def get_queryset(self):
-    """Return list of exam ids for current user."""
+    def get_queryset(self):
+        """Return list of exam ids for current user."""
 
-    return list(
-        ExamAttempt.objects.filter(user=self.request.user).select_related(
-            'exam', 'exam__subject').values_list('exam', flat=True).distinct())
+        return list(
+            ExamAttempt.objects.filter(user=self.request.user)
+            .select_related("exam", "exam__subject")
+            .values_list("exam", flat=True)
+            .distinct()
+        )

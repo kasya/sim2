@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('user', '0002_remove_user_requires_extra_time_and_more'),
+        ("user", "0002_remove_user_requires_extra_time_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='required_extra_time',
-            field=models.IntegerField(default=0, verbose_name='required extra time'),
+            model_name="user",
+            name="required_extra_time",
+            field=models.IntegerField(
+                default=0, verbose_name="required extra time"
+            ),
         ),
     ]
