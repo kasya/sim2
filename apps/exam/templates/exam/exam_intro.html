@@ -1,33 +1,38 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
+
 {% block content %}
 
 <div class="container-fluid">
 	{% if exam_mode == "practice" %}
-	<p>You chose to practice {{ subject.name }} {{ exam.name }}.</p>
-	<p>This practice mode doesn't have a time limit - you can go at your desired
-		speed.</p>
-	<p> You'll have {{ exam.question_count }} questions to answer.
+	<p>{% translate You chose to practice %} {{ subject.name }}
+		{{ exam.name }}.</p>
+	<p>{% translate "This practice mode doesn't have a time limit - you can go at your desired speed." %}</p>
+	<p> {% blocktranslate with question_count=exam.question_count trimmed %}You'll have {{ question_count }} questions to
+		answer.
 		After picking an answer - click "Check answer" button, to see if you were
 		right. Click "Submit" to go to next question.
-		Good luck!
+		Good luck!{% endblocktranslate %}
 	</p>
 	<form method="POST">
 		{% csrf_token %}
 		<button class="btn bg-gradient-info w-auto me-1 mb-0" type="submit">
-			Start practice
+			{% translate "Start practice" %}
 		</button>
 	</form>
 	{% elif exam_mode == "exam" %}
-	<p>You chose {{ subject.name}} {{ exam.name }} as your exam.</p>
-	<p>
-		This exam has {{ exam.question_count }} {{subject_question_count}} questions. The time to finish this
-		exam is limited to {{ attempt_duration }} minutes. Good luck!
+	<p>{% blocktranslate with subject_name=subject.name exam_name=exam.name trimmed%}You chose {{ subject_name}}
+		{{ exam_name }}
+		as your exam.{% endblocktranslate %}</p>
+	<p>{% blocktranslate with question_count=exam.question_count subject_question_count=subject_question_count trimmed%}
+		This exam has {{ question_count }} {{subject_question_count}} questions. The time to finish this
+		exam is limited to {{ attempt_duration }} minutes. Good luck!{% endblocktranslate %}
 	</p>
 	<form method="POST">
 		{% csrf_token %}
 		<button class="btn bg-gradient-info w-auto me-1 mb-0" type="submit">
-			Start exam
+			{% translate "Start exam"%}
 		</button>
 	</form>
 	{% endif %}
