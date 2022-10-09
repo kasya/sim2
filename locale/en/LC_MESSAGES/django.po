@@ -114,6 +114,11 @@ msgstr ""
 msgid "<AnswerAttempt>: id# {id}"
 msgstr ""
 
+#: apps/exam/templates/exam/exam_intro.html:9
+#, python-format
+msgid "You chose to practice %(subject)s %(exam_name)s."
+msgstr ""
+
 #: apps/exam/templates/exam/exam_intro.html:11
 msgid ""
 "This practice mode doesn't have a time limit - you can go at your desired "
@@ -258,7 +263,7 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: apps/templates/base.html:94 apps/user/templates/user/signup.html:7
+#: apps/templates/base.html:94
 msgid "Signup"
 msgstr ""
 
@@ -344,6 +349,10 @@ msgstr ""
 
 #: apps/user/templates/user/profile.html:56
 msgid "Go check them out!"
+msgstr ""
+
+#: apps/user/templates/user/signup.html:7
+msgid "Sign Up"
 msgstr ""
 
 #: config/settings.py:168
