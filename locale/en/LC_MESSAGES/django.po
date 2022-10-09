@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-05 16:25+0000\n"
+"POT-Creation-Date: 2022-10-09 00:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kateryna Golovanova <kate@kgthreads.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,11 +112,6 @@ msgstr ""
 #: apps/exam/models.py:182
 #, python-brace-format
 msgid "<AnswerAttempt>: id# {id}"
-msgstr ""
-
-#: apps/exam/templates/exam/exam_intro.html:9
-#, python-format
-msgid "You chose to practice %(subject)s %(exam_name)s."
 msgstr ""
 
 #: apps/exam/templates/exam/exam_intro.html:11
@@ -263,7 +258,7 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: apps/templates/base.html:94
+#: apps/templates/base.html:94 apps/user/templates/user/signup.html:7
 msgid "Signup"
 msgstr ""
 
@@ -349,10 +344,6 @@ msgstr ""
 
 #: apps/user/templates/user/profile.html:56
 msgid "Go check them out!"
-msgstr ""
-
-#: apps/user/templates/user/signup.html:7
-msgid "Sign Up"
 msgstr ""
 
 #: config/settings.py:168

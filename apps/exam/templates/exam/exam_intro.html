@@ -6,8 +6,8 @@
 
 <div class="container-fluid">
 	{% if exam_mode == "practice" %}
-	<p>{% blocktranslate with subject=subject.name exam_name=exam.name trimmed %}You chose to practice {{ subject }}
-		{{ exam_name }}.{% endblocktranslate %}</p>
+	<p>{% translate You chose to practice %} {{ subject.name }}
+		{{ exam.name }}.</p>
 	<p>{% translate "This practice mode doesn't have a time limit - you can go at your desired speed." %}</p>
 	<p> {% blocktranslate with question_count=exam.question_count trimmed %}You'll have {{ question_count }} questions to
 		answer.

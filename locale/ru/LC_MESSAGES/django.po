@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-05 16:25+0000\n"
+"POT-Creation-Date: 2022-10-09 00:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kateryna Golovanova <kate@kgthreads.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,12 +115,6 @@ msgstr "предложенные ответы"
 msgid "<AnswerAttempt>: id# {id}"
 msgstr "<Предложенный ответ>: id# {id}"
 
-# python-format
-#: apps/exam/templates/exam/exam_intro.html:9
-#, fuzzy, python-format
-msgid "You chose to practice %(subject)s %(exam_name)s."
-msgstr "Вы выбрали практику по %(subject)s %(exam_name)s."
-
 #: apps/exam/templates/exam/exam_intro.html:11
 msgid ""
 "This practice mode doesn't have a time limit - you can go at your desired "
@@ -172,8 +166,8 @@ msgid ""
 "To pass this exam you needed to answer at least %(grade)s%% questions "
 "correctly."
 msgstr ""
-"Чтобы пройти этот экзамен, вы должны были правильно ответить "
-" минимум на %(grade)s%% вопросов."
+"Чтобы пройти этот экзамен, вы должны были правильно ответить  минимум на "
+"%(grade)s%% вопросов."
 
 #: apps/exam/templates/exam/finish.html:18
 msgid "Would you like to try again? "
@@ -283,7 +277,7 @@ msgstr "Начать экзамен"
 msgid "Login"
 msgstr "Войти"
 
-#: apps/templates/base.html:94
+#: apps/templates/base.html:94 apps/user/templates/user/signup.html:7
 msgid "Signup"
 msgstr "Создать аккаунт"
 
@@ -314,17 +308,14 @@ msgid "Save"
 msgstr "Сохранить"
 
 #: apps/user/templates/user/profile.html:10
-#, python-format
 msgid "Welcome,"
 msgstr "Добро пожаловать, "
 
 #: apps/user/templates/user/profile.html:13
-#, python-format
 msgid "Name:"
 msgstr "Имя:"
 
 #: apps/user/templates/user/profile.html:14
-#, python-format
 msgid "Lastname:"
 msgstr "Фамилия:"
 
@@ -373,10 +364,6 @@ msgstr "Вы еще не прошли ни одного экзамена"
 #: apps/user/templates/user/profile.html:56
 msgid "Go check them out!"
 msgstr "Пройти экзамен."
-
-#: apps/user/templates/user/signup.html:7
-msgid "Sign Up"
-msgstr "Создать аккаунт"
 
 #: config/settings.py:168
 msgid "English"
