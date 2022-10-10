@@ -3,6 +3,6 @@ from django.apps import AppConfig
 
 
 class CoreConfig(AppConfig):
-  """Core app configuration."""
+    """Core app configuration."""
 
-  name = 'apps.core'
+    name = "apps.core"

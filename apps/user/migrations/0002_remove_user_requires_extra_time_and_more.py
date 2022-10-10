@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('user', '0001_initial'),
+        ("user", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='user',
-            name='requires_extra_time',
+            model_name="user",
+            name="requires_extra_time",
         ),
         migrations.AddField(
-            model_name='user',
-            name='required_extra_time',
+            model_name="user",
+            name="required_extra_time",
             field=models.IntegerField(default=0),
         ),
     ]

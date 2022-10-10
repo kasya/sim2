@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('exam', '0005_examattempt_mode'),
+        ("exam", "0005_examattempt_mode"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='examattempt',
-            name='mode',
-            field=models.CharField(choices=[('practice', 'Practice mode'), ('exam', 'Exam mode')], default='practice', max_length=30),
+            model_name="examattempt",
+            name="mode",
+            field=models.CharField(
+                choices=[("practice", "Practice mode"), ("exam", "Exam mode")],
+                default="practice",
+                max_length=30,
+            ),
         ),
     ]

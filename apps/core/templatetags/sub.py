@@ -4,8 +4,8 @@ from django import template
 register = template.Library()
 
 
-@register.filter(name='sub')
+@register.filter(name="sub")
 def sub_filter(value, arg):
-  """Subtract arg from value."""
+    """Subtract arg from value."""
 
-  return int(value) - int(arg)
+    return int(value) - int(arg)

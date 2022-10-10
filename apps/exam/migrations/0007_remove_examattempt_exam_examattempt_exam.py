@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('exam', '0006_alter_examattempt_mode'),
+        ("exam", "0006_alter_examattempt_mode"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='examattempt',
-            name='exam',
+            model_name="examattempt",
+            name="exam",
         ),
         migrations.AddField(
-            model_name='examattempt',
-            name='exam',
-            field=models.ManyToManyField(related_name='exams', to='exam.Exam'),
+            model_name="examattempt",
+            name="exam",
+            field=models.ManyToManyField(related_name="exams", to="exam.Exam"),
         ),
     ]

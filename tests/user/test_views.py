@@ -8,229 +8,275 @@ from apps.user.models import User
 
 
 class UserViewTestCase(TestCase):
-  """Test cases for user views."""
+    """Test cases for user views."""
 
-  client = Client()
-  fixtures = [
-      "answer.json", "answer_attempt.json", "exam.json", "exam_attempt.json",
-      "question.json", "question_category.json", "subject.json", "user.json"
-  ]
+    client = Client()
+    fixtures = [
+        "answer.json",
+        "answer_attempt.json",
+        "exam.json",
+        "exam_attempt.json",
+        "question.json",
+        "question_category.json",
+        "subject.json",
+        "user.json",
+    ]
 
-  user_id = 4
-  user_password = 'mypassword'
+    user_id = 4
+    user_password = "mypassword"
 
-  def test_login_get(self):
-    """Check that login page renders correctly."""
+    def test_login_get(self):
+        """Check that login page renders correctly."""
 
-    response = self.client.get(reverse('login'))
-    self.assertEqual(response.status_code, 200)
-    self.assertTemplateUsed('user/login.html')
+        response = self.client.get(reverse("login"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("user/login.html")
 
-  def test_login_post_correct_user(self):
-    """Check that user logged in correctly and redirected to profile page."""
+    def test_login_post_correct_user(self):
+        """
+        Check that user logged in correctly
+        and redirected to profile page.
+        """
 
-    user = User.objects.get(id=self.user_id)
-    response = self.client.post(reverse('login'), {
-        'email': user.email,
-        'password': self.user_password,
-    })
-    self.assertRedirects(response, reverse('profile'))
+        user = User.objects.get(id=self.user_id)
+        response = self.client.post(
+            reverse("login"),
+            {
+                "email": user.email,
+                "password": self.user_password,
+            },
+        )
+        self.assertRedirects(response, reverse("profile"))
 
-  def test_login_post_invalid_password(self):
-    """Check that invalid password redirects back to login."""
+    def test_login_post_invalid_password(self):
+        """Check that invalid password redirects back to login."""
 
-    user = User.objects.get(id=self.user_id)
-    response = self.client.post(reverse('login'), {
-        'email': user.email,
-        'password': 'wrongpass',
-    })
-    self.assertTemplateUsed('user/login.html')
-    self.assertEqual(response.status_code, 200)
+        user = User.objects.get(id=self.user_id)
+        response = self.client.post(
+            reverse("login"),
+            {
+                "email": user.email,
+                "password": "wrongpass",
+            },
+        )
+        self.assertTemplateUsed("user/login.html")
+        self.assertEqual(response.status_code, 200)
 
-  def test_logout_get(self):
-    """Check that user logged out and redirected to login page."""
+    def test_logout_get(self):
+        """Check that user logged out and redirected to login page."""
 
-    user = User.objects.get(id=self.user_id)
-    self.client.login(email=user.email, password=self.user_password)
+        user = User.objects.get(id=self.user_id)
+        self.client.login(email=user.email, password=self.user_password)
 
-    response = self.client.get(reverse('logout'))
+        response = self.client.get(reverse("logout"))
 
-    self.assertRedirects(response, reverse('login'))
+        self.assertRedirects(response, reverse("login"))
 
-  def test_profile_get_incognito(self):
-    """Check that profile page is not available for unauthorized users."""
+    def test_profile_get_incognito(self):
+        """Check that profile page is not available for unauthorized users."""
 
-    response = self.client.get(reverse('profile'))
-    self.assertRedirects(response,
-                         f'{reverse("login")}?next={reverse("profile")}')
+        response = self.client.get(reverse("profile"))
+        self.assertRedirects(
+            response, f'{reverse("login")}?next={reverse("profile")}'
+        )
 
-  def test_profile_get(self):
-    """Check that profile page renders correctly."""
+    def test_profile_get(self):
+        """Check that profile page renders correctly."""
 
-    user = User.objects.get(id=self.user_id)
-    self.client.login(username=user.email, password=self.user_password)
+        user = User.objects.get(id=self.user_id)
+        self.client.login(username=user.email, password=self.user_password)
 
-    response = self.client.get(reverse('profile'))
-    self.assertEqual(response.status_code, 200)
-    self.assertTemplateUsed('user/profile.html')
+        response = self.client.get(reverse("profile"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("user/profile.html")
 
-  def test_profile_get_message(self):
-    """Check that page shows greeting message with username."""
+    def test_profile_get_message(self):
+        """Check that page shows greeting message with username."""
 
-    user = User.objects.get(id=self.user_id)
-    self.client.login(username=user.email, password=self.user_password)
+        user = User.objects.get(id=self.user_id)
+        self.client.login(username=user.email, password=self.user_password)
 
-    response = self.client.get(reverse('profile'))
-    self.assertIn(f'Welcome, {user.first_name}',
-                  response.content.decode('utf-8'))
+        response = self.client.get(reverse("profile"))
+        self.assertIn(
+            f"Welcome, {user.first_name}", response.content.decode("utf-8")
+        )
 
-  def test_signup_get(self):
-    """Check that signup page renders correctly."""
+    def test_signup_get(self):
+        """Check that signup page renders correctly."""
 
-    response = self.client.get(reverse('signup'))
-    self.assertEqual(response.status_code, 200)
-    self.assertTemplateUsed('user/signup.html')
+        response = self.client.get(reverse("signup"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("user/signup.html")
 
-  def test_signup_post(self):
-    """Check that user is redirected to login page after signing up
-    and that user has been added to db."""
+    def test_signup_post(self):
+        """Check that user is redirected to login page after signing up
+        and that user has been added to db."""
 
-    response = self.client.post(
-        reverse('signup'), {
-            'email': 'test@email.com',
-            'password': 'password',
-            'first_name': 'Julie',
-            'last_name': 'Doe',
-        })
-    self.assertRedirects(response, reverse('login'))
-    self.assertEqual(User.objects.count(), 3)
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "email": "test@email.com",
+                "password": "password",
+                "first_name": "Julie",
+                "last_name": "Doe",
+            },
+        )
+        self.assertRedirects(response, reverse("login"))
+        self.assertEqual(User.objects.count(), 3)
 
-  def test_signup_post_same_user(self):
-    """Check that system doesn't add same user to db twice."""
+    def test_signup_post_same_user(self):
+        """Check that system doesn't add same user to db twice."""
 
-    response = self.client.post(
-        reverse('signup'), {
-            'email': 'secondtest@email.com',
-            'password': 'password',
-            'first_name': 'Janice',
-            'last_name': 'Doe',
-        })
-    self.assertRedirects(response, reverse('login'))
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "email": "secondtest@email.com",
+                "password": "password",
+                "first_name": "Janice",
+                "last_name": "Doe",
+            },
+        )
+        self.assertRedirects(response, reverse("login"))
 
-    response = self.client.post(
-        reverse('signup'), {
-            'email': 'secondtest@email.com',
-            'password': 'password',
-            'first_name': 'Janice',
-            'last_name': 'Doe',
-        })
-    self.assertEqual(User.objects.count(), 3)
-    self.assertIn('You already have an account with us.',
-                  response.content.decode('utf-8'))
-    self.assertTemplateUsed('user/signup.html')
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "email": "secondtest@email.com",
+                "password": "password",
+                "first_name": "Janice",
+                "last_name": "Doe",
+            },
+        )
+        self.assertEqual(User.objects.count(), 3)
+        self.assertIn(
+            "You already have an account with us.",
+            response.content.decode("utf-8"),
+        )
+        self.assertTemplateUsed("user/signup.html")
 
-  def test_profile_get_context(self):
-    """Check that method updates context data. """
+    def test_profile_get_context(self):
+        """Check that method updates context data."""
 
-    user = User.objects.get(id=self.user_id)
-    self.client.login(username=user.email, password=self.user_password)
+        user = User.objects.get(id=self.user_id)
+        self.client.login(username=user.email, password=self.user_password)
 
-    response = self.client.get(reverse('profile'))
-    self.assertEqual(
-        response.context['exams_count'],
-        ExamAttempt.objects.filter(
-            user=user,
-            mode=ExamAttempt.EXAM_MODE).values('exams').distinct().count())
-    self.assertEqual(
-        response.context['exam_ids'],
-        list(
-            ExamAttempt.objects.filter(
-                user=user, mode=ExamAttempt.EXAM_MODE).values_list('exams',
-                                                                   flat=True)))
+        response = self.client.get(reverse("profile"))
+        self.assertEqual(
+            response.context["exams_count"],
+            ExamAttempt.objects.filter(user=user, mode=ExamAttempt.EXAM_MODE)
+            .values("exams")
+            .distinct()
+            .count(),
+        )
+        self.assertEqual(
+            response.context["exam_ids"],
+            list(
+                ExamAttempt.objects.filter(
+                    user=user, mode=ExamAttempt.EXAM_MODE
+                ).values_list("exams", flat=True)
+            ),
+        )
 
-  def test_profile_chart_get(self):
-    """Check that method sends data to frontend."""
+    def test_profile_chart_get(self):
+        """Check that method sends data to frontend."""
 
-    user = User.objects.get(id=self.user_id)
-    self.client.login(username=user.email, password=self.user_password)
-    exam = Exam.objects.get(id=1)
+        user = User.objects.get(id=self.user_id)
+        self.client.login(username=user.email, password=self.user_password)
+        exam = Exam.objects.get(id=1)
 
-    response = self.client.get(
-        reverse('profile-chart', kwargs={'exam_id': exam.id}))
+        response = self.client.get(
+            reverse("profile-chart", kwargs={"exam_id": exam.id})
+        )
 
-    self.assertEqual(response.data['exam_name'], exam.name)
-    self.assertEqual(response.data['exam_subject'], exam.subject.name)
+        self.assertEqual(response.data["exam_name"], exam.name)
+        self.assertEqual(response.data["exam_subject"], exam.subject.name)
 
-  def test_edit_profile_get_incognito(self):
-    """Check that edit profile page is not available for unauthorized users."""
+    def test_edit_profile_get_incognito(self):
+        """
+        Check that edit profile page
+        is not available for unauthorized users.
+        """
 
-    response = self.client.get(reverse('edit-profile'))
-    self.assertRedirects(response,
-                         f'{reverse("login")}?next={reverse("edit-profile")}')
+        response = self.client.get(reverse("edit-profile"))
+        self.assertRedirects(
+            response, f'{reverse("login")}?next={reverse("edit-profile")}'
+        )
 
-  def test_edit_profile_get(self):
-    """Check that edit profile page renders correctly."""
+    def test_edit_profile_get(self):
+        """Check that edit profile page renders correctly."""
 
-    user = User.objects.get(id=self.user_id)
-    self.client.login(username=user.email, password=self.user_password)
+        user = User.objects.get(id=self.user_id)
+        self.client.login(username=user.email, password=self.user_password)
 
-    response = self.client.get(reverse('edit-profile'))
+        response = self.client.get(reverse("edit-profile"))
 
-    self.assertEqual(response.status_code, 200)
-    self.assertTemplateUsed('user/edit_profile.html')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed("user/edit_profile.html")
 
-  def test_edit_profile_post(self):
-    """Check that user has been redirected to profile page after edit."""
+    def test_edit_profile_post(self):
+        """Check that user has been redirected to profile page after edit."""
 
-    user = User.objects.get(id=self.user_id)
-    self.client.login(username=user.email, password=self.user_password)
+        user = User.objects.get(id=self.user_id)
+        self.client.login(username=user.email, password=self.user_password)
 
-    response = self.client.post(reverse('edit-profile'), {
-        'first_name': 'Janine',
-        'last_name': 'Doe',
-    })
+        response = self.client.post(
+            reverse("edit-profile"),
+            {
+                "first_name": "Janine",
+                "last_name": "Doe",
+            },
+        )
 
-    self.assertRedirects(response, reverse('profile'))
+        self.assertRedirects(response, reverse("profile"))
 
-  def test_edit_profile_post_no_change(self):
-    """Check that other profile details hasn't been changed after edit."""
+    def test_edit_profile_post_no_change(self):
+        """Check that other profile details hasn't been changed after edit."""
 
-    user = User.objects.get(id=self.user_id)
-    test_user_username = user.username
-    test_user_password = self.user_password
-    test_user_required_extra_time = user.required_extra_time
+        user = User.objects.get(id=self.user_id)
+        test_user_username = user.username
+        test_user_password = self.user_password
+        test_user_required_extra_time = user.required_extra_time
 
-    self.client.login(email=user.email, password=self.user_password)
+        self.client.login(email=user.email, password=self.user_password)
 
-    response = self.client.post(reverse('edit-profile'), {
-        'first_name': 'Jane',
-        'last_name': 'Smith',
-    })
+        self.client.post(
+            reverse("edit-profile"),
+            {
+                "first_name": "Jane",
+                "last_name": "Smith",
+            },
+        )
 
-    self.assertEqual(test_user_username, user.username)
-    self.assertEqual(test_user_password, self.user_password)
-    self.assertEqual(test_user_required_extra_time, user.required_extra_time)
+        self.assertEqual(test_user_username, user.username)
+        self.assertEqual(test_user_password, self.user_password)
+        self.assertEqual(
+            test_user_required_extra_time, user.required_extra_time
+        )
 
-  def test_edit_profile_post_change_extra_field(self):
-    """Check that user can not edit anything else except what's allowed."""
+    def test_edit_profile_post_change_extra_field(self):
+        """Check that user can not edit anything else except what's allowed."""
 
-    user = User.objects.get(id=self.user_id)
-    test_user_username = user.username
-    test_user_password = self.user_password
-    test_user_required_extra_time = user.required_extra_time
-    test_user_username = user.username
+        user = User.objects.get(id=self.user_id)
+        test_user_username = user.username
+        test_user_password = self.user_password
+        test_user_required_extra_time = user.required_extra_time
+        test_user_username = user.username
 
-    self.client.login(email=user.email, password=self.user_password)
+        self.client.login(email=user.email, password=self.user_password)
 
-    response = self.client.post(
-        reverse('edit-profile'), {
-            'first_name': 'Jane',
-            'last_name': 'Smith',
-            'required_extra_time': 10,
-            'username': 'new_username'
-        })
+        self.client.post(
+            reverse("edit-profile"),
+            {
+                "first_name": "Jane",
+                "last_name": "Smith",
+                "required_extra_time": 10,
+                "username": "new_username",
+            },
+        )
 
-    self.assertEqual(test_user_username, user.username)
-    self.assertEqual(test_user_password, self.user_password)
-    self.assertEqual(user.required_extra_time, test_user_required_extra_time)
-    self.assertEqual(test_user_username, user.username)
+        self.assertEqual(test_user_username, user.username)
+        self.assertEqual(test_user_password, self.user_password)
+        self.assertEqual(
+            user.required_extra_time, test_user_required_extra_time
+        )
+        self.assertEqual(test_user_username, user.username)
